@@ -1,0 +1,14 @@
+<div *ngIf="selected.length > 0" [ngStyle]="style">
+  <cdk-virtual-scroll-viewport itemSize="58" class="h-100">
+    <div *cdkVirtualFor="let actor of selectedItems$ | async" class="pb-1">
+      <div class="d-flex flex-nowrap align-items-center">
+        <adms-road-actor-preview class="w-100" [data]="actor"></adms-road-actor-preview>
+        <div>
+          <button mat-icon-button (click)="remove(actor.id)" type="button">
+            <mat-icon>clear</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </cdk-virtual-scroll-viewport>
+</div>

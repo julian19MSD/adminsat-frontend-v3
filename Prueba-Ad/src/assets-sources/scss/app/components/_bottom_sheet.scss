@@ -1,0 +1,24 @@
+.filter-bottom-sheet {
+  font-size: 0.94rem !important;
+
+  .filter-bottom-sheet-title {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .container {
+    overflow: auto;
+    max-height: calc(80vh - 110px);
+  }
+}
+
+.filter-bottom-sheet-controls {
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+
+.mat-bottom-sheet-container {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}

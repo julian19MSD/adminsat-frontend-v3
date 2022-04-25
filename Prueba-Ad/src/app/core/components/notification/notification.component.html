@@ -1,0 +1,67 @@
+<ng-container *ngTemplateOutlet="icon"></ng-container>
+
+<h1 class="notification-title">{{(data.title|translate) || 'Opss...'}}</h1>
+
+<div mat-dialog-content class="notification-content mb-2">
+  <div class="mb-2 text-center">
+    <p>{{ data.contentTitle|translate}}</p>
+  </div>
+
+  <p *ngFor="let msg of data.content" class="text-justify">{{msg|translate}}
+    <a *ngIf="data.task" class="ml-2" color="primary" mat-mini-fab routerLink="/tasks" target="_blank">
+      <mat-icon class="text-contrast">inbox</mat-icon>
+    </a>
+    <button (click)="showWeft=!showWeft" *ngIf="data.weft" class="ml-2" color="primary" mat-mini-fab>
+      <mat-icon class="text-contrast">remove_red_eye</mat-icon>
+    </button>
+  </p>
+
+  <p *ngIf="showWeft">{{data.weft|json}}</p>
+
+  <div *ngFor="let msg of data.contentItert" class="text-left">
+    <dl>
+      <dt>{{msg[0]|translate}}</dt>
+      <dd *ngFor="let submsg of msg[1]" class="ml-3">{{submsg}}</dd>
+    </dl>
+  </div>
+
+</div>
+
+<div mat-dialog-actions class="notification-footer">
+  <button mat-raised-button *ngIf="data.cancelButtonText" mat-dialog-close>
+    {{data.cancelButtonText|translate}}
+  </button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="data.result || true">
+    {{(data.confirmButtonText || 'CLOSE')|translate}}
+  </button>
+</div>
+
+
+<ng-template #icon>
+  <div class="notification-icon">
+    <ng-container [ngSwitch]="data.contentType">
+      <ng-container *ngSwitchCase="'success'">
+        <div class="icon notification-success notification-animate-success-icon">
+          <div class="notification-success-circular-line-left"></div>
+          <span class="notification-success-line-tip"></span>
+          <span class="notification-success-line-long"></span>
+          <div class="notification-success-ring"></div>
+          <div class="notification-success-fix"></div>
+          <div class="notification-success-circular-line-right"></div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'error'">
+        <div class="icon notification-error notification-animate-error-icon" style="display: flex;">
+      <span class="notification-x-mark">
+        <span class="notification-x-mark-line-left"></span>
+        <span class="notification-x-mark-line-right"></span>
+      </span>
+        </div>
+      </ng-container>
+
+      <div *ngSwitchDefault class="icon notification-{{data.contentType}}"></div>
+
+    </ng-container>
+  </div>
+</ng-template>

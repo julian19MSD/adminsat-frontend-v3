@@ -1,0 +1,33 @@
+<form (ngSubmit)="onSubmit()" [formGroup]="formGroup" class="text-center">
+
+  <div class="container p-0">
+    <div class="mat-body-strong mb-3">{{'PLEASE_LOGIN'|translate}}</div>
+  </div>
+
+  <mat-form-field appearance="fill" class="w-100">
+    <mat-label>{{ 'USERNAME' | translate }}</mat-label>
+    <input formControlName="username" matInput type="text">
+    <mat-error>
+      {{formStatus?.username|translate}}
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-100 mt-2">
+    <mat-label>{{ 'PASSWORD' | translate }}</mat-label>
+    <input [type]="hidePass ? 'password' : 'text'" formControlName="password" matInput>
+    <mat-icon class="cursor-pointer" matSuffix (click)="hidePass = !hidePass">
+      {{hidePass ? 'visibility' : 'visibility_off'}}
+    </mat-icon>
+    <mat-error>
+      {{formStatus?.password|translate}}
+    </mat-error>
+  </mat-form-field>
+
+  <button [disabled]="false" class="w-100 no-outline mt-2" color="primary" mat-raised-button type="submit">
+    {{ 'LOGIN' | translate}}
+  </button>
+
+  <a [disabled]="false" class="w-100 no-outline mt-2" mat-button type="button" routerLink="/public/forgotten-password">
+    {{ 'FORGOTTEN_PASSWORD' | translate}}
+  </a>
+</form>

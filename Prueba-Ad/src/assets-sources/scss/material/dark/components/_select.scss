@@ -1,0 +1,5 @@
+.mat-select-panel {
+  .mat-option.mat-selected:not(.mat-option-multiple) {
+    color: mat-color($dark-foreground, text);
+  }
+}

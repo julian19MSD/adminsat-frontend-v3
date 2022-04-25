@@ -1,0 +1,116 @@
+<div class="filter-bottom-sheet">
+  <div class="filter-bottom-sheet-title">
+    <h5>{{'FILTER_MESSAGINGS'| translate}}</h5>
+    <mat-divider></mat-divider>
+  </div>
+
+  <form [formGroup]="formGroup" class="grid grid-md-3 align-items-center pt-3" id="filterForm">
+
+    <adms-select *ngIf="data?.clients?.length >1" [ctrl]="formGroup.get('cliente__in')" [multiple]="true"
+      [options]="data.clients" placeholder="{{'CARRIER'|translate}}">
+    </adms-select>
+
+
+    <mat-form-field>
+      <mat-chip-list #placa formControlName="placa">
+        <mat-chip (removed)="chipRemove('placa',name)" *ngFor="let name of formGroup.get('placa').value"
+          removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('placa',$event,50)" (paste)="chipPaste('placa',$event,50)"
+          [matChipInputAddOnBlur]="true" [matChipInputFor]="placa" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          placeholder="{{'PLATE'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_50'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #actor formControlName="identificador">
+        <mat-chip (removed)="chipRemove('identificador',name)"
+         *ngFor="let name of formGroup.get('identificador').value"
+          removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('identificador',$event)" (paste)="chipPaste('identificador',$event)"
+          [matChipInputAddOnBlur]="true" [matChipInputFor]="actor" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          placeholder="{{'IDENTIFIER'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_5'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field class="w-100">
+      <mat-label>{{ 'DATE_FROM' | translate }}</mat-label>
+      <input #dtFrom [max]="formGroup.get('datetime__gte').value" [owlDateTime]="dtRangeFrom"
+             [owlDateTimeTrigger]="dtRangeFrom"
+             formControlName="datetime__lte" matInput >
+      <button (click)="formGroup.get('datetime__lte').reset(null);" *ngIf="dtFrom.value" mat-icon-button matSuffix
+              type="button">
+        <mat-icon>clear</mat-icon>
+      </button>
+      <button [owlDateTimeTrigger]="dtRangeFrom" mat-icon-button matSuffix type="button">
+        <mat-icon>calendar_today</mat-icon>
+      </button>
+      <mat-error>
+        {{formStatus?.datetime__lte|translate}}
+      </mat-error>
+      <owl-date-time #dtRangeFrom></owl-date-time>
+    </mat-form-field>
+
+    <mat-form-field class="w-100">
+      <mat-label>{{ 'DATE_TO' | translate }}</mat-label>
+      <input #dtTo [min]="formGroup.get('datetime__gte').value" [max]="today" [owlDateTime]="dtRangeTo"
+             [owlDateTimeTrigger]="dtRangeTo" formControlName="datetime__lte" matInput >
+      <button (click)="formGroup.get('datetime__lte').reset(null);" *ngIf="dtTo.value" mat-icon-button matSuffix
+              type="button">
+        <mat-icon>clear</mat-icon>
+      </button>
+      <button [owlDateTimeTrigger]="dtRangeTo" mat-icon-button matSuffix type="button">
+        <mat-icon>calendar_today</mat-icon>
+      </button>
+      <mat-error>
+        {{formStatus?.datetime__lte|translate}}
+      </mat-error>
+      <owl-date-time #dtRangeTo></owl-date-time>
+    </mat-form-field>
+
+    
+    <mat-form-field>
+      <mat-select formControlName="status" placeholder="{{'STATUS'|translate}}">
+        <mat-option>--</mat-option>
+        <mat-option *ngFor="let item of choices?.message_status" value="{{item.id}}"
+                    class="text-capitalize">
+          {{item.value |translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="direction" placeholder="{{'DIRECTION'|translate}}">
+        <mat-option>--</mat-option>
+        <mat-option *ngFor="let item of choices?.message_direction" value="{{item.id }}"
+                    class="text-capitalize">
+          {{item.value |translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    
+  </form>
+</div>
+
+<div class="filter-bottom-sheet-controls">
+  <mat-divider class="mt-2 mb-2"></mat-divider>
+  <div class="container-fluid">
+    <div class="row justify-content-end">
+      <button (click)="close($event,false, false)" class="m-1" mat-button type="button">
+        {{'CANCEL'| translate}}
+      </button>
+      <button class="m-1" form="filterForm" mat-raised-button type="reset">{{'CLEAR'| translate}}</button>
+      <button (click)="close($event,true, true)" class="m-1" color="primary" mat-raised-button type="button">
+        {{'FILTER'| translate}}
+      </button>
+    </div>
+  </div>
+</div>

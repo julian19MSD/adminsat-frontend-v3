@@ -1,0 +1,35 @@
+<mat-card class="rounded" matRipple>
+  <mat-card-header>
+    <div [style.background]="alarm.color" matTooltipShowDelay="300"
+         [matTooltip]="alarm.evento_nombre" mat-card-avatar></div>
+    <mat-card-title class="text-ellipsis text-nowrap">{{alarm.activo_nombre}}</mat-card-title>
+    <mat-card-subtitle class="text-ellipsis text-nowrap">{{alarm.placa}}</mat-card-subtitle>
+    <mat-checkbox *ngIf="actionsCapabilities?.default"
+                  (change)="checkedItem($event.checked)"
+                  [(ngModel)]="alarm.isSelected" color="primary"></mat-checkbox>
+  </mat-card-header>
+
+  <mat-card-content class="text-center">
+    <div class="text-ellipsis text-nowrap">
+      {{alarm.evento_nombre}}
+    </div>
+    <div class="small text-ellipsis text-nowrap">
+      {{alarm.reporte_fecha}}
+    </div>
+  </mat-card-content>
+
+  <mat-card-actions class="text-center">
+    <button *ngIf="actionsCapabilities?.default" (click)="retrieveItem(alarm.id)"
+            matTooltipShowDelay="300" matTooltip="{{'UPDATE_ATTEND'|translate}}" mat-icon-button>
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button (click)="retrieveItem(alarm.id,1)" matTooltipShowDelay="300"
+            matTooltip="{{'VIEW_LOCATION'|translate}}" mat-icon-button>
+      <mat-icon>my_location</mat-icon>
+    </button>
+    <a matTooltipShowDelay="300" [queryParams]="{ cliente: alarm.cliente,reportId: alarm.activo }"
+       routerLink="/monitoring/tracking"  matTooltip="{{'GO_TRACKING'|translate}}" mat-icon-button>
+      <mat-icon>location_on</mat-icon>
+    </a>
+  </mat-card-actions>
+</mat-card>

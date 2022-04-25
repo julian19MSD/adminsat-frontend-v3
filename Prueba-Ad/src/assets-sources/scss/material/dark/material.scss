@@ -1,0 +1,35 @@
+@import "material.variables";
+
+.dark {
+  @import "material.themes";
+  @import "components/alarm";
+  @import "components/cdk";
+  @import "components/quill";
+  @import "components/crud";
+  @import "components/button";
+  @import "components/dashboard";
+  @import "components/datetime-picker";
+  @import "components/toggle";
+  @import "components/dialog";
+  @import "components/dropzone";
+  @import "components/header";
+  @import "components/info_subtitle";
+  @import "components/info_subtitle-2";
+  @import "components/input";
+  @import "components/card";
+  @import "components/map-reports";
+  @import "components/maps";
+  @import "components/menu";
+  @import "components/scrollbar";
+  @import "components/select";
+  @import "components/sidenav";
+  @import "components/swal2";
+
+  @import "utilities/background";
+  @import "utilities/borders";
+  @import "utilities/color";
+  @import "utilities/text";
+  @import "utilities/content-placeholder";
+
+  color: mat-color($dark-foreground, text);
+}

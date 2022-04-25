@@ -1,0 +1,93 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "./src/assets-sources/scss/app/utilities/variables";
+@import "~src/assets-sources/scss/app/mixins/flex";
+
+.asset-item-wrapper {
+  display: grid;
+  column-gap: 8px;
+  grid-template-columns: auto 80px 1fr 1fr 1fr auto;
+  grid-template-areas: 'selector icon description external devices more';
+  margin: auto;
+  align-items: center;
+  min-height: 89px;
+  max-width: $max-content-width;
+
+  .asset-name {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+  }
+
+  .asset-icon {
+    position: relative;
+    grid-area: icon;
+    justify-self: center;
+
+    img {
+      max-width: 60px;
+    }
+
+    .icon-safe-badge {
+      position: absolute;
+      top: 0;
+    }
+  }
+
+  .selector {
+    grid-area: selector;
+  }
+
+  .more {
+    grid-area: more;
+  }
+
+  .devices {
+    align-self: start;
+    grid-area: devices;
+  }
+
+  .description {
+    align-self: start;
+    grid-area: description;
+  }
+
+  .external {
+    align-self: start;
+    grid-area: external;
+  }
+
+  .accessories {
+    @include flexbox;
+    @include align-items(center);
+    @include flex-direction(row);
+    @include flex-wrap(nowrap);
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .asset-item-wrapper {
+    grid-template-columns: auto 80px 1fr 1fr auto;
+    grid-template-areas: 'selector icon description external more' 'selector icon description devices more';
+
+    .accessories {
+      display: none;
+    }
+  }
+}
+
+@include media-breakpoint-down(xs) {
+  .asset-item-wrapper {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: 'selector description more' 'selector external more' 'selector devices more';
+
+    .asset-icon {
+      display: none;
+    }
+
+    .selector {
+      align-self: start;
+    }
+  }
+}
+

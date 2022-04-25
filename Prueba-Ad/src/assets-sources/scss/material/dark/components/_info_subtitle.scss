@@ -1,0 +1,9 @@
+.info-subtitle {
+  background: mat-color($dark-primary);
+  color: mat-color($dark-primary, default-contrast);
+}
+
+.info-subtitle:before {
+  border-left: 40px solid mat-color($dark-primary);
+}
+

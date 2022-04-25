@@ -1,0 +1,50 @@
+{
+  "$schema": "./node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/index.html",
+          "/manifest.webmanifest",
+          "/*.css",
+          "/*.js"
+        ]
+      }
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "resources": {
+        "files": [
+          "https://s3.amazonaws.com/adminsat/static/**",
+          "/assets/**",
+          "/*.(eot|svg|cur|jpg|png|webp|gif|otf|ttf|woff|woff2|ani)"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "AdminsatAPI",
+      "urls": [
+        "https://api-sandbox.adminsat.com/**"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness",
+        "maxAge": "2h",
+        "maxSize": 100,
+        "timeout": "3s"
+      }
+    }
+  ],
+  "navigationUrls": [
+    "/v2/**",
+    "!/**/*.*",
+    "!/**/*__*",
+    "!/**/*__*/**"
+  ]
+}

@@ -1,0 +1,15 @@
+<div class="container-fluid border rounded">
+  <div class="row py-2 align-content-center flex-nowrap align-items-center">
+    <div class="col">
+      <h3 class="mat-h3 name mr-2">{{data.nombre}}</h3>
+      <div class="mat-body-1"><strong class="mr-2">{{'IDENTIFICATION' | translate}}
+        :</strong>{{data.identificacion}}</div>
+    </div>
+    <div *ngIf="permissionsService.hasPermission(permissions.actorVial.ver)">
+      <button (click)="openDetails()" matTooltipShowDelay="300" matTooltip="{{'DETAILS'|translate}}"
+              color="primary" mat-icon-button type="button">
+        <mat-icon>info_outline</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,190 @@
+<div class="item-wrapper bb-divider" [class.hasClient]="viewClienInfo"
+[class.bg-alert-danger-deep]="permanence?.permanence?.alert === 4" [class.bg-alert-danger]="permanence?.permanence?.alert === 3"
+[class.bg-alert-warning-deep]="permanence?.permanence?.alert === 2" [class.bg-alert-warning]="permanence?.permanence?.alert === 1"
+[class.bg-alert-success]="permanence?.permanence?.alert === 0">
+
+  <!-- ... -->
+  <div class="item-content">
+    <button type="button" [matMenuTriggerFor]="moreWorkMenu" mat-icon-button>
+      <mat-icon>more_vert</mat-icon>
+
+      <mat-menu #moreWorkMenu="matMenu">
+        <button (click)="openHistoric(permanence?.id, permanence?.placa)" mat-menu-item type="button">
+          <mat-icon>info_outline</mat-icon>
+          <span>{{ "DETAILS" | translate }}</span>
+        </button>
+
+      </mat-menu>
+    </button>
+
+  </div>
+
+
+  <!-- placa -->
+  <div class="item-content" [matTooltipDisabled]="!permanence.placa" matTooltip="{{permanence.placa || '--'}}"
+    matTooltipShowDelay="300">
+    <button (click)="openAssetDetails(permanence.id)"
+      *ngIf="permanence?.id && permissionsService.hasPermission(permissions.activos.ver);else assetPlate"
+      class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+      {{permanence.placa}}
+    </button>
+    <ng-template #assetPlate>
+      <div class="text-ellipsis">
+        {{permanence.placa || '--'}}
+      </div>
+    </ng-template>
+  </div>
+
+
+
+  <!-- remolque -->
+  <div class="item-content" [matTooltipDisabled]="!permanence.remolque" matTooltipShowDelay="300"
+    matTooltip="{{permanence.remolque || '--'}}">
+    <div class="text-ellipsis">
+      {{permanence.remolque || '--'}}
+    </div>
+  </div>
+
+
+  <!-- actor vial -->
+  <div class="item-content" [matTooltipDisabled]="!permanence.actor_vial_nombre"
+    matTooltip="{{permanence.actor_vial_nombre || '--'}}" matTooltipShowDelay="300">
+    <button (click)="openRoadActorDetails(permanence.actor_vial)"
+      *ngIf="permanence.actor_vial_nombre && permissionsService.hasPermission(permissions.actorVial.ver);else roadActor"
+      class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+      {{permanence.actor_vial_nombre}}
+    </button>
+    <ng-template #roadActor>
+      <div class="text-ellipsis">
+        {{permanence.actor_vial_nombre || '--'}}
+      </div>
+    </ng-template>
+  </div>
+
+
+  <!-- contacto -->
+  <div class="item-content" [matTooltipDisabled]="!permanence.actor_vial_celular" matTooltipShowDelay="300"
+    matTooltip="{{permanence.actor_vial_celular || '--'}}">
+    <div class="text-ellipsis">
+      {{permanence.actor_vial_celular || '--'}}
+    </div>
+  </div>
+
+
+  <!-- enturnamiento -->
+  <div class="item-content" [matTooltipDisabled]="!permanence.orden_cargue" matTooltipShowDelay="300"
+    matTooltip="{{permanence.orden_cargue || '--'}}">
+    <div class="text-ellipsis">
+      {{permanence.orden_cargue || '--'}}
+    </div>
+  </div>
+
+
+
+  <!-- tipo de instalalcion -->
+  <div class="item-content" [matTooltipDisabled]="!permanence?.permanence?.installation_type_name" matTooltipShowDelay="300"
+    matTooltip="{{permanence?.permanence?.installation_type_name || '--'}}">
+    <div class="text-ellipsis">
+      {{permanence?.permanence?.installation_type_name || '--'}}
+    </div>
+  </div>
+
+  <!-- nombre -->
+  <div class="item-content" [matTooltipDisabled]="!permanence?.permanence?.zona_control_nombre" matTooltipShowDelay="300"
+    matTooltip="{{permanence?.permanence?.zona_control_nombre || '--'}}">
+    <div class="text-ellipsis">
+      {{permanence?.permanence?.zona_control_nombre || '--'}}
+    </div>
+  </div>
+
+
+  <!-- ultima ubicación -->
+  <div class="item-content" [matTooltipDisabled]="!permanence?.ultimo_reporte_fecha"
+    matTooltip="{{permanence?.ultimo_reporte_fecha || '--'}}" matTooltipShowDelay="300"><a
+      [queryParams]="{  cliente: permanence.cliente,reportId: permanence?.id }"
+      class="w-100 mw-100 text-ellipsis" mat-stroked-button routerLink="/monitoring/tracking" target="_blank">
+      {{permanence?.ultimo_reporte_fecha || '--'}} </a>
+  </div>
+
+
+  <!-- hora de ingreso -->
+  <div class="item-content" [matTooltipDisabled]="!permanence?.permanence?.entry_time" matTooltipShowDelay="300"
+    matTooltip="{{permanence?.permanence?.entry_time || '--'}}">
+    <div class="text-ellipsis">
+      {{permanence?.permanence?.entry_time || '--'}}
+    </div>
+  </div>
+
+  
+  <!-- L1 -->
+  <div class="item-content" [matTooltipDisabled]="!permanence?.permanence?.level_1_time_alert" matTooltipShowDelay="300"
+    matTooltip="{{permanence?.permanence?.level_1_time_alert || '--'}}">
+    <div class="text-ellipsis">
+      {{permanence?.permanence?.level_1_time_alert || '--'}}
+    </div>
+  </div>
+
+    <!-- L2 -->
+    <div class="item-content" [matTooltipDisabled]="!permanence?.permanence?.level_2_time_alert" matTooltipShowDelay="300"
+    matTooltip="{{permanence?.permanence?.level_2_time_alert || '--'}}">
+    <div class="text-ellipsis">
+      {{permanence?.permanence?.level_2_time_alert || '--'}}
+    </div>
+  </div>
+
+    <!-- L3 -->
+    <div class="item-content" [matTooltipDisabled]="!permanence?.permanence?.level_3_time_alert" matTooltipShowDelay="300"
+    matTooltip="{{permanence?.permanence?.level_3_time_alert || '--'}}">
+    <div class="text-ellipsis">
+      {{permanence?.permanence?.level_3_time_alert || '--'}}
+    </div>
+  </div>
+
+    <!-- L4 -->
+    <div class="item-content" [matTooltipDisabled]="!permanence?.permanence?.level_4_time_alert" matTooltipShowDelay="300"
+    matTooltip="{{permanence?.permanence?.level_4_time_alert || '--'}}">
+    <div class="text-ellipsis">
+      {{permanence?.permanence?.level_4_time_alert || '--'}}
+    </div>
+  </div>
+
+
+
+  <!--tiempo de permanencia -->
+  <div class="item-content" [matTooltipDisabled]="!permanence?.permanence?.current_duration" matTooltipShowDelay="300"
+    matTooltip="{{permanence?.permanence?.current_duration || '--'}}">
+    <div class="text-ellipsis">
+      {{permanence?.permanence?.current_duration || '--'}}
+    </div>
+  </div>
+
+
+  <!--tiempo de sello -->
+  <div class="item-content">
+    <div class="text-ellipsis">
+
+      <ng-container *ngIf="permanence?.vehiculo_seguro; else noSecure">
+
+        <mat-icon class="text-success mr-2">check_circle</mat-icon>
+        <span>{{'SAFE_VEHICLE' | translate}}</span>
+      </ng-container>
+
+      <ng-template #noSecure>
+        <mat-icon class="text-danger mr-2">error</mat-icon>
+        <span>{{'UNSAFE_VEHICLE' | translate}}</span>
+      </ng-template>
+    </div>
+  </div>
+
+
+
+
+  
+  <!--CLIENTE  -->
+  <div class="item-content" [matTooltipDisabled]="!permanence.cliente_nombre" matTooltipShowDelay="300"
+    matTooltip="{{permanence.cliente_nombre || '--'}}">
+    <div class="text-ellipsis">
+      {{permanence.cliente_nombre || '--'}}
+    </div>
+  </div>
+</div>

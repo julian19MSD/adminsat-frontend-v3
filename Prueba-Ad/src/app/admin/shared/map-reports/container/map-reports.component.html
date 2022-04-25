@@ -1,0 +1,283 @@
+<mat-sidenav-container [ngStyle]="{'z-index': mapService?.panoramaShowed? 2:1}" class="map-report-wrapper fadeInUp">
+
+  <mat-sidenav-content class="map-container" [class.expanded]="mapService.panoramaMapExpanded"
+    [class.panorama]="mapService.panoramaShowed">
+
+    <div id="agm-pano"></div>
+
+    <div class="agm-container">
+      <div [class.focus]="instance" class="position-absolute" id="agm-map"></div>
+
+      <ng-container *ngIf="mapService.panoramaShowed">
+
+        <div *ngIf="this.instance && 'historical' === mode" class="mini-map-control mini-map-player">
+          <button (click)="lastDetail()" [disabled]="lastDetailDisabled" mat-icon-button
+            matTooltip=" {{'PREVIOUS_POINT'|translate}}" matTooltipShowDelay="300" type="button">
+            <mat-icon>fast_rewind</mat-icon>
+          </button>
+          <button (click)="mapService.panPanoramaToMarker(instance?.datos_json?.rumbo)" mat-icon-button
+            matTooltipShowDelay="300" type="button" matTooltip=" {{'CENTER_MINI_MAP_POINT'|translate}}">
+            <mat-icon>place</mat-icon>
+          </button>
+          <button (click)="netxDetail()" [disabled]="this.nextDetailDisabled" mat-icon-button
+            matTooltip=" {{'NEXT_POINT'|translate}}" matTooltipShowDelay="300" type="button">
+            <mat-icon>fast_forward</mat-icon>
+          </button>
+        </div>
+
+        <div class="mini-map-control mini-map-screen">
+          <button (click)="mapService.expandPanoramaMap()" mat-icon-button
+            matTooltip=" {{(mapService.panoramaMapExpanded?'MINIMIZE':'EXPAND')|translate}}" matTooltipPosition="right"
+            matTooltipShowDelay="300" type="button">
+            <mat-icon *ngIf="mapService.panoramaMapExpanded;else noExpanded">fullscreen_exit</mat-icon>
+            <ng-template #noExpanded>
+              <mat-icon>fullscreen</mat-icon>
+            </ng-template>
+          </button>
+        </div>
+
+        <div class="mini-map-control mini-map-zoom">
+          <div class="d-flex flex-column">
+            <button (click)="mapService.panToPanorama()" mat-icon-button matTooltip="{{'CENTER_MINI_MAP'|translate}}"
+              matTooltipPosition="right" matTooltipShowDelay="300" type="button">
+              <mat-icon>my_location</mat-icon>
+            </button>
+            <button (click)="mapService.mapZoomIn()" mat-icon-button matTooltip="{{'ZOOM_IN'|translate}}"
+              matTooltipPosition="right" matTooltipShowDelay="300" type="button">
+              <mat-icon>add</mat-icon>
+            </button>
+            <button (click)="mapService.mapZoomOut()" mat-icon-button matTooltip="{{'ZOOM_OUT'|translate}}"
+              matTooltipPosition="right" matTooltipShowDelay="300" type="button">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <button (click)="mapService.measureMarks()" mat-icon-button matTooltip="{{'GET_MEASURING'|translate}}"
+              matTooltipPosition="right" matTooltipShowDelay="300" type="button">
+              <mat-icon [class.text-info]="mapService.isMeasuring">straighten</mat-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <button (click)="sideNav.toggle()" class="report-flap" mat-raised-button type="button">
+      <mat-icon>menu</mat-icon>
+    </button> 
+    <button class="creation-flap" (click)="editCreateZoneCurrent(null)" *ngIf="'listZones'=== mode && !isCreatingControlInstallation && permissionsService.hasPermission(permissions.zonasControl.eliminar)" color="primary" mat-mini-fab
+      matTooltip="{{'CREATE'|translate}}" matTooltipShowDelay="300">
+      <mat-icon>add</mat-icon>
+    </button>
+
+
+    <div *ngIf="!mapService.panoramaShowed" class="map-controls-container" [class.no-street-view]="isFetchingMarkers">
+      <div
+        *ngIf="(mode != 'listZones' && isFetchingMarkers) || (mode === 'listZones' && isFetchingList) ;else mapControls"
+        class="map-controls pt-2 pb-1 rounded">
+        <div class="ph-icon ph-brightness mx-2"></div>
+        <div class="ph-icon ph-brightness mx-2"></div>
+        <div class="ph-icon ph-brightness mx-2"></div>
+        <div class="ph-icon ph-brightness mx-2"></div>
+      </div>
+
+      <ng-template #mapControls>
+        <div class="map-controls d-flex flex-column">
+          <button (click)="mapService.mapZoomIn()" mat-icon-button matTooltip="{{'ZOOM_IN'|translate}}"
+            matTooltipPosition="right" matTooltipShowDelay="300" type="button">
+            <mat-icon>add</mat-icon>
+          </button>
+          <button (click)="mapService.mapZoomOut()" mat-icon-button matTooltip="{{'ZOOM_OUT'|translate}}"
+            matTooltipPosition="right" matTooltipShowDelay="300" type="button">
+            <mat-icon>remove</mat-icon>
+          </button>
+
+          <button (click)="mapService.measureMarks()" mat-icon-button matTooltip="{{'GET_MEASURING'|translate}}"
+            matTooltipPosition="right" matTooltipShowDelay="300" type="button">
+            <mat-icon [class.text-info]="mapService.isMeasuring">straighten</mat-icon>
+          </button>
+
+          <button (click)="mapService.setCurrentPosition()" mat-icon-button
+            matTooltip="{{'GET_USER_POSITION'|translate}}" matTooltipPosition="right" matTooltipShowDelay="300"
+            type="button">
+            <mat-icon [class.text-info]="mapService.showCurrentPosition">my_location</mat-icon>
+          </button>
+
+          <button [matMenuTriggerFor]="layerMenu" mat-icon-button matTooltip="{{'TOOGLE_MAP_STYLE'|translate}}"
+            matTooltipPosition="right" matTooltipShowDelay="300" type="button">
+            <mat-icon>layers</mat-icon>
+          </button>
+
+          <button (click)="mapService.fitMarkerBounds()" mat-icon-button matTooltip="{{'ZOOM_OUT_MAP'|translate}}"
+            matTooltipPosition="right" matTooltipShowDelay="300" type="button">
+            <mat-icon>zoom_out_map</mat-icon>
+          </button>
+
+          <mat-menu #layerMenu="matMenu" class="map-menu">
+
+            <button (click)="mapService.setMapType('roadmap')"
+              [class.active]="mapService?.map?.getMapTypeId() === 'roadmap'" mat-menu-item type="button">
+              <mat-icon>map</mat-icon>
+              {{'STANDARD' | translate}}
+            </button>
+
+            <button (click)="mapService.setMapType('night')"
+              [class.active]="mapService?.map?.getMapTypeId() === 'night'" mat-menu-item type="button">
+              <mat-icon>brightness_low</mat-icon>
+              {{'NIGHT' | translate}}
+            </button>
+
+            <button (click)="mapService.setMapType('terrain')"
+              [class.active]="mapService?.map?.getMapTypeId() === 'terrain'" mat-menu-item type="button">
+              <mat-icon>terrain</mat-icon>
+              {{'TERRAIN' | translate}}
+            </button>
+
+            <button (click)="mapService.setMapType('hybrid')"
+              [class.active]="mapService?.map?.getMapTypeId() === 'hybrid'" mat-menu-item type="button">
+              <mat-icon>satellite</mat-icon>
+              {{'SATELLITE' | translate}}
+            </button>
+
+            <button (click)="mapService.setMapType('OSM')" [class.active]="mapService?.map?.getMapTypeId() === 'OSM'"
+              mat-menu-item type="button">
+              <em class="icon-osm mr-4"></em>{{'OSM' | translate}}
+            </button>
+
+            <button (click)="mapService.setMapType('OCM')" [class.active]="mapService?.map?.getMapTypeId() === 'OCM'"
+              mat-menu-item type="button">
+              <mat-icon>directions_bike</mat-icon>
+              {{'OCM' | translate}}
+            </button>
+
+            <button (click)="mapService.setMapType('ILLEGAL_MINERY')" [class.active]="mapService.illegalMiningVisible "
+              mat-menu-item type="button">
+              <em class="icon-mining mr-4"></em>{{'ILLEGAL_MINERY' | translate}}
+            </button>
+
+          </mat-menu>
+        </div>
+      </ng-template>
+    </div>
+  </mat-sidenav-content>
+
+
+  <mat-sidenav #sideNav (openedChange)="mapService.resize()" [mode]="profile?.screenSize?.mdSize? 'over':'side'"
+    [opened]="!mapService?.panoramaShowed" class="report-container" [class.isCreating]="isCreatingControlInstallation"
+    position="end">
+
+    <ng-container *ngIf="!isCreatingControlInstallation else formControlInstallations">
+
+
+      <div *ngIf="!instance  && !loadingInstance ; else detailcontent" class="report-list-wrapper fadeInRigth">
+
+        <div class="p-2 search-field" *ngIf="'historical'=== mode">
+          <mat-form-field class="w-100" appearance="fill">
+            <mat-label>{{'SEARCH'|translate}}</mat-label>
+            <input matInput [formControl]="historicalSearchControl">
+            <button (click)="historicalSearchControl.reset()" *ngIf="historicalSearchControl.value;else searchIcon"
+              matSuffix mat-icon-button>
+              <mat-icon>clear</mat-icon>
+            </button>
+            <ng-template #searchIcon>
+              <mat-icon matSuffix>search</mat-icon>
+            </ng-template>
+            <mat-hint>{{"ITEMS_OF" | translate:{
+              'partial': (filteredReports$|async).length,
+              'total': reports.length
+              } }}</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <ng-container *ngIf="(reports && (filteredReports$| async)?.length ===0) || ((filteredReports$| async)?.length ===0 && 'listZones' === mode ) ;else list">
+          <div *ngIf="!isFetchingList;else phItem" class="title p-2 text-center">
+            {{'NO_RESULT'|translate}}
+          </div>
+        </ng-container>
+
+        <ng-template #list>
+
+          <cdk-virtual-scroll-viewport [class.historical-scroll-viewport]="'historical'===mode" class="h-100 w-100"
+            itemSize="80" (scroll)="onScroll($event)" *ngIf="(filteredReports$| async)?.length >0 ">
+            <div *cdkVirtualFor="let item of filteredReports$| async;let index = index;">
+              <ng-container *ngIf="mode != 'listZones'; else zones">
+                <adms-location-item *ngIf="!isFetchingList;else phItem" [location]="item" [mode]="mode"   (onClick)="setDetail($event)"
+                  [metricsAlias]="profile?.metrics_alias" [disabled]="isFetchingMarkers">
+                </adms-location-item>
+              </ng-container>
+
+              <ng-template #zones>
+                <adms-zone-item *ngIf="!isFetchingList;else phItem" [zone]="item" [mode]="mode" (deleteZone)="deleteZone($event)"
+                  [metricsAlias]="profile?.metrics_alias" [disabled]="isFetchingZones" (onClick)="setDetail($event)">
+                </adms-zone-item>
+              </ng-template>
+
+              <mat-divider></mat-divider>
+            </div>
+          </cdk-virtual-scroll-viewport>
+
+
+        </ng-template>
+      </div>
+
+      <ng-template #detailcontent>
+        <adms-location-detail *ngIf="'listZones' != mode else detailZone" [instance]="instance" 
+          [waitingCommandResponse]="waitingCommandResponse" [requestLocation]="requestLocation" [mode]="mode"
+          [aviableCommands]="aviableCommands" [canSendCommands]="canSendCommands"
+          [metricsAlias]="profile?.metrics_alias" (getLocationClick)="getLocation($event)"
+          (showAroundClick)="mapService.showAround($event)" (showLastCommands)="showLastCommands($event)"
+          (sendCommandClick)="openCommand($event)" (onClose)="unsetDetail($event)">
+        </adms-location-detail>
+
+        <ng-template #detailZone>
+          <adms-zone-detail [instance]="instance" (onClose)="unsetDetail($event)" (deleteZone)="deleteZone($event)"
+            (editableZone)="editCreateZoneCurrent($event)">
+          </adms-zone-detail>
+        </ng-template>
+      </ng-template>
+
+    </ng-container>
+
+    <ng-template #formControlInstallations>
+      <adms-control-installations-create [instanceId]="instance?.id" (onClose)="closeFormZone($event)"  (successCompleted)="getZones($event)" [drawCreated]="drawCreated">
+      </adms-control-installations-create>
+    </ng-template>
+
+
+  </mat-sidenav>
+</mat-sidenav-container>
+
+
+<ng-template #phItem>
+  <div class="ph-wrapper px-2">
+    <div class="ph-item m-0">
+      <div class="ph-col-12">
+        <div class="ph-row">
+          <div class="ph-col-3 big ph-brightness"></div>
+          <div class="ph-col-9 empty"></div>
+        </div>
+      </div>
+      <div class="justify-content-center">
+        <div class="ph-row">
+          <div class="ph-col-2 ph-brightness"></div>
+          <div class="ph-col-1 empty"></div>
+          <div class="ph-col-9 ph-brightness"></div>
+          <div class="ph-col-2 ph-brightness"></div>
+          <div class="ph-col-1 empty"></div>
+          <div class="ph-col-9 ph-brightness"></div>
+          <div class="ph-col-2 ph-brightness"></div>
+          <div class="ph-col-1 empty"></div>
+          <div class="ph-col-9 ph-brightness"></div>
+        </div>
+      </div>
+      <div class="ph-col-3 text-right">
+        <div class="ph-row justify-content-center">
+          <div class="m-1 ph-icon ph-brightness"></div>
+          <div class="m-1 ph-icon ph-brightness"></div>
+        </div>
+        <div class="ph-row justify-content-center">
+          <div class="m-1 ph-icon ph-brightness"></div>
+          <div class="m-1 ph-icon ph-brightness"></div>
+        </div>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  </div>
+</ng-template>

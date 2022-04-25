@@ -1,0 +1,87 @@
+<mat-accordion class="main-sidenav-menu">
+  <div class="menu-logo-container d-lg-none">
+    <div class="menu-logo">
+      <img [src]="logo" alt="logo">
+    </div>
+    <button (click)="closeSideNav()" mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <ng-container *ngIf="!(userPermissionsLoaded$|async);else siteMenu">
+    <ng-container *ngFor="let item of phItems">
+      <div class="py-3 m-0 ph-item align-items-center">
+        <div class="ph-col-auto">
+          <div class="m-0 ph-icon ph-brightness"></div>
+        </div>
+        <div>
+          <div class="ph-row m-0">
+            <div class="ph-col-12 ph-brightness m-0"></div>
+          </div>
+        </div>
+      </div>
+      <mat-divider></mat-divider>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #siteMenu>
+
+    <ng-container *ngFor="let menuItem of menuNav">
+      <ng-container *ngIf="showMenu(menuItem.permission, menuItem.submenu)">
+        <mat-expansion-panel #panelActive="routerLinkActive"
+                             [class.mr-11p]="menuItem.custom_icon"
+                             [disabled]="!menuItem.submenu"
+                             [expanded]="panelActive?.isActive && menuItem.submenu"
+                             [hideToggle]="!menuItem.submenu"
+                             [routerLinkActiveOptions]="{exact: false}"
+                             class="mat-elevation-z0"
+                             routerLinkActive="active">
+          <mat-expansion-panel-header>
+
+            <a *ngIf="menuItem.url && menuItem.href !== true; else externalLink" class="mat-content text-decoration-none"
+               routerLink="/{{menuItem.url}}">
+              <ng-container *ngTemplateOutlet="headerContent"></ng-container>
+            </a>
+
+            <ng-template #externalLink>
+              <a *ngIf="menuItem.url  && menuItem.href === true else headerContent"  class="mat-content text-decoration-none"
+              target="_blank" href="{{menuItem.url}}">
+             <ng-container *ngTemplateOutlet="headerContent"></ng-container>
+           </a>
+            </ng-template>
+
+
+            <ng-template #headerContent>
+              <mat-panel-title>
+                <mat-icon *ngIf="!menuItem.custom_icon; else customIcon">{{menuItem.icon}}</mat-icon>
+                <ng-template #customIcon>
+                  <mat-icon class="adminsat-icon {{menuItem.icon}}"></mat-icon>
+                </ng-template>
+              </mat-panel-title>
+
+              <mat-panel-description>
+                {{menuItem.menu | translate }}
+              </mat-panel-description>
+            </ng-template>
+          </mat-expansion-panel-header>
+
+          <mat-divider class="mb-2"></mat-divider>
+          <ng-container *ngFor="let subItem of menuItem.submenu">
+            <ng-container *ngIf="showSubMenu(subItem.permission)">
+              <a *ngIf="!subItem.href" [routerLinkActiveOptions]="{exact: true}" class="submenu"
+                 routerLink="/{{menuItem.id}}/{{subItem.url}}" routerLinkActive="active">
+                {{subItem.name | translate}}
+              </a>
+
+              <a *ngIf="subItem.href" class="submenu" href="/#/{{menuItem.id}}/{{subItem.url}}">
+                {{subItem.name | translate}}
+              </a>
+            </ng-container>
+
+          </ng-container>
+
+        </mat-expansion-panel>
+        <mat-divider></mat-divider>
+      </ng-container>
+    </ng-container>
+  </ng-template>
+</mat-accordion>

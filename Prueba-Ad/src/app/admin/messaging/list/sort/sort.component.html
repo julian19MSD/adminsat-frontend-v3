@@ -1,0 +1,65 @@
+<div class="filter-bottom-sheet">
+  <div class="filter-bottom-sheet-title">
+    <h5>{{'SORT_MESSAGINGS'| translate}}</h5>
+    <mat-divider></mat-divider>
+  </div>
+  <form [formGroup]="formGroup" class="grid grid-md-3 align-items-center pt-3" id="filterForm">
+
+    <mat-form-field>
+      <mat-label>{{'CLIENT'|translate}}</mat-label>
+      <mat-select formControlName="cliente__nombre">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'PLATE'|translate}}</mat-label>
+      <mat-select formControlName="activo__placa">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'ASSET_NAME'|translate}}</mat-label>
+      <mat-select formControlName="activo_nombre">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+    <mat-form-field>
+      <mat-label>{{'IDENTIFIER'|translate}}</mat-label>
+      <mat-select formControlName="identifier">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </form>
+</div>
+
+<div class="filter-bottom-sheet-controls">
+  <mat-divider class="mt-2 mb-2"></mat-divider>
+  <div class="container-fluid">
+    <div class="row justify-content-end">
+      <button (click)="close($event,false)" class="m-1" mat-button type="button">
+        {{'CANCEL'| translate}}
+      </button>
+      <button class="m-1" form="filterForm" mat-raised-button type="reset">{{'CLEAR'| translate}}</button>
+      <button (click)="close($event,true)" class="m-1" color="primary" mat-raised-button type="button">
+        {{'SORT'| translate}}
+      </button>
+    </div>
+  </div>
+</div>

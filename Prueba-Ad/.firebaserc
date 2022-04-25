@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "adminsat-e1469"
+  },
+  "targets": {
+    "adminsat-e1469": {
+      "hosting": {
+        "prod-transporte": [
+          "adminsat-transporte"
+        ],
+        "stag-transporte": [
+          "adminsat-transporte-stag"
+        ]
+      }
+    }
+  }
+}

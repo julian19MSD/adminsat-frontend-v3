@@ -1,0 +1,93 @@
+<div class="item-wrapper bb-divider" [class.mainAction]="actionsCapabilities.default"     >
+
+  <!-- ... -->
+  <div class="item-content">
+    <button type="button" [matMenuTriggerFor]="moreWorkMenu" mat-icon-button>
+      <mat-icon>more_vert</mat-icon>
+
+      <mat-menu #moreWorkMenu="matMenu">
+
+        <button type="button" mat-menu-item (click)="newMessage(messaging.activo, messaging.device, messaging.cliente)" *ngIf="permissionsService.hasPermission(permissions.mensajeria.crear)">
+          <mat-icon>speaker_notes</mat-icon>
+          <span>{{'ADD_MESSAGE'|translate}}</span>
+        </button>
+      </mat-menu>
+    </button>
+
+  </div>
+
+  <!-- username -->
+  <div class="item-content" [matTooltipDisabled]="!messaging.username" matTooltipShowDelay="300"
+    matTooltip="{{messaging.username || '--'}}">
+    <div class="text-ellipsis">
+      {{messaging.username || '--'}}
+    </div>
+  </div>
+
+  <!-- serial -->
+  <div class="item-content" [matTooltipDisabled]="!messaging.identifier" matTooltipShowDelay="300"
+    matTooltip="{{messaging.identifier || '--'}}">
+    <div class="text-ellipsis">
+      {{messaging.identifier || '--'}}
+    </div>
+  </div>
+
+
+  <!-- nombre -->
+  <div class="item-content" [matTooltipDisabled]="!messaging.activo_placa"
+    matTooltip="{{messaging.activo_placa || '--'}}" matTooltipShowDelay="300">
+    <button (click)="openAssetDetails(messaging.activo)"
+      *ngIf="messaging?.activo && permissionsService.hasPermission(permissions.activos.ver);else assetPlate"
+      class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+      {{messaging.activo_nombre || '--'}}
+    </button>
+    <ng-template #assetPlate>
+      <div class="text-ellipsis">
+        {{messaging.activo_nombre || '--'}}
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- sentido -->
+  <div class="item-content" [matTooltipDisabled]="!messaging.direction" matTooltipShowDelay="300"
+    matTooltip="{{messaging.direction || '--'}}">
+    <div class="text-ellipsis">
+      {{messaging.direction || '--'}}
+    </div>
+  </div>
+
+  <!-- fecha -->
+  <div class="item-content" [matTooltipDisabled]="!messaging.datetime" matTooltipShowDelay="300"
+    matTooltip="{{messaging.datetime || '--'}}">
+    <div class="text-ellipsis">
+      {{messaging.datetime || '--'}}
+    </div>
+  </div>
+
+
+  <!-- mensaje -->
+  <div class="item-content" [matTooltipDisabled]="!messaging.content" matTooltipShowDelay="300"
+    matTooltip="{{messaging.content || '--'}}">
+    <div class="text-ellipsis">
+      {{messaging.content || '--'}}
+    </div>
+  </div>
+
+  <!-- estado -->
+  <div class="item-content" [matTooltipDisabled]="!messaging.status" matTooltipShowDelay="300"
+    matTooltip="{{messaging.status || '--'}}">
+    <div class="text-ellipsis">
+      {{messaging.status || '--'}}
+    </div>
+  </div>
+
+  <!-- ultima ubicación -->
+  <div class="item-content" [matTooltipDisabled]="!messaging?.last_report_date"
+    matTooltip="{{messaging?.last_report_date || '--'}}" matTooltipShowDelay="300"><a
+      [queryParams]="{  cliente: messaging.cliente, reportId: messaging?.activo }" class="w-100 mw-100 text-ellipsis"
+      mat-stroked-button routerLink="/monitoring/tracking" target="_blank">
+      {{messaging?.last_report_date || '--'}} </a>
+  </div>
+
+
+</div>

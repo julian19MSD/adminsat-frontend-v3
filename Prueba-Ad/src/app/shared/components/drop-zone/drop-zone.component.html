@@ -1,0 +1,34 @@
+<div *ngIf="document;else picture" [class.dragover]="draging" class="dropzone-container">
+
+  <div class="dropzone-controls">
+    <a *ngIf="fileUrl && !fileName" [href]="fileUrl"  matTooltipShowDelay="300" matTooltip="{{'VIEW_FILE_SAVED'|translate}}" mat-icon-button
+       target="_blank">
+      <mat-icon>remove_red_eye</mat-icon>
+    </a>
+    <button (click)="delete_image()" *ngIf="fileUrl"  matTooltipShowDelay="300" matTooltip="{{'DELETE'|translate}}" mat-icon-button
+            type="button">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+
+  <input [name]="'file_text_' + model" [value]="fileName" placeholder="{{'CLICK_DROP'|translate}}"
+         readonly type="text">
+  <input #fileInput (change)="fileUpload($event)" (dragenter)="draging=true" (dragleave)="draging=false"
+         (dragover)="draging=true" (drop)="draging=false"
+         [name]="'file_' + model" accept="image/jpeg,image/gif,image/png,application/pdf"
+         type="file">
+</div>
+
+<ng-template #picture>
+  <div class=" picture-containter">
+    <img [src]="fileUrl || defaultImage" alt="profile picture"
+         class="profile-avatar picture-avatar avatar-shadow">
+    <div class="picture-input-containter">
+      <input #fileInput (change)="fileUpload($event)" [name]="'file_' + model" accept=".jpg, .png" type="file">
+    </div>
+    <button (click)="delete_image()" *ngIf="fileUrl" class="deletepic" color="warn" data-placement="right"
+            id="deletepic" mat-mini-fab type="button">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</ng-template>

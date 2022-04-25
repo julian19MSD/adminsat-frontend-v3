@@ -1,0 +1,39 @@
+
+.map-report-wrapper {
+
+  .agm-container {
+    .mini-map-control {
+      background-color: mat-color($dark-background, card) !important;
+      color: white;
+    }
+  }
+
+  .report-flap {
+    background-color: mat-color($dark-background, card) !important;
+    color: mat-color($dark-foreground, text) !important;
+  }
+
+
+
+  .map-container {
+    .gm-svpc {
+      background-color: mat-color($dark-background, card) !important;
+    }
+
+    .plate-wrapper {
+      color: black !important;
+    }
+
+  }
+
+  .map-controls-container {
+    .map-controls {
+      background-color: mat-color($dark-background, card) !important;
+    }
+  }
+}
+
+.map-utils {
+  background-color: mat-color($dark-background, card);
+  color: mat-color($dark-foreground, text);
+}

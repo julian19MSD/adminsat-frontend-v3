@@ -1,0 +1,13 @@
+
+body.custom:not(.dark) {
+  .gridster {
+    .gridster-item {
+      .title,
+      .delete {
+        background: mat-color($primary) !important;
+        color: mat-color($primary, default-contrast) !important;
+      }
+
+    }
+  }
+}

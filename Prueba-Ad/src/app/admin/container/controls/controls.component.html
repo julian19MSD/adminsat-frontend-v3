@@ -1,0 +1,44 @@
+<div class="header-controls br-divider bl-lg-divider" [class.mobile]="mobile"
+     [class.mobile-portrait]="'portrait'===orientation">
+  <button [disabled]="false === (wsConnectionState$|async)" (click)="pauseConnection()"
+          [ngSwitch]="wsConnectionState$|async"
+          mat-icon-button matTooltip="{{'STATE_REALTIME'|translate}}" matTooltipShowDelay="300" type="button">
+    <mat-icon *ngSwitchCase="true" class="text-success animate-spin">autorenew</mat-icon>
+    <mat-icon *ngSwitchCase="false" class="text-danger">autorenew</mat-icon>
+    <mat-icon *ngSwitchCase="null" class="text-warning">pause_circle_outline</mat-icon>
+  </button>
+
+  <a mat-icon-button matTooltip="{{'USER_TASKS'|translate}}" matTooltipShowDelay="300" routerLink="/tasks"
+     routerLinkActive="active">
+    <mat-icon>inbox</mat-icon>
+  </a>
+
+  <a mat-icon-button matTooltip="{{'ALARMS'|translate}}" matTooltipShowDelay="300" routerLink="/alarms"
+     routerLinkActive="active" type="button">
+    <mat-icon [matBadgeHidden]="!alarmCounter" [matBadge]="'!'" matBadgeColor="warn"
+              matBadgePosition="above after">
+      <ng-container *ngIf="alarmCounter;else noAlarms">
+        notification_important
+      </ng-container>
+      <ng-template #noAlarms>
+        notifications_none
+      </ng-template>
+    </mat-icon>
+  </a>
+
+  <button (click)="changeSoundStatus()" [ngSwitch]="soundStatus" mat-icon-button
+          matTooltip="{{'TOGGLE_SOUND'|translate}}"
+          matTooltipShowDelay="300">
+    <mat-icon *ngSwitchCase="1">repeat</mat-icon>
+    <mat-icon *ngSwitchCase="2">volume_off</mat-icon>
+    <mat-icon *ngSwitchDefault>volume_up</mat-icon>
+  </button>
+
+  <button *ngIf="!mobile" (click)="setFullscreen()" mat-icon-button matTooltip="{{'FULLSCREEN'|translate}}"
+          matTooltipShowDelay="300">
+    <mat-icon *ngIf="fullScreen;else noFullScreen">fullscreen_exit</mat-icon>
+    <ng-template #noFullScreen>
+      <mat-icon>fullscreen</mat-icon>
+    </ng-template>
+  </button>
+</div>

@@ -1,0 +1,870 @@
+<div class="detail-container">
+
+  <mat-toolbar color="primary">
+    <h1 *ngIf="instance?.nombre;else phTittle">{{ instance?.nombre }}</h1>
+    <ng-template #phTittle>
+      <div class="ph-row">
+        <div class="ph-col-auto big ph-brightness">
+        </div>
+      </div>
+    </ng-template>
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+  <ng-template #loaded>
+    <mat-tab-group (selectedIndexChange)="selectedIndex=$event" [selectedIndex]="selectedIndex">
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>home</mat-icon>
+        </ng-template>
+
+        <div class="home-tab-container">
+
+          <div [class.ph-brightness]="noImage" [class.ph-picture]="noImage" class="asset-image ">
+            <img (load)="noImage=false" [hidden]="noImage"
+                 [src]="instance?.foto ||  staticUrl +  '/images/noimage.jpg'" alt="asset-photo" class="rounded">
+          </div>
+
+          <div class="safe">
+            <div *ngIf="instance?.tipo_activo === 0"
+                 class="mat-body-2 d-flex justify-content-center aling-items-center">
+              <ng-container *ngIf="instance?.vehiculo_seguro; else noSecure">
+
+                <mat-icon class="text-success mr-2">check_circle</mat-icon>
+                <span>{{'SAFE_VEHICLE' | translate}}</span>
+              </ng-container>
+
+              <ng-template #noSecure>
+                <mat-icon class="text-danger mr-2">error</mat-icon>
+                <span>{{'UNSAFE_VEHICLE' | translate}}</span>
+              </ng-template>
+            </div>
+          </div>
+
+          <mat-list class="info">
+            <mat-list-item>
+              <div class="mat-body-2 mr-2">{{'STATE' | translate}}:</div>
+              <div *ngIf="instance?.is_active; else state" class="mat-body-1 text-success">
+                {{'ENABLED' | translate}}
+              </div>
+              <ng-template #state>
+                <div class="mat-body-1 text-danger">{{'DISABLED' | translate}}</div>
+              </ng-template>
+            </mat-list-item>
+            <mat-divider class="mt-2"></mat-divider>
+
+            <mat-list-item *ngIf="permissionsService.hasPermission(permissions.clientes.ver)">
+              <div class="mat-body-2 mr-2">{{'CLIENT' | translate}}:</div>
+              <div class="mat-body-1">{{instance?.cliente_nombre}}</div>
+            </mat-list-item>
+            <mat-divider class="mt-2"></mat-divider>
+
+            <mat-list-item *ngIf="instance?.placa">
+              <div class="mat-body-2 mr-2">{{'PLATE' | translate}}:</div>
+              <div class="mat-body-1">{{instance?.placa}}</div>
+            </mat-list-item>
+            <mat-divider class="mt-2"></mat-divider>
+
+            <mat-list-item *ngIf="instance?.icono">
+              <div class="mat-body-2 mr-2">{{'ICON' | translate}}:</div>
+              <div class="mat-body-1">
+                <img [src]="instance?.icono" alt="" class="icon">
+              </div>
+            </mat-list-item>
+            <mat-divider class="mt-2"></mat-divider>
+
+            <mat-list-item *ngIf="instance?.activo_asociado">
+              <div class="w-100">
+                <div class="mat-body-2">{{'ASSOCIATED_ASSET' | translate}}</div>
+                <div class="mt-2">
+                  <button (click)="openAssetDetails(instance?.activo_asociado)" mat-stroked-button
+                          type="button">{{instance?.activo_asociado_nombre}}</button>
+                </div>
+              </div>
+            </mat-list-item>
+
+            <mat-list-item *ngIf="instance?.equipos?.length > 0">
+              <div class="w-100">
+                <div class="mat-body-2">{{'DEVICES' | translate}}</div>
+                <div *ngFor="let device of instance?.equipos" class="mt-2">
+                  <adms-device-preview (details)="dialogRef.close()" [data]="device"></adms-device-preview>
+                </div>
+              </div>
+            </mat-list-item>
+          </mat-list>
+        </div>
+      </mat-tab>
+
+      <mat-tab *ngIf="instance?.tipo_activo === 0" label="{{'DETAILS' | translate}}">
+        <section id="contact">
+          <h2 class="info-subtitle  mt-3">{{'CONTACT' | translate}}</h2>
+          <div class="instance-detail-container">
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'NAME' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.contacto_json?.nombre || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'LAST_NAME' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.contacto_json?.apellidos || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'EMAIL' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.contacto_json?.correo || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'POSITION_HELD' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.contacto_json?.cargo || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'PHONE' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.contacto_json?.telefono || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'MOBILE' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.contacto_json?.celular || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'CITY' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.contacto_json?.ciudad || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'PROVINCE' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.contacto_json?.departamento || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+          </div>
+
+        </section>
+        <section id="technical-data">
+          <h2 class="info-subtitle  mt-3">{{'TECHNICAL_DATA' | translate}}</h2>
+          <div class="instance-detail-container">
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'ASSET_TYPE' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.tipo_activo_nombre || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'SERVICE_TYPE' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.servicio_nombre || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'SERVICE_MODE' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.modalidad_servicio || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'PASSENGER_CAPACITY' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.capacidad_pasajeros || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'ASSIGNED_AREA' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.radio_accion || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'VEHICLE_TYPE' | translate}}</div>
+              <div
+                class="mat-body-1 ">{{instance?.tipo_vehiculo_nombre || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'VIN_NUMBER' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.vin || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TYPE_BODYWORK' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.tipo_carroceria || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'FUEL' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.tipo_combustible || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'BRAND' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.marca || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'LINE' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.linea || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'COLOR' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.color || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'DOOR_NUM' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.puertas || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'ASSET_HP' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.potencia || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TRANSIT_AUTHORITY' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.transito || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'ENGINE_NUMBER' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.motor || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'CHASSIS_NUMBER' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.chasis || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'SERIAL_NUMBER' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.serie || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'MODEL' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.modelo || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'WEIGHT' | translate}} (Kg)</div>
+              <div
+                class="mat-body-1">{{instance?.documentos_json?.peso || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'ODOMETER' | translate}}</div>
+              <div class="mat-body-1">{{instance?.odometro}}</div>
+              <!--                  {{profile?.metrics_alias.distance}}-->
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'USE_TIME' | translate}}</div>
+              <div class="mat-body-1">{{instance?.tiempo_uso}}</div>
+              <!--                  {{profile?.metrics_alias.timedelta}}-->
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TECHNICAL_SPECIFICATIONS' | translate}}</div>
+              <div class="mat-body-1 text-center">
+                <a *ngIf="instance?.especificaciones_tecnicas; else notRegister"
+                   [attr.href]="instance?.especificaciones_tecnicas" color="primary"
+                   mat-raised-button
+                   target="_blank">{{'VIEW_FILE_SAVED' | translate}}</a>
+                <ng-template #notRegister>
+                  <div class="mat-body-1 text-left">{{'NOT_RECORDED'|translate}}</div>
+                </ng-template>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+          </div>
+        </section>
+
+        <section id="owner-data">
+          <h2 class="info-subtitle mt-3">{{'OWNER_DATA' | translate}}</h2>
+          <div class="instance-detail-container">
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'NAME' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.propietario_json?.nombre || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'LAST_NAME' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.propietario_json?.apellidos || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'IDENTIFICATION' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.propietario_json?.identificacion || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'MOBILE' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.propietario_json.celular || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'PHONE' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.propietario_json?.telefono || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'ADDRESS' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.propietario_json?.direccion || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'EMAIL' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.propietario_json?.correo || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'CITY' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.propietario_json?.ciudad || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'OWNERSHIP_CARD' | translate}}</div>
+              <div class="mat-body-1 text-center">
+                <a *ngIf="instance?.propietario_tarjeta; else notRegister"
+                   [attr.href]="instance?.propietario_tarjeta"
+                   color="primary"
+                   mat-raised-button
+                   target="_blank">{{'VIEW_FILE_SAVED' | translate}}</a>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+          </div>
+        </section>
+
+        <section id="accesories">
+          <h2 class="info-subtitle  mt-3">{{'ACCESSORIES' | translate}}</h2>
+          <div class="instance-detail-container">
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.varios_json?.ecumonitor; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <ng-template #erroIcon>
+                  <mat-icon class="text-danger mr-2">error</mat-icon>
+                </ng-template>
+                <div class="flex">{{'ECU' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.varios_json?.sensor_combustible; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <ng-template #erroIcon>
+                  <mat-icon class="text-danger mr-2">error</mat-icon>
+                </ng-template>
+                <div class="flex">{{'FUEL_SENSOR' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.varios_json?.sensor_llantas; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <ng-template #erroIcon>
+                  <mat-icon class="text-danger mr-2">error</mat-icon>
+                </ng-template>
+                <div class="flex">{{'TIRE_SENSOR' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.varios_json?.boton_panico; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <ng-template #erroIcon>
+                  <mat-icon class="text-danger mr-2">error</mat-icon>
+                </ng-template>
+                <div class="flex">{{'PANIC_BUTTON' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.varios_json?.apagado_remoto; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <ng-template #erroIcon>
+                  <mat-icon class="text-danger mr-2">error</mat-icon>
+                </ng-template>
+                <div class="flex">{{'REMOTE_SHUTDOWN' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.varios_json?.ignicion; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <ng-template #erroIcon>
+                  <mat-icon class="text-danger mr-2">error</mat-icon>
+                </ng-template>
+                <div class="flex">{{'IGNITION' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.varios_json?.own; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <ng-template #erroIcon>
+                  <mat-icon class="text-danger mr-2">error</mat-icon>
+                </ng-template>
+                <div class="flex">{{'OWN_ASSET' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+          </div>
+        </section>
+
+        <section id="security">
+          <h2 class="info-subtitle  mt-3">{{'SECURITY_SYSTEMS' | translate}}</h2>
+
+          <div class="instance-detail-container mb-3">
+            <h3 class="mat-h3 font-weight-bold mb-0 grid-col">{{'ACTIVE_SAFETY' | translate}}</h3>
+            <h4 class="mat-caption grid-col">{{'PREVENTING_ACCIDENTS' | translate }}</h4>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_activa?.mobileye; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'MOBILEYE' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_activa?.llantas; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'TIRES' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_activa?.llantas; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'TIRES' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_activa?.frenos_abs; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'ABS' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_activa?.frenos_bas; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'BAS' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_activa?.tcs; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'TCS' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_activa?.control_estabilidad; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'STABILITY_CONTROL' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_activa?.direccion_asistida; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'POWER_STEERING' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_activa?.suspencion_activa; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'ACTIVE_SUSPENSION' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_activa?.iluminacion; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'LIGHTING' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_activa?.climatizacion; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'AIR_CONDITIONER' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_activa?.cambio_carril; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'LDW' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon
+                  *ngIf="instance?.seguridad_json?.seguridad_activa?.circulacion_sentido_contrario; else erroIcon"
+                  class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'ONCOMMING_TRAFFIC_DETECTION' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_activa?.angulo_muerto; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'BLIND_SPOT_DETECTION' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+          </div>
+
+          <div class="instance-detail-container mb-3">
+            <h3 class="mat-h3 font-weight-bold mb-0 grid-col">{{'PASSIVE_SAFETY' | translate}}</h3>
+            <h4 class="mat-caption grid-col">{{'REDUCING_DAMAGE' | translate }}</h4>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_pasiva?.airbag; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'AIRBAG' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_pasiva?.cinturon_seguridad; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'SEAT_BELT' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_pasiva?.apoyacabezas; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'HEADRESTS' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_pasiva?.diseno_carroceria; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'BODYWORK_DESIGN' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_pasiva?.chasis; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'CHASSIS' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_pasiva?.blindaje; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'ARMOR' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="d-flex  align-items-center flex-nowrap">
+                <mat-icon *ngIf="instance?.seguridad_json?.seguridad_pasiva?.polarizado; else erroIcon"
+                          class="text-success mr-2">check_circle
+                </mat-icon>
+                <div class="flex">{{'POLARIZED_GLASS' | translate}}</div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+          </div>
+        </section>
+      </mat-tab>
+
+      <mat-tab *ngIf="documentOptions?.length > 0" label="{{'DOCUMENTS' | translate}}">
+        <div class="p-2 p-md-4">
+          <div class="mb-3 m-auto mw-600-px">
+            <adms-select [ctrl]="documentFormControl" [options]="documentOptions"
+                         placeholder="{{'SELECT_DOCUMENT_TYPE' | translate}}">
+            </adms-select>
+          </div>
+
+          <mat-accordion>
+            <ng-container *ngFor="let document of documents; let i = index">
+              <mat-expansion-panel (closed)="document.open = false" (opened)="document.open = true"
+                                   [expanded]="i === 0">
+
+                <mat-expansion-panel-header class="h-auto">
+                  <div class="grid grid-md-2 w-100 px-2">
+
+                    <div [class.bb-divider]="document.open" class="w-100 py-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">
+                        {{ "EFFECTIVE_FROM" | translate }}:
+                      </h3>
+                      <div class="mat-body">
+                        {{ document.vigencia_desde }}
+                      </div>
+                    </div>
+
+                    <div [class.bb-divider]="document.open" class="w-100 py-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">
+                        {{ "EFFECT_UNTIL" | translate }}:
+                      </h3>
+                      <div class="mat-body">
+                        {{ document.vigencia_hasta }}
+                      </div>
+                    </div>
+                  </div>
+                </mat-expansion-panel-header>
+
+                <div class="grid grid-md-2 mt-4">
+                  <div class="w-100 bb-divider pb-2">
+                    <h3 class="mat-h3 font-weight-bold mb-0">
+                      {{ "EXPEDITION_DATE" | translate }}:
+                    </h3>
+                    <div class="mat-body">
+                      {{ document.fecha_expedicion }}
+                    </div>
+                  </div>
+
+                  <div class="w-100 bb-divider pb-2">
+                    <h3 class="mat-h3 font-weight-bold mb-0">
+                      {{ "DOCUMENT_NUMBER" | translate }}:
+                    </h3>
+                    <div class="mat-body">
+                      {{ document.numero_documento }}
+                    </div>
+                  </div>
+
+                  <div class="w-100 bb-divider pb-2">
+
+                    <h3 class="mat-h3 font-weight-bold mb-0">
+                      {{ "COMPANY" | translate }}:
+                    </h3>
+                    <div class="mat-body">
+                      {{ document.compania || ("NOT_RECORDED" | translate) }}
+                    </div>
+                  </div>
+
+                  <div class="w-100 bb-divider pb-2">
+                    <h3 class="mat-h3 font-weight-bold mb-0">
+                      {{ "NOTIFICATION_DAYS" | translate }}:
+                    </h3>
+                    <div class="mat-body">
+                      {{ document.dias_notificacion }}
+                    </div>
+                  </div>
+
+                  <div class="w-100 bb-divider pb-2">
+                    <h3 class="mat-h3 font-weight-bold mb-0">
+                      {{ "NOTIFICATION_EMAIL" | translate }}:
+                    </h3>
+                    <div class="mat-body">
+                      <mat-chip-list *ngIf=" document?.correos_notificaciones_m2m?.length > 0; else notRegister ">
+                        <mat-chip *ngFor=" let email of document.correos_notificaciones_m2m " color="primary"
+                                  selected="true">
+                          {{ email }}
+                        </mat-chip>
+                      </mat-chip-list>
+                      <ng-template #notRegister>
+                        {{ "NOT_RECORDED" | translate }}
+                      </ng-template>
+                    </div>
+                  </div>
+
+                  <div class="w-100 bb-divider pb-2">
+                    <h3 class="mat-h3 font-weight-bold mb-0">
+                      {{ "VOUCHER" | translate }}
+                    </h3>
+                    <div class="text-center">
+                      <a *ngIf="document.comprobante; else notRegister" [href]="document.comprobante"
+                         mat-icon-button matTooltip="{{ 'VIEW_FILE_SAVED' | translate }}" matTooltipShowDelay="300"
+                         target="_blank">
+                        <mat-icon>description</mat-icon>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+            </ng-container>
+          </mat-accordion>
+
+
+        </div>
+      </mat-tab>
+
+      <mat-tab *ngIf="instance?.observaciones" label="{{'OBSERVATIONS' | translate}}">
+        <div [innerHTML]="instance?.observaciones | keepHtml" class="p2 p-md-4"></div>
+      </mat-tab>
+
+      <mat-tab *ngIf="instance?.historico_cambios?.length > 0 || instance?.creacion?.fecha_hora"
+               label="{{'HISTORICAL' | translate}}">
+        <adms-historical-changes [changes]="instance?.historico_cambios" [creation]="instance?.creacion">
+        </adms-historical-changes>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-template>
+</div>

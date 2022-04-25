@@ -1,0 +1,15 @@
+a.mat-button:hover,
+a.mat-stroked-button:hover,
+a.mat-raised-button:hover {
+  color: initial !important;
+  text-decoration: none !important;
+}
+
+
+button:focus {
+  outline: none !important;
+}
+
+button, [type="button"], [type="reset"], [type="submit"] {
+  -webkit-appearance: inherit !important;
+}

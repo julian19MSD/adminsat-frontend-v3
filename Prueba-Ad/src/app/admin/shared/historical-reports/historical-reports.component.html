@@ -1,0 +1,49 @@
+<div class="map-utils">
+  <ng-container *ngIf="controlsLoader || fetching;else controls">
+    <div class="ph-item m-0 py-0 align-items-center">
+      <div class="ph-icon ph-brightness m-0 mr-2"></div>
+      <div class="ph-icon ph-brightness  m-0 mr-2"></div>
+      <div class="ph-icon ph-brightness m-0"></div>
+    </div>
+  </ng-container>
+  <ng-template #controls>
+    <button (click)="polyLineActive = !polyLineActive" mat-icon-button
+            matTooltip="{{'TOOGLE_POLYLINE'|translate}}"
+            matTooltipShowDelay="300" type="button">
+      <mat-icon [class.text-info]="polyLineActive">linear_scale</mat-icon>
+    </button>
+
+    <button (click)="onControlZoneClick()" mat-icon-button
+            matTooltip="{{'TOOGLE_CONTROLZONES'|translate}}"
+            matTooltipShowDelay="300" type="button">
+      <em [class.text-info]="controlZoneActive" class="adminsat-icon icon-polygon-1"></em>
+    </button>
+
+    <button (click)="markersActive = !markersActive" mat-icon-button
+            matTooltip="{{'TOOGLE_MARKERS'|translate}}"
+            matTooltipShowDelay="300" type="button">
+      <mat-icon [class.text-info]="markersActive">place</mat-icon>
+    </button>
+
+    <button class="d-lg-none" (click)="toogleReportsSideNav()" mat-icon-button type="button">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </ng-template>
+
+</div>
+
+<mat-divider class="d-md-none z-2"></mat-divider>
+
+<adms-map-reports mode="historical"
+                  [isFetchingMarkers]="fetching"
+                  [isFetchingList]="fetching"
+                  [polyLineActive]="polyLineActive"
+                  [markersActive]="markersActive"
+                  [controlZoneActive]="controlZoneActive"
+                  [controlZones]="controlZones"
+                  [reports]="listItems"
+                  [toggleReports]="toggleReports">
+</adms-map-reports>
+
+
+

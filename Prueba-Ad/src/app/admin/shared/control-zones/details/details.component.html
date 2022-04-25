@@ -1,0 +1,115 @@
+<div class="detail-container">
+
+  <mat-toolbar color="primary">
+    <h1 *ngIf="instance?.nombre;else phTittle">{{ instance?.nombre }}</h1>
+    <ng-template #phTittle>
+      <div class="ph-row">
+        <div class="ph-col-auto big ph-brightness">
+        </div>
+      </div>
+    </ng-template>
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+
+  <ng-template #loaded>
+
+    <mat-tab-group (selectedIndexChange)="onTabChange($event)">
+
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>home</mat-icon>
+        </ng-template>
+
+        <section id="information">
+          <div class="instance-detail-container">
+            <div class="instance-detail-item">
+              <div class="mat-body-2 mr-2">{{'STATE' | translate}}:</div>
+              <div *ngIf="instance?.is_active; else state"
+                   class="mat-body-1 text-success">{{'ENABLED' | translate}}</div>
+              <ng-template #state>
+                <div class="mat-body-1 text-danger">{{'DISABLED' | translate}}</div>
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div *ngIf="permissionsService.hasPermission(permissions.clientes.ver)" class="instance-detail-item">
+              <div class="mat-body-2 mr-2">{{'CLIENT' | translate}}:</div>
+              <div class="mat-body-1">
+                {{instance?.cliente_nombre || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2 mr-2">{{'EMAILS_FOR_NOTIFICATIONS' | translate}}:</div>
+              <mat-chip-list *ngIf="instance?.correos_notificaciones_m2m.length > 0; else controlZoneMails">
+                <mat-chip
+                  *ngFor="let email of instance?.correos_notificaciones_m2m">{{ email }}</mat-chip>
+              </mat-chip-list>
+
+              <ng-template #controlZoneMails>
+                <div class="mat-body-1">
+                  {{'NOT_RECORDED'|translate}}
+                </div>
+              </ng-template>
+
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'MODE' | translate}}</div>
+              <div
+                class="mat-body-1">{{instance?.modo_nombre || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'MAX_TIME' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.tiempo_maximo || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'MAX_VELOCITY' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.velocidad_maxima || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+          </div>
+        </section>
+      </mat-tab>
+
+      <mat-tab label="{{'CONTROLZONE' | translate}}">
+        <div class="dialog-map-container" id="cz-agm-map"></div>
+      </mat-tab>
+
+
+      <mat-tab *ngIf="instance?.activos?.length > 0" label="{{'ASSETS' | translate}}">
+        <div class="p-2 d-flex flex-row flex-wrap align-content-center align-items-center">
+          <h3 class="mat-h3 mb-0 font-weight-bold mr-2">{{'TOTAL_ASSETS' | translate}}:</h3>
+          <div class="mat-body-1">{{ instance.activos.length }}</div>
+        </div>
+        <div *ngFor="let asset of instance.activos" class="p-2 pb-0 pl-md-4 pr-md-4">
+          <adms-asset-preview [data]="asset"></adms-asset-preview>
+        </div>
+      </mat-tab>
+
+      <mat-tab
+        *ngIf="instance?.historico_cambios?.length > 0 || instance?.creacion?.fecha_hora"
+        label="{{'HISTORICAL' | translate}}">
+        <adms-historical-changes [changes]="instance?.historico_cambios"
+                                 [creation]="instance?.creacion"></adms-historical-changes>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-template>
+</div>
+

@@ -1,0 +1,17 @@
+.ph-wrapper {
+    max-width: 1000px;
+    margin: auto;
+    padding: 0;
+    height: 108px;
+  
+    .ph-item {
+      height: 100%;
+      width: 100%;
+  
+      .ph-picture{
+        height: 60px;
+        width: 60px;
+      }
+    }
+  }
+  

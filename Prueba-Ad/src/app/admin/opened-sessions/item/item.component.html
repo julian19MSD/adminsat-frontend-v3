@@ -1,0 +1,30 @@
+<mat-card  class="opened-session-wrapper mw-sm-400-px" matRipple>
+  <div class="description mb-2">
+    {{session?.details?.nombre}}
+  </div>
+
+  <div class="mat-small">
+    <span class="mr-2 font-weight-bold">{{'CREATED_AT'|translate}}:</span>{{session?.created_at}}
+  </div>
+
+  <div class="mat-small">
+    <span class="mr-2 font-weight-bold">{{'IP_ADDRESS'|translate}}:</span>{{session?.details?.ip}}
+  </div>
+
+  <div *ngIf="session?.details?.ciudad || session?.details?.pais || session?.details?.continente"
+       class="mat-small">
+    <span class="mr-2 font-weight-bold">{{'LOCATION'|translate}}:</span>
+    <span *ngIf="session?.details?.ciudad">{{session?.details?.ciudad}}</span>
+    <span *ngIf="session?.details?.pais"> / {{session?.details?.pais}}</span>
+    <span *ngIf="session?.details?.continente"> / {{session?.details?.continente}}</span>
+  </div>
+
+  <div class="close-button">
+    <button type="button" (click)="onDetailsClick(session?.id)" matTooltipShowDelay="300"
+            matTooltip="{{'CLOSE_SESSION'|translate}}"
+            class="primary-hover"
+            mat-icon-button>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</mat-card>

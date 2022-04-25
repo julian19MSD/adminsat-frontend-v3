@@ -1,0 +1,89 @@
+<div class="detail-container" [class.map-tab]="currentTab===1 && !loading">
+
+  <mat-toolbar color="primary">
+    <h1>{{ instance?.activo_nombre }}</h1>
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+  <ng-template #loaded>
+    <div class="d-block overflow-auto">
+      <mat-tab-group [selectedIndex]="data.tab" (selectedIndexChange)="onTabChange($event)">
+
+        <mat-tab label="{{'DETAILS' | translate}}">
+          <div class="container-fluid pb-2">
+            <div class="row">
+              <section *ngIf="data.canAttend" class="col-12  p-0" [class.col-xl-6]="instance?.protocolo">
+                <h2 class="info-subtitle dark my-3">{{'COMMENT' | translate}}</h2>
+
+                <form class="px-2" [formGroup]="form">
+                  <div class=" w-100 mb-3 d-flex flex-nowrap align-items-center justify-content-center">
+                    <button *ngIf="data.ids.length === 1" mat-raised-button (click)="onSubmit('update')" type="button"
+                            class="mx-1">
+                      {{'UPDATE'|translate}}
+                    </button>
+                    <button mat-raised-button (click)="onSubmit('attend')" color="primary"
+                            type="button" class="mx-1">
+                      {{'ATTEND'|translate}}
+                    </button>
+                  </div>
+
+                  <mat-error class="small text-center mb-2">
+                    {{(formStatus$|async)?.descripcion|translate}}
+                  </mat-error>
+                  <quill-editor required="true" placeholder="{{'INSERT_TEXT'|translate}}" [styles]="{height: '200px'}"
+                                formControlName="descripcion">
+                  </quill-editor>
+                </form>
+              </section>
+
+              <section *ngIf="instance?.protocolo" class="col-12  p-0" [class.col-xl-6]="data.canAttend">
+                <h2 class="info-subtitle dark my-3">{{'PROTOCOLS' | translate}}</h2>
+                <div class="p-2">
+                  <quill-view-html [content]="instance?.protocolo"></quill-view-html>
+                </div>
+              </section>
+
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab *ngIf="instance?.reporte" label="{{'LOCATION' | translate}}">
+          <div *ngIf="loadMap" class="dialog-map-container">
+            <adms-map-reports mode="single" [markers]="instance?.marcador" [isFetchingList]="false"
+                              [isFetchingMarkers]="false" [instance]="instance?.reporte"></adms-map-reports>
+          </div>
+        </mat-tab>
+
+        <mat-tab *ngIf="instance?.actualizaciones?.length > 0" label="{{'HISTORICAL' | translate}}">
+          <div class="px-1 px-md-3 py-3 mw-100 w-800-px">
+            <mat-accordion>
+              <mat-expansion-panel *ngFor="let item of instance?.actualizaciones" class="pt-2 pb-2 pt-sm-0 pb-sm-0">
+                <mat-expansion-panel-header class="flex-wrap" style="height: 48px">
+                  <mat-panel-title>
+                    {{item.usuario}}
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    {{item.creado  }}
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+
+                <ng-template matExpansionPanelContent>
+                  <mat-divider class="mb-2"></mat-divider>
+                  <quill-view-html [content]="item.descripcion"></quill-view-html>
+                </ng-template>
+
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </mat-tab>
+
+      </mat-tab-group>
+    </div>
+
+
+  </ng-template>
+</div>

@@ -1,0 +1,16 @@
+.mat-form-field-appearance-legacy.invalid {
+  .mat-form-field-underline {
+    background-color: mat-color($warn) !important;
+  }
+}
+
+.mat-form-field.invalid {
+  .mat-form-field-ripple {
+    background-color: mat-color($warn) !important;
+  }
+
+  .mat-form-field-label {
+    color: mat-color($warn) !important;
+  }
+}
+

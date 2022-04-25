@@ -1,0 +1,31 @@
+<div class="notification-icon">
+  <div class="icon notification-warning"></div>
+</div>
+<h2 class="notification-title">{{'ARE_YOU_SURE'|translate}}</h2>
+<div mat-dialog-content class="notification-content mb-2">
+  <div class="mb-2 text-center">
+    <ng-container *ngIf="data?.actionMessage;else standarMessage">
+      <p>{{data.actionMessage| translate}}</p>
+    </ng-container>
+    <ng-template #standarMessage>
+      <p>{{'DO_YOU_WANT_DELETE'|translate}}</p>
+    </ng-template>
+  </div>
+  <ol class="text-left" *ngIf="data?.items">
+    <ng-container *ngFor="let item of data.items">
+      <li class="font-weight-bold">{{item}}</li>
+    </ng-container>
+  </ol>
+
+</div>
+<div mat-dialog-actions class="notification-footer">
+  <button mat-button mat-dialog-close>
+    {{'CANCEL'|translate}}
+  </button>
+  <button *ngIf="data?.secondButtonMessage" mat-raised-button [mat-dialog-close]="'second'">
+    {{data?.secondButtonMessage |translate}}
+  </button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="true">
+    {{(data?.mainButtonMessage || 'DELETE')|translate}}
+  </button>
+</div>

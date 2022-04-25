@@ -1,0 +1,16 @@
+<div class="twetts-dialog-container">
+  <div class="d-flex align-items-center">
+    <div class="col w-100 mat-title mb-0">
+      Twitter <a class="ml-2 mat-caption" target="_blank" href="https://twitter.com/numeral767">Invias #767</a>
+    </div>
+    <button mat-icon-button type="button" mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="twetts-container">
+    <ngx-twitter-timeline [data]="{sourceType: 'url', url: 'https://twitter.com/numeral767'}"
+                          [opts]="{tweetLimit: 20,chrome:['noheader']}">
+    </ngx-twitter-timeline>
+  </div>
+</div>

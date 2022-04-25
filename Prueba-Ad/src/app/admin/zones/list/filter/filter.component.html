@@ -1,0 +1,54 @@
+<div class="filter-bottom-sheet">
+    <div class="filter-bottom-sheet-title">
+      <h5>{{'FILTER_ZONES'| translate}}</h5>
+      <mat-divider></mat-divider>
+    </div>
+  
+    <form [formGroup]="formGroup" class="grid grid-md-3 align-items-center pt-3" id="filterForm">
+  
+      <adms-select *ngIf="data?.clients?.length >1" [ctrl]="formGroup.get('cliente')" [multiple]="true"
+                   [options]="data.clients" placeholder="{{'CLIENT'|translate}}">
+      </adms-select>
+  
+      <mat-form-field>
+        <mat-chip-list #nombre formControlName="name__in">
+          <mat-chip (removed)="chipRemove('name__in',name)"
+                    *ngFor="let name of formGroup.get('name__in').value"
+                    removable="true" selectable="true">
+            {{name}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <input (matChipInputTokenEnd)="chipAdd('name__in',$event,50)"
+                 (paste)="chipPaste('name__in',$event,50)"
+                 [matChipInputAddOnBlur]="true"
+                 [matChipInputFor]="nombre"
+                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 placeholder="{{'ZONE_NAME'|translate}}">
+        </mat-chip-list>
+        <mat-hint>{{'MAX_50'| translate}}</mat-hint>
+      </mat-form-field>
+
+
+    
+  
+    </form>
+  </div>
+  
+  <div class="filter-bottom-sheet-controls">
+    <mat-divider class="mt-2 mb-2"></mat-divider>
+    <div class="container-fluid">
+      <div class="row justify-content-end">
+        <button (click)="close($event,false, false)" class="m-1" mat-button type="button">
+          {{'CANCEL'| translate}}
+        </button>
+        <button class="m-1" form="filterForm" mat-raised-button type="reset">{{'CLEAR'| translate}}</button>
+        <button (click)="close($event,true, true)" class="m-1" color="primary" mat-raised-button type="button">
+          {{'FILTER'| translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  

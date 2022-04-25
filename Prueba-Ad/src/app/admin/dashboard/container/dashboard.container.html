@@ -1,0 +1,45 @@
+<div class="px-1 p-lg-0 h-100 fadeInUp">
+
+  <div class="p-1 py-lg-2 h-100 overflow-auto" *ngIf="dashboard?.length === 0;else dashContainer">
+    <mat-card *ngIf="!fetching;else phContent" class="mw-600-px bl-primary-3">
+      <h1 class="mat-title">{{'NO_RESULT'|translate}}</h1>
+    </mat-card>
+
+    <ng-template #phContent>
+      <div class="ph-wrapper">
+        <div class="ph-grid-item bg-card" *ngFor="let item of phItems">
+          <div class="icon bg-primary">
+            <div class="ph-icon"></div>
+          </div>
+          <div class="title bg-primary ph-row">
+            <div class="ph-col-8 ph-brightness m-0"></div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+
+  <ng-template #dashContainer>
+    <gridster *ngIf="showGrid" class="gridster bg-paper" [options]="gridOptions">
+      <gridster-item *ngFor="let item of dashboard" [ngSwitch]="item['type']" [class.editing]="editing" [item]="item"
+                     class="gridster-item  mat-card">
+
+        <div class="title">{{item['type'] | uppercase | translate}}</div>
+
+        <div *ngIf="editing" class="delete">
+          <button mat-icon-button (click)="gridRemoveItem(item)">
+            <mat-icon matTooltipShowDelay="300" matTooltip="{{'DELETE'|translate}}">delete</mat-icon>
+          </button>
+        </div>
+
+        <div *ngSwitchCase="'location'" class="last-report-wrapper content h-100 w-100  position-relative">
+          <adms-tracking-dashboard [cliente]="client"></adms-tracking-dashboard>
+        </div>
+
+      </gridster-item>
+    </gridster>
+  </ng-template>
+
+</div>
+
+

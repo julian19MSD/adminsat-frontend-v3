@@ -1,0 +1,7 @@
+.alarm-wrapper {
+  .selected {
+    .mat-card {
+      background: mat-color($dark-background, hover);
+    }
+  }
+}

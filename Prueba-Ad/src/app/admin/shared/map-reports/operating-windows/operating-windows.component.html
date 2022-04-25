@@ -1,0 +1,194 @@
+<div class="w-800-px mw-100">
+  <h1 class="bb-divider mb-1 pb-2" mat-dialog-title>
+    {{title|translate}}
+  </h1>
+
+  <div class="py-2" mat-dialog-content>
+
+    <div *ngIf="loader" [innerHTML]="loaderContent" class="loader-container" id="internalLoader"></div>
+
+    <!-- <adms-ph *ngIf="loader; else loaded" mode="form"></adms-ph> -->
+
+ 
+
+      <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" id="operatingWindowsForm">
+        <div class="grid grid-sm-2 p-0">
+
+
+          <mat-form-field class="w-100 grid-col">
+            <input #controlName formControlName="name" matInput maxlength="30" placeholder="{{ 'NAME' | translate }}"
+              required type="text" />
+            <mat-hint align="end">
+              {{ controlName.value?.length || 0 }}/30
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.name | translate }}
+            </mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field class="w-100">
+            <!-- [min]="startOfToday" [max]="formGroup.get('end_time_local').value" -->
+            <mat-label>{{ 'START_TIME' | translate }}</mat-label>
+            <input #dStart [owlDateTime]="dtStart" 
+              [owlDateTimeTrigger]="dtStart" formControlName="start_time_local" matInput required>
+            <button (click)="formGroup.get('start_time_local').reset(null);" *ngIf="dStart.value" mat-icon-button
+              matSuffix type="button">
+              <mat-icon>clear</mat-icon>
+            </button>
+            <mat-error>
+              {{formStatus?.start_time_local|translate}}
+            </mat-error>
+            <owl-date-time [pickerType]="'timer'" #dtStart></owl-date-time>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <mat-label>{{ 'END_TIME' | translate }}</mat-label>
+            <!-- [min]="formGroup.get('start_time_local').value" [max]="endOfToday" -->
+            <input #dEnd [owlDateTime]="dtEnd" 
+              [owlDateTimeTrigger]="dtEnd" formControlName="end_time_local" matInput required>
+            <button (click)="formGroup.get('end_time_local').reset(null);" *ngIf="dEnd.value" mat-icon-button matSuffix
+              type="button">
+              <mat-icon>clear</mat-icon>
+            </button>
+            <mat-error>
+              {{formStatus?.end_time_local|translate}}
+            </mat-error>
+            <owl-date-time [pickerType]="'timer'" #dtEnd></owl-date-time>
+          </mat-form-field>
+        </div>
+
+
+
+        <div class="d-flex justify-content-md-between flex-column flex-md-row">
+
+          <mat-button-toggle class="mt-3" color="primary" (change)="checkedItem($event, 'day_0_local')" id="day_0_local"
+            mat-raised-button>{{'SUNDAY' | translate}}</mat-button-toggle>
+
+          <mat-button-toggle class="mt-3" color="primary" (change)="checkedItem($event, 'day_1_local')" id="day_1_local"
+            mat-raised-button>{{'MONDAY' | translate}}</mat-button-toggle>
+
+          <mat-button-toggle class="mt-3" color="primary" (change)="checkedItem($event, 'day_2_local')" id="day_2_local"
+            mat-raised-button>{{'TUESDAY' | translate}}</mat-button-toggle>
+
+          <mat-button-toggle class="mt-3" color="primary" (change)="checkedItem($event, 'day_3_local')" id="day_3_local"
+            mat-raised-button>{{'WEDNESDAY' | translate}}</mat-button-toggle>
+
+          <mat-button-toggle class="mt-3" color="primary" (change)="checkedItem($event, 'day_4_local')" id="day_4_local"
+            mat-raised-button>{{'THURSDAY' | translate}}</mat-button-toggle>
+
+          <mat-button-toggle class="mt-3" color="primary" (change)="checkedItem($event, 'day_5_local')" id="day_5_local"
+            mat-raised-button>{{'FRIDAY' | translate}}</mat-button-toggle>
+
+          <mat-button-toggle class="mt-3" color="primary" (change)="checkedItem($event, 'day_6_local')" id="day_6_local"
+            mat-raised-button>{{'SATURDAY' | translate}}</mat-button-toggle>
+
+
+        </div>
+        <mat-error class="text-center" *ngIf="SinSeleccionarDias">
+          {{"PLEASE_SELECT_OPERATION_DAYS"}}
+        </mat-error>
+
+
+
+        <div class="grid grid-sm-2 p-0 mt-3">
+          <mat-form-field class="w-100">
+            <input formControlName="total_daily_capacity" matInput min="0"
+              placeholder="{{ 'DAILY_CAPACITY' | translate }}" type="number" />
+            <mat-error>
+              {{ formStatus?.total_daily_capacity | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input formControlName="simultaneous_capacity" matInput min="0"
+              placeholder="{{ 'SIMULTANEOUS_CAPACITY' | translate }}" type="number" />
+            <mat-error>
+              {{ formStatus?.simultaneous_capacity | translate }}
+            </mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field class="w-100">
+            <input formControlName="min_expected_daily" matInput min="0"
+              placeholder="{{ 'MIN_EXPECTED_DAILY' | translate }}" type="number" />
+            <mat-error>
+              {{ formStatus?.min_expected_daily | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input formControlName="max_waiting_assets" matInput min="0"
+              placeholder="{{ 'MAX_WAITING_ASSETS' | translate }}" type="number" />
+            <mat-error>
+              {{ formStatus?.max_waiting_assets | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input formControlName="expected_attention_time" matInput min="0"
+              placeholder="{{ 'EXPECTED_ATTENTION_TIME' | translate }} ({{ 'MINUTES' | translate }})" type="number" />
+            <mat-error>
+              {{ formStatus?.expected_attention_time | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input formControlName="min_permanence_time" matInput min="0"
+              placeholder="{{ 'MIN_PERMANENCE_TIME' | translate }} ({{ 'MINUTES' | translate }})" type="number" />
+            <mat-error>
+              {{ formStatus?.min_permanence_time | translate }}
+            </mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field class="w-100">
+            <input formControlName="level_1_time_alert" matInput [min]=0
+              placeholder="{{ 'ALERT_LEVEL_1' | translate }} ({{'MINUTES'|translate}})" type="number" />
+            <mat-error>
+              {{ formStatus?.level_1_time_alert | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input formControlName="level_2_time_alert" matInput [min]="formGroup.get('level_1_time_alert').value +1"
+              placeholder="{{ 'ALERT_LEVEL_2' | translate }} ({{'MINUTES'|translate }})" type="number" />
+            <mat-error>
+              {{ formStatus?.level_2_time_alert | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input formControlName="level_3_time_alert" matInput [min]="formGroup.get('level_2_time_alert').value + 1"
+              placeholder="{{ 'ALERT_LEVEL_3' | translate }} ({{'MINUTES'|translate }})" type="number" />
+            <mat-error>
+              {{ formStatus?.level_3_time_alert | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input formControlName="level_4_time_alert" [min]="formGroup.get('level_3_time_alert').value +1" matInput
+              placeholder="{{ 'ALERT_LEVEL_4' | translate }}  ({{'MINUTES'|translate }})" type="number" />
+            <mat-error>
+              {{ formStatus?.level_4_time_alert | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+
+      </form>
+   
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="justify-content-end" mat-dialog-actions>
+    <button class="m-1" mat-button mat-dialog-close type="button">
+      {{'CANCEL'| translate}}
+    </button>
+    <button class="m-1" color="primary" form="operatingWindowsForm" mat-raised-button type="submit">
+      {{'SAVE'| translate}}
+    </button>
+  </div>
+
+</div>

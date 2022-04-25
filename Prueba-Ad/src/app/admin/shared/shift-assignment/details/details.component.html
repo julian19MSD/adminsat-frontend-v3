@@ -1,0 +1,432 @@
+<div class="detail-container" [class.w-100]="fullWidth">
+
+  <mat-toolbar color="primary">
+    <h1 *ngIf="instance?.orden_cargue;else phTittle">{{ instance?.orden_cargue }}</h1>
+    <ng-template #phTittle>
+      <div class="ph-row">
+        <div class="ph-col-auto big ph-brightness">
+        </div>
+      </div>
+    </ng-template>
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+  <ng-template #loaded>
+    <mat-tab-group (selectedIndexChange)="onTabChange($event)">
+      <mat-tab>
+
+        <ng-template mat-tab-label>
+          <mat-icon>home</mat-icon>
+        </ng-template>
+
+        <section id="basic_data">
+
+          <h2 class="info-subtitle  mt-3">{{'BASIC_DATA' | translate}}</h2>
+
+          <div class="instance-detail-container">
+            <div *ngIf="permissionsService.hasPermission(permissions.clientes.ver)" class="instance-detail-item">
+              <div class="mat-body-2">{{'CARRIER' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.cliente_nombre || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'FINAL_CLIENT' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.cliente_enturne_nombre || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'LOAD_ORDER' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.orden_cargue || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'LOAD_ID' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.id_carga || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'PLANILLA' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.planilla || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'CONTENT' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.producto || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'STATE' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.estado_nombre || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'START_MODE' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.inicializacion || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'END_MODE' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.finalizacion || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+          </div>
+        </section>
+
+        <section id="route_information">
+
+          <h2 class="info-subtitle  mt-3">{{'ROUTE_INFORMATION' | translate}}</h2>
+
+          <div class="instance-detail-container">
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'ORIGIN' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.origen || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'DESTINATION' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.destino || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'WAY' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.via || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'ETA' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.eta || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'ROAD_ACTORS' | translate}}</div>
+              <ng-container *ngIf="instance?.actores_viales?.length >0;else notRecorded">
+                <ng-container *ngFor="let actor of instance?.actores_viales">
+                  <adms-road-actor-preview [data]="actor"></adms-road-actor-preview>
+                </ng-container>
+              </ng-container>
+              <ng-template #notRecorded>
+                {{'NOT_RECORDED'|translate}}
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+          </div>
+        </section>
+
+        <section id="date_information">
+
+          <h2 class="info-subtitle  mt-3">{{'DATE_INFORMATION' | translate}}</h2>
+
+          <div class="instance-detail-container">
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'ASSIGNATION_DATE' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.fecha_hora_asignacion || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'LOAD_ORDER_DATETIME' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.fecha_orden_cargue || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'PLANNED_DATE_TO_START' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.fecha_hora_inicio || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'START_DATE' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.fecha_hora_inicio_real || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'END_DATE' | translate}}</div>
+              <div class="mat-body-1">
+                {{instance?.fecha_hora_fin || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+          </div>
+        </section>
+      </mat-tab>
+
+
+      <mat-tab *ngIf="hasLocations" label="{{'LOCATION.....S' | translate}}">
+
+        <div *ngIf="loadMap" class="dialog-map-container">
+          <adms-historical-reports [queryParams]="historicalFilters" [controlZonesUrl]="controlZoneFeaturesUrl">
+          </adms-historical-reports>
+        </div>
+      </mat-tab>
+
+      <mat-tab *ngIf="hasControlZones" label="{{'CONTROL_ZONES' | translate}}">
+        <div class="grid grid-sm-2 grid-md-3 grid-xl-6 pt-3 align-items-center" [formGroup]="formGroup">
+          <h3 class="mat-h3 mb-0 text-center  d-down-lg-none">
+            <strong>{{'NAME'|translate}}</strong>
+          </h3>
+          <h3 class="mat-h3 mb-0  text-center  d-down-lg-none">
+            <strong>{{'PLANNED_DATE'|translate}}</strong>
+          </h3>
+          <h3 class="mat-h3 mb-0  text-center  d-down-lg-none">
+            <strong>{{'ADJUSTED_DATE'|translate}}</strong>
+          </h3>
+          <h3 class="mat-h3 mb-0  text-center  d-down-lg-none">
+            <strong>{{'INGRESS_DATE'|translate}}</strong>
+          </h3>
+          <h3 class="mat-h3 mb-0  text-center  d-down-lg-none">
+            <strong>{{'EXIT_DATE'|translate}}</strong>
+          </h3>
+          <h3 class="mat-h3 mb-0  text-center  d-down-lg-none">
+            <strong>{{'TIME_FROM_ORIGIN'|translate}}</strong>
+          </h3>
+          <mat-divider class="grid-col-6  d-down-lg-none"></mat-divider>
+
+          <ng-container *ngFor="let controlZone of instance.zonascontrol; let idx = index">
+            <div>
+              <h3 class="mat-h3 mb-0 d-xl-none">
+                <strong>{{'NAME' | translate}}</strong>
+              </h3>
+              <div [matTooltipDisabled]="!controlZone.tipo_zona_nombre" matTooltipShowDelay="300"
+                   matTooltip="{{controlZone.tipo_zona_nombre}}" [class.text-success]="0 === controlZone.tipo"
+                   [class.text-danger]="2 === controlZone.tipo" class="text-xl-center">
+                <button type="button" mat-button (click)="openControlZoneDetails(controlZone.zona_control)"
+                        *ngIf="controlZone.zona_control && permissionsService.hasPermission(permissions.zonasControl.ver);else cannotControlZone">
+                  {{controlZone.nombre}}
+                </button>
+                <ng-template #cannotControlZone>
+                  {{controlZone.nombre}}
+                </ng-template>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="mat-h3 mb-0 d-xl-none">
+                <strong>{{'PLANNED_DATE' | translate}}
+                </strong>
+              </h3>
+              <div class="text-xl-center">{{controlZone.hora_planeada}}</div>
+            </div>
+
+            <div>
+              <h3 class="mat-h3 mb-0 d-xl-none">
+                <strong>{{'ADJUSTED_DATE' | translate}}</strong>
+              </h3>
+              <div class="text-xl-center">{{controlZone.hora_ajustada}}</div>
+            </div>
+
+            <div>
+
+              <h3 class="mat-h3 mb-0 d-xl-none">
+                <strong>{{'INGRESS_DATE' | translate}}</strong>
+              </h3>
+
+              <ng-container *ngIf="false === controlZoneWay || controlZoneIndex !== idx;else ingressExitEditing">
+                <div [matTooltipDisabled]="!controlZone.retraso" matTooltipShowDelay="300"
+                     matTooltip="{{controlZone.retraso}}" [class.text-success]="false === controlZone.desventaja"
+                     [class.text-danger]="controlZone.desventaja" class="text-xl-center">
+                  <ng-container
+                    *ngIf="permissionsService.hasPermission(permissions.rutas.enturnamientos.editar);else cannotIngressEdit">
+                    <button mat-button
+                            (click)="editIngressExitDate(idx, true)">
+                      {{controlZone.hora_entrada || '--'}}
+                    </button>
+                  </ng-container>
+                  <ng-template #cannotIngressEdit>{{controlZone.hora_entrada || '--'}}</ng-template>
+                </div>
+              </ng-container>
+            </div>
+
+            <div>
+              <h3 class="mat-h3 mb-0 d-xl-none">
+                <strong>{{'EXIT_DATE' | translate}}</strong>
+              </h3>
+
+              <ng-container *ngIf="controlZoneWay || controlZoneIndex !== idx;else ingressExitEditing">
+                <div class="text-xl-center">
+                  <ng-container
+                    *ngIf="permissionsService.hasPermission(permissions.rutas.enturnamientos.editar);else cannotIngressEdit">
+                    <button mat-button
+                            (click)="editIngressExitDate(idx, false)">
+                      {{controlZone.hora_salida || '--'}}
+                    </button>
+                  </ng-container>
+                  <ng-template #cannotIngressEdit>{{controlZone.hora_salida || '--'}}</ng-template>
+                </div>
+              </ng-container>
+            </div>
+
+            <div>
+              <h3 class="mat-h3 mb-0 d-xl-none">
+                <strong>{{'TIME_FROM_ORIGIN' | translate}}</strong>
+              </h3>
+              <div class="text-xl-center">{{controlZone.tiempo_origen}}</div>
+            </div>
+
+            <mat-divider class="grid-col grid-col-sm-2 grid-col-md-3 grid-col-xl-6"></mat-divider>
+          </ng-container>
+
+
+          <ng-template #ingressExitEditing>
+            <mat-form-field class="w-100">
+              <mat-label>{{ 'DATE' | translate }}</mat-label>
+              <input #inputDt [owlDateTime]="dtEl" [owlDateTimeTrigger]="dtEl" required formControlName="newDate"
+                     matInput>
+              <button (click)="formGroup.get('newDate').reset(null)" *ngIf="inputDt.value" mat-icon-button matSuffix
+                      type="button"
+                      matTooltip="{{'CLEAR'|translate}}">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button *ngIf="formGroup.get('newDate').valid" mat-icon-button matSuffix type="button"
+                      (click)="updateIngressExitDate()" matTooltip="{{'SAVE'|translate}}">
+                <mat-icon>save</mat-icon>
+              </button>
+              <button [owlDateTimeTrigger]="dtEl" mat-icon-button matSuffix type="button">
+                <mat-icon>calendar_today</mat-icon>
+              </button>
+              <button mat-icon-button matSuffix type="button" (click)="cancelEditingExitIndex()"
+                      matTooltip="{{'CANCEL'|translate}}">
+                <mat-icon>cancel</mat-icon>
+              </button>
+
+              <mat-error>
+                {{ formStatus?.newDate | translate }}
+              </mat-error>
+              <owl-date-time #dtEl></owl-date-time>
+            </mat-form-field>
+          </ng-template>
+        </div>
+      </mat-tab>
+
+      <mat-tab *ngIf="instance?.observaciones?.length > 0" label="{{'OBSERVATIONS' | translate}}">
+        <div class="p-2">
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let observation of instance.observaciones" class="pt-2 pb-2 pt-sm-0 pb-sm-0">
+              <mat-expansion-panel-header class="flex-wrap" style="height: 48px">
+                <mat-panel-title>
+                  {{observation.username}}
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{observation.fecha_hora  }}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <ng-template matExpansionPanelContent>
+                <mat-divider class="mb-2"></mat-divider>
+                <div class="gri grid-md-2">
+                  <div>
+                    <div class="mat-body-2">{{'USERNAME' | translate}}</div>
+                    <div class="mat-body-1">
+                      {{observation?.username || ('NOT_RECORDED'|translate)}}
+                    </div>
+                    <mat-divider class="mt-2"></mat-divider>
+                  </div>
+
+                  <div>
+                    <div class="mat-body-2">{{'DATE' | translate}}</div>
+                    <div class="mat-body-1">
+                      {{observation?.fecha_hora || ('NOT_RECORDED'|translate)}}
+                    </div>
+                    <mat-divider class="mt-2"></mat-divider>
+                  </div>
+
+                  <div>
+                    <div class="mat-body-2">{{'TYPE' | translate}}</div>
+                    <div class="mat-body-1">
+                      {{observation?.tipo_nombre || ('NOT_RECORDED'|translate)}}
+                    </div>
+                    <mat-divider class="mt-2"></mat-divider>
+                  </div>
+
+                  <div>
+                    <div class="mat-body-2">{{'SUBTYPE' | translate}}</div>
+                    <div class="mat-body-1">
+                      {{observation?.sub_tipo_nombre || ('NOT_RECORDED'|translate)}}
+                    </div>
+                    <mat-divider class="mt-2"></mat-divider>
+                  </div>
+
+                  <div>
+                    <div class="mat-body-2">{{'ADDED_TIME' | translate}}</div>
+                    <div class="mat-body-1">
+                      {{observation?.tiempo_agregado || ('NOT_RECORDED'|translate)}}
+                    </div>
+                    <mat-divider class="mt-2"></mat-divider>
+                  </div>
+
+                  <div>
+                    <div class="mat-body-2">{{'DETAIL' | translate}}</div>
+                    <div class="mat-body-1">
+                      {{observation?.observacion || ('NOT_RECORDED'|translate)}}
+                    </div>
+                    <mat-divider class="mt-2"></mat-divider>
+                  </div>
+                </div>
+              </ng-template>
+
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-tab>
+
+      <mat-tab *ngIf="instance?.historico_cambios?.length > 0 || instance?.creacion?.fecha_hora"
+               label="{{'HISTORICAL' | translate}}">
+        <adms-historical-changes [changes]="instance?.historico_cambios" [creation]="instance?.creacion">
+        </adms-historical-changes>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-template>
+</div>

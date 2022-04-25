@@ -1,0 +1,14 @@
+$text-sizes: ("xs": 50%, "sm": 70%, "md": 80%, "df":13px, "lg": 110%, "xl":120%, "xxl":60px);
+
+@each $key, $value in $text-sizes {
+  .text-#{$key} {
+    font-size: $value !important;
+  }
+}
+
+.text-ellipsis {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
+

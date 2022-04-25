@@ -1,0 +1,59 @@
+<div class="h-100 p-1 p-md-2  fadeInUp">
+  <div *ngIf="!totalListItemsCounter;else list" class="p-1 py-lg-2">
+    <mat-card *ngIf="!fetching;else phContent" class="mw-600-px bl-primary-3">
+      <h1 class="mat-title">{{'NO_RESULT'|translate}}</h1>
+    </mat-card>
+
+    <ng-template #phContent>
+      <div *ngFor="let asset of placeholderItems" class="pb-1">
+        <ng-container *ngTemplateOutlet="phItem"></ng-container>
+      </div>
+    </ng-template>
+  </div>
+
+  <ng-template #list>
+    <mat-card class="h-100 p-0">
+      <div #headerScroll class="header-wrapper bb-divider  overflow-x-auto  "
+        [class.mainAction]="listHeaderState.actionsCapabilities?.default">
+        <div *ngIf="listHeaderState.actionsCapabilities?.default" class="text-center"></div>
+        <div class="title-item">{{'USERNAME'|translate}}</div>
+        <div class="title-item">{{'EQUIPMENT_SERIAL'|translate}}</div>
+        <div class="title-item">{{'NAME'|translate}}</div>
+        <div class="title-item">{{'SENSE'|translate}}</div>
+        <div class="title-item">{{'DATETIME'|translate}}</div>
+        <div class="title-item">{{'MESSAGE'|translate}}</div>
+        <div class="title-item">{{'STATUS'|translate}}</div>
+        <div class="title-item">{{'LAST_LOCATION'|translate}}</div>
+
+
+      </div>
+
+      <cdk-virtual-scroll-viewport #cdkScroller (scroll)="updateScroll(headerScroll,$event)" class="w-100"
+        itemSize="48">
+        <div *cdkVirtualFor="let messaging of listItems$ | async" class="w-100">
+          <adms-messaging-item *ngIf="!fetching;else phItem" [messaging]="messaging" (refrehsList)="getListData()"
+            [actionsCapabilities]="listHeaderState.actionsCapabilities" [viewClienInfo]="clients?.length>1">
+          </adms-messaging-item>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </mat-card>
+  </ng-template>
+
+</div>
+
+
+<ng-template #phItem>
+  <mat-card class="ph-wrapper p-0 bb-divider">
+    <div class="ph-item align-items-center p-0 h-100">
+      <div>
+        <div class="ph-row m-0">
+          <div class="ph-col-3 big ph-brightness m-0"></div>
+          <div class="ph-col-1 empty"></div>
+          <div class="ph-col-3 big ph-brightness m-0"></div>
+          <div class="ph-col-1 empty"></div>
+          <div class="ph-col-4 big ph-brightness m-0"></div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</ng-template>

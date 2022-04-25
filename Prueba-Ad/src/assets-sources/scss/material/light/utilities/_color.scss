@@ -1,0 +1,15 @@
+body:not(.dark) {
+  .text-contrast {
+    color: mat-color($primary, default-contrast) !important;
+  }
+
+  .text-foreground {
+    color: mat-color($foreground, text) !important;
+  }
+
+
+  a {
+    color: mat-color($foreground, text);
+  }
+
+}

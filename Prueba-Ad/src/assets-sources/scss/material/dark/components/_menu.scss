@@ -1,0 +1,10 @@
+.mat-menu-content {
+  button.active {
+    color: mat-color($dark-primary);
+    background: mat-color($dark-background, hover);
+  }
+
+  a:hover {
+    color: mat-color($dark-foreground, text) !important;
+  }
+}

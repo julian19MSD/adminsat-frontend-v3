@@ -1,0 +1,28 @@
+<mat-card [class.list-item-selected]="novelty.isSelected" class="novelty-item-wrapper" matRipple>
+
+
+  <div *ngIf="actionsCapabilities?.delete" class="selector pr-2 pr-md-0">
+    <mat-checkbox (change)="checkedItem($event.checked)" [(ngModel)]="novelty.isSelected" color="primary">
+    </mat-checkbox>
+  </div>
+
+  <div class="description">
+    <h2 class="novelty-name">
+      {{ novelty?.nombre }}
+    </h2>
+
+    <div *ngIf="viewClienInfo" class="small">
+      <span class="font-weight-bold mr-1">{{ "CLIENT" | translate }}: </span>{{ novelty?.cliente_nombre }}
+    </div>
+    <div *ngIf="novelty?.novedad_padre_nombre" class="small">
+      <span class="font-weight-bold mr-1">{{ "NOVELTY" | translate }}: </span>{{ novelty?.novedad_padre_nombre }}
+    </div>
+
+  </div>
+  <div>
+    <a *ngIf="permissionsService.hasPermission(permissions.rutas.novedades.editar)"
+       [routerLink]="['form', novelty?.id]" mat-icon-button type="button">
+      <mat-icon>edit</mat-icon>
+    </a>
+  </div>
+</mat-card>

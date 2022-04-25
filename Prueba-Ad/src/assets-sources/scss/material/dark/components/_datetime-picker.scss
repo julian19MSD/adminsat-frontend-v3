@@ -1,0 +1,33 @@
+.owl-dt-calendar-table .owl-dt-calendar-cell-selected {
+  color: mat-color($dark-primary, default-contrast);
+  background-color: mat-color($dark-primary);
+}
+
+
+.owl-dt-calendar-table .owl-dt-calendar-cell-active:focus > .owl-dt-calendar-cell-content:not(.owl-dt-calendar-cell-selected),
+.owl-dt-calendar-table :not(.owl-dt-calendar-cell-disabled):hover > .owl-dt-calendar-cell-content:not(.owl-dt-calendar-cell-selected) {
+  background-color: mat-color($dark-background, hover);
+}
+
+.owl-dt-timer-content .owl-dt-timer-input,
+.owl-dt-calendar-table .owl-dt-calendar-cell-today:not(.owl-dt-calendar-cell-selected) {
+  border-color: mat-color($dark-foreground, disabled-button);
+}
+
+.owl-dt-calendar-table .owl-dt-calendar-header {
+  color: mat-color($dark-foreground, disabled-button);
+}
+
+.owl-dt-calendar-control,
+.owl-dt-calendar-table .owl-dt-calendar-cell {
+  color: mat-color($dark-foreground, text);
+}
+
+.owl-dt-container {
+  background: mat-color($dark-background, card);
+  color: mat-color($dark-foreground, text);
+}
+
+.owl-dt-container-buttons{
+  color: mat-color($dark-foreground, text) !important;
+}

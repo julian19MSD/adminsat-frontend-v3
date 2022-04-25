@@ -1,0 +1,83 @@
+<div *ngIf="loading;else cardContent" class="container-fluid h-100">
+  <div class="row justify-content-center align-content-center h-100">
+    <mat-spinner [diameter]="50" class="m-auto text-dark"></mat-spinner>
+  </div>
+</div>
+
+
+<ng-template #cardContent>
+  <div *ngIf="points.length >0" class="h-100" id="agm-map"></div>
+
+  <div class="sidebar container-fluid" [class.nomap]="points.length === 0" id="sidebar">
+    <div class="row pt-3 h-100">
+
+      <div class="col-12">
+        <h1 class="mat-h1 text-center">{{ 'ASSETS_RESUME' | translate }}</h1>
+      </div>
+
+      <div class="col-6 text-center text">
+        <h2 class="mat-h2 mb-0">{{ 'ENABLED_S' | translate }}</h2>
+        <div [class.text-success]="info.habilitados > 0"
+             class="value">
+          <span>{{ info.habilitados || 0 }}</span>
+        </div>
+      </div>
+
+      <div class="col-6 text-center">
+        <h2 class="mat-h2 mb-0">{{ 'DISABLED_S' | translate }}</h2>
+        <div [class.text-danger]="info.inhabilitados > 0"
+             class="value">
+          <span>{{ info.inhabilitados || 0 }}</span>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <h1 class="mat-h1 text-center">{{ 'UNREPORTED_ASSETS' | translate }}</h1>
+      </div>
+
+      <div class="col-6 text-center">
+        <h2 class="mat-h2 mb-0">{{ 'NEVER' | translate }}</h2>
+        <div [class.text-danger]="info.nunca > 0" class="value">
+          <span>{{ info.nunca || 0 }}</span>
+        </div>
+      </div>
+
+      <div class="col-6 text-center">
+        <h2 class="mat-h2 mb-0">{{ '1_DAY_NOREPORT' | translate }}</h2>
+        <div [class.text-danger]="info.un_dia > 0" class="value">
+        <span (click)="goToTracking('un_dia',info.un_dia)" [class.cursor-pointer]="info.un_dia > 0">
+          {{ info.un_dia || 0 }}
+        </span>
+        </div>
+      </div>
+
+      <div class="col-6 text-center">
+        <h2 class="mat-h2 mb-0">{{ '12_HOURS_NOREPORT' | translate }}</h2>
+        <div [class.text-warning]="info.doce_h > 0" class="value ">
+        <span (click)="goToTracking('doce_h',info.doce_h)" [class.cursor-pointer]="info.doce_h > 0">
+          {{ info.doce_h || 0 }}</span>
+        </div>
+      </div>
+
+      <div class="col-6 text-center">
+        <h2 class="mat-h2 mb-0">{{ '3_HOURS_NOREPORT' | translate }}</h2>
+        <div [class.text-info]="info.tres_h > 0" class="value">
+        <span (click)="goToTracking('tres_h',info.tres_h)" [class.cursor-pointer]="info.tres_h > 0">
+          {{ info.tres_h || 0 }}
+        </span>
+        </div>
+      </div>
+
+      <div class="col-6 text-center">
+        <h2 class="mat-h2 mb-0">{{ 'IN_WORKSHOP' | translate }}</h2>
+        <div [class.text-info]="info.fuera_servicio > 0" class="value">
+        <span (click)="goToTracking('out_service',info.fuera_servicio)"
+              [class.cursor-pointer]="info.fuera_servicio > 0">
+          {{ info.fuera_servicio || 0 }}
+        </span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</ng-template>

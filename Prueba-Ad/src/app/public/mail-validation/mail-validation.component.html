@@ -1,0 +1,8 @@
+<div class="container" *ngIf="invalid!==null">
+  <div [class.alert-danger]="invalid" [class.alert-success]="!invalid" class="alert">
+    {{detail}}
+    <div class="text-center mt-2">
+      <a mat-button routerLink="/">{{'CLOSE'|translate}}</a>
+    </div>
+  </div>
+</div>

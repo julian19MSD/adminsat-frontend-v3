@@ -1,0 +1,10 @@
+
+body:not(.dark) {
+
+
+  .mat-button-toggle-checked {
+    background-color: mat-color($primary);
+    color: mat-color($primary, default-contrast);
+  }
+
+}

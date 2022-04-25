@@ -1,0 +1,48 @@
+<mat-card [class.list-item-selected]="zones?.isSelected" [class.hasClient]="viewClienInfo" class="zones-item-wrapper" matRipple>
+    <div  class="selector pr-2 pr-md-0">
+      <mat-checkbox *ngIf="actionsCapabilities?.delete" (change)="checkedItem($event.checked)" [(ngModel)]="zones.isSelected" color="primary">
+      </mat-checkbox>
+    </div>
+
+    <div class="name">
+      <h2 class="zones-name align-middle">
+        {{ zones?.name }}
+      </h2>
+
+    </div>
+
+    <div *ngIf="viewClienInfo" class="client">
+      <div  class="small">
+        <span class="font-weight-bold mr-1">{{ "CLIENT" | translate }}:</span>
+        {{ zones?.cliente_nombre }}
+      </div>
+
+    </div>
+
+    <button [matMenuTriggerFor]="detailsMenu" class="more" mat-icon-button type="button">
+        <mat-icon>more_vert</mat-icon>
+
+        <mat-menu #detailsMenu="matMenu">
+          <button (click)="openDetailDialog(zones?.id)" *ngIf="permissionsService.hasPermission(permissions.subzones.ver)" mat-menu-item type="button">
+            <mat-icon>info_outline</mat-icon>
+            <span>{{ "VIEW_SUB_ZONES" | translate }}</span>
+          </button>
+
+
+          <button *ngIf="actionsCapabilities?.edit" (click)="openEditDialog(zones?.id)" mat-menu-item type="button">
+            <mat-icon>edit</mat-icon>
+            <span>{{ "EDIT" | translate }}</span>
+          </button>
+          <!-- <a
+            *ngIf="actionsCapabilities?.edit"
+            [routerLink]="['form', zones?.id]"
+            class="text-decoration-none"
+            mat-menu-item
+          >
+            <mat-icon>edit</mat-icon>
+            <span>{{ "EDIT" | translate }}</span>
+          </a> -->
+        </mat-menu>
+      </button>
+
+  </mat-card>

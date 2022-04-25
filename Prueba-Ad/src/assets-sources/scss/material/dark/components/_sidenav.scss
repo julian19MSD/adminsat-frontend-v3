@@ -1,0 +1,45 @@
+.main-sidenav {
+  background-color: mat-color($dark-background, card) !important;
+  .main-sidenav-menu {
+
+    .menu-logo-container {
+      background-color: mat-color($dark-primary);
+    }
+
+    .mat-expansion-panel-content {
+      border-left: 4px solid mat-color($dark-primary);
+    }
+
+    .mat-expansion-panel-header:hover,
+    .submenu:hover:not([disabled]) {
+      background: mat-color($dark-background, hover);
+    }
+
+    .mat-expansion-panel {
+      .mat-expansion-panel-header {
+        a {
+          color: mat-color($dark-foreground, base, 0.7) !important;
+        }
+      }
+
+      .mat-expansion-panel-body {
+        a {
+          color: mat-color($dark-foreground, base, 0.7) !important;
+        }
+
+        a.active {
+          color: mat-color($dark-foreground, text) !important;
+        }
+      }
+
+    }
+
+
+    .mat-expansion-panel.active {
+      .mat-expansion-panel-header-title {
+        color: mat-color($dark-primary) !important;
+      }
+    }
+
+  }
+}

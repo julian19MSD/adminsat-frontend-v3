@@ -1,0 +1,99 @@
+
+body:not(.dark) {
+  .map-report-wrapper {
+
+    .mat-divider {
+      border-top-color: mat-color($dark-foreground, divider);
+    }
+
+    .agm-container {
+      .mini-map-control {
+        background-color: mat-color($dark-background, card) !important;
+        color: white;
+      }
+    }
+
+    .report-flap,
+    .report-container {
+      background-color: mat-color($dark-background, card) !important;
+      color: mat-color($dark-foreground, text) !important;
+
+    &.isCreating{
+      background-color: mat-color($background, card) !important;
+      color: mat-color($foreground, text) !important;
+
+    }
+
+      .report-list-wrapper {
+
+        .search-field {
+
+          .mat-form-field-appearance-fill {
+            .mat-form-field-underline::before {
+              background-color: mat-color($dark-foreground, base, 0.1);
+            }
+
+            .mat-form-field-flex {
+              background-color: mat-color($dark-foreground, base, 0.1);
+            }
+          }
+
+          .mat-form-field-label {
+            color: mat-color($dark-foreground, secondary-text);
+          }
+
+          .mat-form-field.mat-focused {
+            .mat-form-field-ripple {
+              background-color: mat-color($dark-foreground, text);
+            }
+
+            .mat-form-field-label {
+              color: mat-color($dark-foreground, text);
+            }
+          }
+
+          .mat-form-field-ripple {
+            background-color: mat-color($dark-foreground, base, 0.1);
+          }
+
+          .mat-input-element {
+            caret-color: mat-color($dark-foreground, text);
+          }
+
+          .mat-hint {
+            color: mat-color($dark-foreground, secondary-text);
+          }
+
+        }
+
+
+        .mat-list-base {
+          .mat-list-item {
+            color: mat-color($dark-foreground, text) !important;
+          }
+
+
+        }
+      }
+
+    }
+
+    .map-container {
+      .gm-svpc {
+        background-color: mat-color($dark-background, card) !important;
+      }
+    }
+
+    .map-controls-container {
+      .map-controls {
+        background-color: mat-color($dark-background, card) !important;
+      }
+    }
+  }
+
+  .map-utils {
+    background-color: mat-color($dark-background, card);
+    color: mat-color($dark-foreground, text);
+  }
+
+}

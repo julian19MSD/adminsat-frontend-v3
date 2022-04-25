@@ -1,0 +1,19 @@
+body:not(.dark) {
+  .gridster {
+    .gridster-item {
+      .title,
+      .delete {
+        background: mat-color($primary) !important;
+        color: mat-color($primary, default-contrast) !important;
+      }
+
+      .sidebar {
+        background: mat-color($dark-background, card) !important;
+        color: mat-color($dark-foreground, text) !important;
+      }
+    }
+  }
+}
+
+
+

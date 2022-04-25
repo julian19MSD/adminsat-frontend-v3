@@ -1,0 +1,31 @@
+<div class="preview-container rounded border">
+  <div class="asset-icon">
+    <mat-icon *ngIf="data?.vehiculo_seguro; else unsafe" class="text-success safe-icon" matTooltipShowDelay="300"
+      matTooltip="{{ 'SAFE_VEHICLE' | translate }}">
+      check_circle
+    </mat-icon>
+
+    <ng-template #unsafe>
+      <mat-icon class="text-danger safe-icon" matTooltipShowDelay="300" matTooltip="{{ 'UNSAFE_VEHICLE' }}">
+        error
+      </mat-icon>
+    </ng-template>
+
+    <img alt="#" class="icon" [src]="data?.icono" />
+  </div>
+
+  <h3 class="mat-h3 name">
+    <strong>{{ data?.nombre }}</strong>
+  </h3>
+
+  <div class="mat-body-1 plate">
+    <strong class="mr-1">{{ "PLATE" | translate }}:</strong>{{ data?.placa }}
+  </div>
+
+  <div class="info">
+    <button (click)="openDetails()" matTooltipShowDelay="300" matTooltip="{{'DETAILS'|translate}}" color="primary"
+      mat-icon-button type="button">
+      <mat-icon>info_outline</mat-icon>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,61 @@
+@each $name, $value in $mat-blue-grey {
+  @if $name != contrast {
+    .bg-primary-#{$name} {
+      background-color: mat-color($dark-primary, $name) !important;
+      color: mat-contrast($dark-primary, $name) !important;
+    }
+  }
+}
+
+.bg-primary {
+  background-color: mat-color($dark-primary, 500) !important;
+  color: mat-contrast($dark-primary, 500) !important;
+}
+
+.bg-color {
+  background-color: mat-color($dark-background, background) !important;
+}
+
+.bg-card {
+  background-color: mat-color($dark-background, card) !important;
+}
+
+.bg-paper {
+  background-color: $dark-paper_color !important;
+}
+
+.bg-unselected-chip {
+  background: mat-color($dark-background, unselected-chip);
+}
+
+.bg-hover:hover {
+  background: mat-color($dark-background, hover);
+}
+
+.bg-intercalable {
+  .bg-intercalable-item:nth-child(even) {
+    background: mat-color($dark-background, hover);
+  }
+}
+
+.bg-alert-danger-deep {
+  background-color: rgba(112, 0, 160, 0.15);
+}
+
+.bg-alert-danger {
+  background-color: rgba(213, 0, 18, 0.15);
+}
+
+.bg-alert-warning-deep {
+  background-color: rgba(227, 107, 0, 0.15);
+}
+
+.bg-alert-warning {
+  background-color: rgba(255, 193, 0, 0.15);
+}
+
+.bg-alert-success {
+  background-color: rgba(0, 118, 28, 0.15);
+}
+
+

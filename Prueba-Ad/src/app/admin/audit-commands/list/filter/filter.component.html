@@ -1,0 +1,125 @@
+<div class="filter-bottom-sheet">
+    <div class="filter-bottom-sheet-title">
+      <h5>{{'FILTER_COMMANDS'| translate}}</h5>
+      <mat-divider></mat-divider>
+    </div>
+  
+    <form [formGroup]="formGroup" class="grid grid-md-3 align-items-center pt-3" id="filterForm">
+  
+      <adms-select *ngIf="data?.clients?.length >1" [ctrl]="formGroup.get('cliente__in')" [multiple]="true"
+                   [options]="data.clients" placeholder="{{'CLIENT'|translate}}">
+      </adms-select>
+
+      <mat-form-field class="w-100">
+        <mat-label>{{ 'DATE_FROM' | translate }}</mat-label>
+        <input #dtFrom [max]="formGroup.get('dt__lte').value" [owlDateTime]="dtRangeFrom"
+               [owlDateTimeTrigger]="dtRangeFrom"
+               formControlName="dt__gte" matInput >
+        <button (click)="formGroup.get('dt__gte').reset(null);" *ngIf="dtFrom.value" mat-icon-button matSuffix
+                type="button">
+          <mat-icon>clear</mat-icon>
+        </button>
+        <button [owlDateTimeTrigger]="dtRangeFrom" mat-icon-button matSuffix type="button">
+          <mat-icon>calendar_today</mat-icon>
+        </button>
+        <mat-error>
+          {{formStatus?.dt__gte|translate}}
+        </mat-error>
+        <owl-date-time #dtRangeFrom></owl-date-time>
+      </mat-form-field>
+
+      <mat-form-field class="w-100">
+        <mat-label>{{ 'DATE_TO' | translate }}</mat-label>
+        <input #dtTo [min]="formGroup.get('dt__gte').value" [max]="today" [owlDateTime]="dtRangeTo"
+               [owlDateTimeTrigger]="dtRangeTo" formControlName="dt__lte" matInput >
+        <button (click)="formGroup.get('dt__lte').reset(null);" *ngIf="dtTo.value" mat-icon-button matSuffix
+                type="button">
+          <mat-icon>clear</mat-icon>
+        </button>
+        <button [owlDateTimeTrigger]="dtRangeTo" mat-icon-button matSuffix type="button">
+          <mat-icon>calendar_today</mat-icon>
+        </button>
+        <mat-error>
+          {{formStatus?.dt__lte|translate}}
+        </mat-error>
+        <owl-date-time #dtRangeTo></owl-date-time>
+      </mat-form-field>
+
+
+      <mat-form-field>
+        <mat-chip-list #username formControlName="username_in">
+          <mat-chip (removed)="chipRemove('username_in',name)"
+                    *ngFor="let name of formGroup.get('username_in').value"
+                    removable="true" selectable="true">
+            {{name}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <input (matChipInputTokenEnd)="chipAdd('username_in',$event,50)"
+                 (paste)="chipPaste('username_in',$event,50)"
+                 [matChipInputAddOnBlur]="true"
+                 [matChipInputFor]="username"
+                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 placeholder="{{'USERNAME'|translate}}">
+        </mat-chip-list>
+        <mat-hint>{{'MAX_50'| translate}}</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-chip-list #asset formControlName="activo_nombre__in">
+          <mat-chip (removed)="chipRemove('activo_nombre__in',name)"
+                    *ngFor="let name of formGroup.get('activo_nombre__in').value"
+                    removable="true" selectable="true">
+            {{name}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <input (matChipInputTokenEnd)="chipAdd('activo_nombre__in',$event,50)"
+                 (paste)="chipPaste('activo_nombre__in',$event,50)"
+                 [matChipInputAddOnBlur]="true"
+                 [matChipInputFor]="asset"
+                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 placeholder="{{'ASSET_NAME'|translate}}">
+        </mat-chip-list>
+        <mat-hint>{{'MAX_50'| translate}}</mat-hint>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-chip-list #plate formControlName="activo_placa__in">
+          <mat-chip (removed)="chipRemove('activo_placa__in',name)"
+                    *ngFor="let name of formGroup.get('activo_placa__in').value"
+                    removable="true" selectable="true">
+            {{name}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <input (matChipInputTokenEnd)="chipAdd('activo_placa__in',$event,50)"
+                 (paste)="chipPaste('activo_placa__in',$event,50)"
+                 [matChipInputAddOnBlur]="true"
+                 [matChipInputFor]="plate"
+                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                 placeholder="{{'PLATE'|translate}}">
+        </mat-chip-list>
+        <mat-hint>{{'MAX_50'| translate}}</mat-hint>
+      </mat-form-field>
+
+
+  
+    </form>
+  </div>
+  
+  <div class="filter-bottom-sheet-controls">
+    <mat-divider class="mt-2 mb-2"></mat-divider>
+    <div class="container-fluid">
+      <div class="row justify-content-end">
+        <button (click)="close($event,false, false)" class="m-1" mat-button type="button">
+          {{'CANCEL'| translate}}
+        </button>
+        <button class="m-1" form="filterForm" mat-raised-button type="reset">{{'CLEAR'| translate}}</button>
+        <button (click)="close($event,true, true)" class="m-1" color="primary" mat-raised-button type="button">
+          {{'FILTER'| translate}}
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  

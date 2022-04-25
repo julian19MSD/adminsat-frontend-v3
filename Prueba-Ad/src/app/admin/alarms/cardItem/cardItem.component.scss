@@ -1,0 +1,32 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+
+.mat-card {
+  height: 196px;
+
+  &-avatar {
+    width: 30px;
+    height: 30px;
+  }
+
+  &-title {
+    margin-bottom: 4px;
+  }
+}
+
+@include media-breakpoint-down(xs) {
+  .mat-card {
+    padding: 0.5rem;
+  }
+}
+
+:host ::ng-deep {
+  .mat-card-header-text {
+    overflow: hidden;
+    text-align: left;
+    width: 100%;
+  }
+}
+
+

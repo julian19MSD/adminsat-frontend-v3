@@ -1,0 +1,45 @@
+<h1 class="mb-0" mat-dialog-title>{{'NEW_DATE_EVENT_WORKDAY'|translate}}</h1>
+<p>{{data.nombre}}</p>
+
+<mat-divider class="mt-3 mb-2"></mat-divider>
+
+<div class="w-600-px  py-2" mat-dialog-content>
+
+  <adms-ph *ngIf="loading; else loaded" mode="form"></adms-ph>
+
+  <ng-template #loaded>
+    <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup"
+          id="workRecalculateForm">
+    
+          <mat-form-field >
+            <mat-label>{{ 'NEW_DATE' | translate }}</mat-label>
+            <input #dtTo  [max]="today" [owlDateTime]="dtRangeTo"
+                   [owlDateTimeTrigger]="dtRangeTo" formControlName="new_date" matInput required>
+            <button (click)="formGroup.get('new_date').reset(null);" *ngIf="dtTo.value" mat-icon-button matSuffix
+                    type="button">
+              <mat-icon>clear</mat-icon>
+            </button>
+            <button [owlDateTimeTrigger]="dtRangeTo" mat-icon-button matSuffix type="button">
+              <mat-icon>calendar_today</mat-icon>
+            </button>
+            <mat-error>
+              {{formStatus?.new_date|translate}}
+            </mat-error>
+            <owl-date-time #dtRangeTo></owl-date-time>
+          </mat-form-field>
+
+    </form>
+  </ng-template>
+</div>
+
+<mat-divider class="mt-3 mb-2"></mat-divider>
+
+<div mat-dialog-actions class="justify-content-end">
+  <button class="m-1" mat-button type="button" (click)="dialogRef.close(false)">
+    {{'CANCEL'| translate}}
+  </button>
+  <button *ngIf="!loading" class="m-1" color="primary" form="workRecalculateForm" mat-raised-button type="submit">
+    {{'SAVE'| translate}}
+  </button>
+</div>
+

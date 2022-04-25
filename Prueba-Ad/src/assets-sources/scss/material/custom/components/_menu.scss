@@ -1,0 +1,10 @@
+body.custom:not(.dark) {
+  .mat-menu-content {
+    button.active {
+      background-color: mat-color($primary);
+      color: mat-color($primary, default-contrast);
+    }
+  }
+}
+
+

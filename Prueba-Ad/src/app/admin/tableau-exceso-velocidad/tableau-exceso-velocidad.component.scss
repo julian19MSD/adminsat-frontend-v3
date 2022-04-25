@@ -1,0 +1,34 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "./src/assets-sources/scss/app/utilities/variables";
+@import "~src/assets-sources/scss/app/mixins/flex";
+
+.main-card-container {
+  max-width: 90% !important;
+  max-height: 100%;
+  padding: 0.25rem 0 !important;
+  margin: auto;
+
+  .banner {
+    height: 250px;
+    width: 100%;
+    object-fit: contain;
+  }
+
+  .tableau-container {
+    height: 100%;
+    width: 100%;
+    margin: auto;
+
+  }
+}
+
+@include media-breakpoint-down(sm) {
+
+  .banner {
+    max-height: 150px;
+    width: 100%;
+    object-fit: contain;
+  }
+}

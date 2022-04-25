@@ -1,0 +1,25 @@
+
+body.custom:not(.dark) {
+  .main-sidenav {
+
+    .main-sidenav-menu {
+
+      .menu-logo-container {
+        background-color: mat-color($background, card);
+      }
+
+      .mat-expansion-panel.active {
+        .mat-expansion-panel-header-title {
+          color: mat-color($primary) !important;
+        }
+      }
+
+      .mat-expansion-panel {
+
+        .mat-expansion-panel-content {
+          border-left: 4px solid mat-color($primary);
+        }
+      }
+    }
+  }
+}

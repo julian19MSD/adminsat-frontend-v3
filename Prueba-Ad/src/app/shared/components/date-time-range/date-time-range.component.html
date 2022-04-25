@@ -1,0 +1,60 @@
+<div class="grid grid-sm-3 border py-2 align-items-center" [formGroup]="formGroup">
+  <div class="grid-col-sm-2">
+
+    <mat-form-field class="w-100">
+      <mat-label>{{ 'DATE_FROM' | translate }}</mat-label>
+      <input #dtFrom [max]="formGroup.get('hasta').value" [owlDateTime]="dtRangeFrom"
+             [owlDateTimeTrigger]="dtRangeFrom"
+             formControlName="desde" matInput required>
+      <button (click)="formGroup.get('desde').reset(null);" *ngIf="dtFrom.value" mat-icon-button matSuffix
+              type="button">
+        <mat-icon>clear</mat-icon>
+      </button>
+      <button [owlDateTimeTrigger]="dtRangeFrom" mat-icon-button matSuffix type="button">
+        <mat-icon>calendar_today</mat-icon>
+      </button>
+      <mat-error>
+        {{formStatus?.desde|translate}}
+      </mat-error>
+      <owl-date-time #dtRangeFrom></owl-date-time>
+    </mat-form-field>
+
+    <mat-form-field class="w-100">
+      <mat-label>{{ 'DATE_TO' | translate }}</mat-label>
+      <input #dtTo [min]="formGroup.get('desde').value" [max]="today" [owlDateTime]="dtRangeTo"
+             [owlDateTimeTrigger]="dtRangeTo" formControlName="hasta" matInput required>
+      <button (click)="formGroup.get('hasta').reset(null);" *ngIf="dtTo.value" mat-icon-button matSuffix
+              type="button">
+        <mat-icon>clear</mat-icon>
+      </button>
+      <button [owlDateTimeTrigger]="dtRangeTo" mat-icon-button matSuffix type="button">
+        <mat-icon>calendar_today</mat-icon>
+      </button>
+      <mat-error>
+        {{formStatus?.hasta|translate}}
+      </mat-error>
+      <owl-date-time #dtRangeTo></owl-date-time>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <div>
+      <button type="button" (click)="setToday()" mat-button>{{'TODAY'|translate}}</button>
+    </div>
+    <div>
+      <button type="button" (click)="setYesterday()" mat-button>{{'YESTERDAY'|translate}}</button>
+    </div>
+    <div>
+      <button type="button" (click)="setCurrentWeek()" mat-button>{{'CURRENT_WEEK'|translate}}</button>
+    </div>
+    <div>
+      <button type="button" (click)="setCurrentMonth()" mat-button>{{'CURRENT_MONTH'|translate}}</button>
+    </div>
+    <div>
+      <button type="button" (click)="setLastWeek()" mat-button>{{'LAST_WEEK'|translate}}</button>
+    </div>
+    <div>
+      <button type="button" (click)="setLastMonth()" mat-button>{{'LAST_MONTH'|translate}}</button>
+    </div>
+  </div>
+</div>

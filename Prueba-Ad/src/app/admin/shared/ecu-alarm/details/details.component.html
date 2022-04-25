@@ -1,0 +1,26 @@
+<div class="detail-container" >
+  <mat-toolbar color="primary">
+    <h1 *ngIf="instance?.activo_nombre;else phTittle">{{ instance?.activo_nombre }}</h1>
+    <ng-template #phTittle>
+      <div class="ph-row">
+        <div class="ph-col-auto big ph-brightness ">
+        </div>
+      </div>
+    </ng-template>
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+
+  <ng-template #loaded>
+
+    <div class="container-g">
+      <div class="spline grafica" [chart]="areaSplineChart" ></div>
+    </div>
+     
+
+  </ng-template>
+</div>

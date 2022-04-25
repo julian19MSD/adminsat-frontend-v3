@@ -1,0 +1,254 @@
+<div class="px-1 p-lg-0 h-100 fadeInUp">
+
+
+  <div *ngIf="loading;else cardContent" class="container-fluid h-100">
+    <div class="row justify-content-center align-content-center h-100">
+      <mat-spinner [diameter]="50" class="m-auto text-dark"></mat-spinner>
+    </div>
+  </div>
+
+
+  <ng-template #cardContent>
+    <div *ngIf="loader" [innerHTML]="loaderContent" class="loader-container" id="internalLoader"></div>
+    <mat-card class="main-card-container">
+      <div class="w-100 h-100 " [class.sidebar]="InstallationsInfo">
+        <mat-card class="w-100 h-100 mat-elevation-z8 ">
+
+          <mat-tab-group class="w-100 h-100 ">
+
+            <mat-tab class="w-100 h-100 " label="{{'INSTALLATION_TYPE' | translate}}">
+
+              <div class="grid grid-sm-2  align-items-start py-2 px-0">
+
+                <div class="w-100  grid-col">
+                  <h1 class="mat-h1 text-center"><strong>{{ fleetInfo?.total_assets }}</strong></h1>
+                  <h1 class="mat-h1  text-center"><strong>{{ 'ASSETS' | translate }}</strong></h1>
+                </div>
+
+                <div class="w-100 text-center text">
+
+                  <h3 class="mat-h3 m-0"> <strong>{{ fleetInfo?.safe }}</strong></h3>
+                  <h4 class="mat-h4 m-0">{{ 'SAFE_VEHICLE' | translate }}</h4>
+                  <div class="value">
+                    <span class="text-success"> {{fleetInfo?.safe_percentage}}% </span>
+                  </div>
+                </div>
+
+                <div class="w-100 text-center text">
+
+                  <h3 class="mat-h3 m-0"> <strong>{{ fleetInfo?.unsafe }}</strong></h3>
+                  <h4 class="mat-h4 m-0">{{ 'UNSAFE_VEHICLE' | translate }}</h4>
+                  <div class="value">
+                    <span class="text-danger"> {{fleetInfo?.unsafe_percentage}}% </span>
+                  </div>
+                </div>
+
+                <div class="w-100 text-center text">
+                  <h3 class="mat-h3 m-0"> <strong>{{ fleetInfo?.in_shift }}</strong></h3>
+                  <h4 class="mat-h4 m-0">{{ 'IN_SHIFT' | translate }}</h4>
+                  <div class="value">
+                    <span class="text-success"> {{fleetInfo?.in_shift_percentage}}% </span>
+                  </div>
+                </div>
+
+                <div class="w-100 text-center text">
+                  <h3 class="mat-h3 m-0"> <strong>{{ fleetInfo?.not_in_shift }}</strong></h3>
+                  <h4 class="mat-h4 m-0">{{ 'NOT_IN_SHIFT' | translate }}</h4>
+                  <div class="value">
+                    <span class="text-warning"> {{fleetInfo?.not_in_shift_percentage}}% </span>
+                  </div>
+                </div>
+
+
+              </div>
+              <div class="items-installations">
+                <div class="  my-3 p-0 cursor-pointer" (click)="viewSubInstallations(item.id)"
+                  *ngFor="let item of fleetInfo?.overview">
+                  <div class=" grid grid-sm-2 border-item" [class.item-click]="InstallationSelected == item?.id"
+                    matRipple>
+                    <div class="grid grid-sm-2  w-100">
+                      <div class="w-100 mt-2">
+                        <img (error)="noImage = true" (load)="noImage = false" [hidden]="noImage" [src]="item?.icon ||  staticUrl +  '/images/default-installation.png' "
+                          alt="icon" />
+                      </div>
+
+                      <div class="w-100 mt-3">
+                        <strong class="mr-1 mb-1">{{item?.in_shift + item?.not_in_shift}}</strong>
+                        <p><strong class="mr-1">{{item?.name}}</strong></p>
+                      </div>
+                    </div>
+                    <div class="w-100 mt-3">
+                      <p class="mb-1 pr-3">{{item?.in_shift}} ({{item?.in_shift_percentage}}%) {{'IN_SHIFT' |
+                        translate}}
+                      </p>
+                      <p class="pr-3">{{item?.not_in_shift}} ({{item?.not_in_shift_percentage}}%) {{'NOT_IN_SHIFT' |
+                        translate }}</p>
+                    </div>
+
+                    <div class="w-100 mb-3">
+                      <p class="small mb-1 text-success grid grid-2 "><span>0 - 60 min</span> <span>{{item?.m_0_60 ||
+                          0}}</span></p>
+                      <p class="small mb-1 text-info  grid grid-2 "><span>60 - 120 min</span> <span>{{item?.m_60_120 ||
+                          0}}</span></p>
+                    </div>
+                    <div class="w-100 mb-3">
+                      <p class="small mb-1 text-warning  grid grid-2 "><span>120 - 180 min</span>
+                        <span>{{item?.m_120_180 ||
+                          0}}</span>
+                      </p>
+                      <p class="small mb-1 text-danger  grid grid-2 "><span>{{'GREATER_THAN_180_MIN' | translate}}</span> <span>{{item?.m_180 ||
+                          0}}</span></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+            </mat-tab>
+            <mat-tab label="{{'ZONES' | translate}}">
+
+              <div class="items-installations" *ngIf="fleetInfo?.by_zone.length == 0 else phContent">
+
+                <mat-card class="mw-600-px bl-primary-3 mt-5">
+                  <h1 class="mat-title">{{'NO_RESULT'|translate}}</h1>
+                </mat-card>
+
+              </div>
+              <ng-template #phContent>
+                <div class="  my-3 p-0" *ngFor="let item of fleetInfo?.by_zone">
+                  <div class=" grid grid-sm-2 border-item" matRipple>
+
+                    <div class="w-100 px-3 mt-3">
+                      <strong class="pr-3 mb-1">{{item?.in_shift + item?.not_in_shift}}</strong>
+                      <p><strong class="pr-3">{{item?.name}}</strong></p>
+                    </div>
+
+                    <div class="w-100 mt-3">
+                      <p class="mb-1 pr-3">{{item?.in_shift}} ({{item?.in_shift_percentage}}%) {{'IN_SHIFT' |
+                        translate}}
+                      </p>
+                      <p class="pr-3">{{item?.not_in_shift}} ({{item?.not_in_shift_percentage}}%) {{'NOT_IN_SHIFT' |
+                        translate }}</p>
+                    </div>
+
+                    <div class="w-100 mb-3">
+                      <p class="small mb-1 text-success grid grid-2 "><span>0 - 60 min</span> <span>{{item?.m_0_60 ||
+                          0}}</span></p>
+                      <p class="small mb-1 text-info  grid grid-2 "><span>60 - 120 min</span> <span>{{item?.m_60_120 ||
+                          0}}</span></p>
+                    </div>
+                    <div class="w-100 mb-3">
+                      <p class="small mb-1 text-warning  grid grid-2 "><span>120 - 180 min</span>
+                        <span>{{item?.m_120_180 ||
+                          0}}</span>
+                      </p>
+                      <p class="small mb-1 text-danger  grid grid-2 "><span>{{'GREATER_THAN_180_MIN' | translate}}</span> <span>{{item?.m_180 ||
+                          0}}</span></p>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </mat-tab>
+          </mat-tab-group>
+
+        </mat-card>
+        <mat-card class="w-100 h-100 mat-elevation-z8 " *ngIf="InstallationsInfo">
+
+          <mat-tab-group class="w-100 h-100 ">
+
+            <mat-tab class="w-100 h-100 " label="{{'SUB_INSTALLATION_TYPE' | translate}}">
+
+              <div class="items-installations" *ngIf="InstallationsInfo?.overview.length == 0  else phContent1">
+                <mat-card class="mw-600-px bl-primary-3 mt-5">
+                  <h1 class="mat-title">{{'NO_RESULT'|translate}}</h1>
+                </mat-card>
+              </div>
+              <ng-template #phContent1>
+                <div class="  my-3 p-0" *ngFor="let item of InstallationsInfo?.overview">
+                  <div class=" grid grid-sm-2 border-item" matRipple>
+
+                    <div class="w-100 px-3 mt-3">
+                      <strong class="pr-3 mb-1">{{item?.in_shift + item?.not_in_shift}}</strong>
+                      <p><strong class="pr-3">{{item?.name}}</strong></p>
+                    </div>
+
+                    <div class="w-100 mt-3">
+                      <p class="mb-1 pr-3">{{item?.in_shift}} ({{item?.in_shift_percentage}}%) {{'IN_SHIFT' |
+                        translate}}
+                      </p>
+                      <p class="pr-3">{{item?.not_in_shift}} ({{item?.not_in_shift_percentage}}%) {{'NOT_IN_SHIFT' |
+                        translate }}</p>
+                    </div>
+
+                    <div class="w-100 mb-3">
+                      <p class="small mb-1 text-success grid grid-2 "><span>0 - 60 min</span> <span>{{item?.m_0_60 ||
+                          0}}</span></p>
+                      <p class="small mb-1 text-info  grid grid-2 "><span>60 - 120 min</span> <span>{{item?.m_60_120 ||
+                          0}}</span></p>
+                    </div>
+                    <div class="w-100 mb-3">
+                      <p class="small mb-1 text-warning  grid grid-2 "><span>120 - 180 min</span>
+                        <span>{{item?.m_120_180 ||
+                          0}}</span>
+                      </p>
+                      <p class="small mb-1 text-danger  grid grid-2 "><span>{{'GREATER_THAN_180_MIN' | translate}}</span> <span>{{item?.m_180 ||
+                          0}}</span></p>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+
+            </mat-tab>
+
+
+            <mat-tab label="{{'ZONES' | translate}}">
+
+              <div class="items-installations" *ngIf="InstallationsInfo?.by_zone.length == 0 else phContent">
+
+                <mat-card class="mw-600-px bl-primary-3 mt-5">
+                  <h1 class="mat-title">{{'NO_RESULT'|translate}}</h1>
+                </mat-card>
+
+              </div>
+              <ng-template #phContent>
+                <div class="  my-3 p-0" *ngFor="let item of InstallationsInfo?.by_zone">
+                  <div class=" grid grid-sm-2 border-item" matRipple>
+
+                    <div class="w-100 px-3 mt-3">
+                      <strong class="pr-3 mb-1">{{item?.in_shift + item?.not_in_shift}}</strong>
+                      <p><strong class="pr-3">{{item?.name}}</strong></p>
+                    </div>
+
+                    <div class="w-100 mt-3">
+                      <p class="mb-1 pr-3">{{item?.in_shift}} ({{item?.in_shift_percentage}}%) {{'IN_SHIFT' |
+                        translate}}
+                      </p>
+                      <p class="pr-3">{{item?.not_in_shift}} ({{item?.not_in_shift_percentage}}%) {{'NOT_IN_SHIFT' |
+                        translate }}</p>
+                    </div>
+
+                    <div class="w-100 mb-3">
+                      <p class="small mb-1 text-success grid grid-2 "><span>0 - 60 min</span> <span>{{item?.m_0_60 ||
+                          0}}</span></p>
+                      <p class="small mb-1 text-info  grid grid-2 "><span>60 - 120 min</span> <span>{{item?.m_60_120 ||
+                          0}}</span></p>
+                    </div>
+                    <div class="w-100 mb-3">
+                      <p class="small mb-1 text-warning  grid grid-2 "><span>120 - 180 min</span>
+                        <span>{{item?.m_120_180 ||
+                          0}}</span>
+                      </p>
+                      <p class="small mb-1 text-danger  grid grid-2 "><span>{{'GREATER_THAN_180_MIN' | translate}}</span> <span>{{item?.m_180 ||
+                          0}}</span></p>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card>
+      </div>
+    </mat-card>
+
+  </ng-template>
+</div>

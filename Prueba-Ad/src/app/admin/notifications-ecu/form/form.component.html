@@ -1,0 +1,212 @@
+<div class="p-1 p-lg-2 h-100 fadeInUp">
+
+  <div *ngIf="loader" [innerHTML]="loaderContent" class="loader-container" id="internalLoader"></div>
+
+  <mat-card class="main-card-container">
+
+    <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" id="notificationForm">
+
+      <section id="basic_data">
+        <h1 class="dark info-subtitle mt-4">{{'BASIC_DATA' | translate}}</h1>
+        <div class="grid grid-md-2  pt-3">
+          <div *ngIf="clients.length > 1">
+            <adms-select [ctrl]="formGroup.get('cliente')" [options]="clients" placeholder="{{'CLIENT' | translate}}"
+              required="true">
+            </adms-select>
+          </div>
+
+
+          <mat-form-field class="w-100 ">
+            <mat-chip-list #notificationEmailList formControlName="correos_notificaciones_m2m" ngDefaultControl>
+              <mat-chip (removed)="chipRemove('correos_notificaciones_m2m', item)"
+                *ngFor=" let item of formGroup.get('correos_notificaciones_m2m') .value "
+                [ngClass]="{ 'text-danger': validateMail.includes(item) }" [removable]="true" [selectable]="false"
+                matTooltip="{{ getMailError(item) | translate }}" matTooltipShowDelay="300">
+                {{ item }}
+                <mat-icon (click)="onValidateMailSubmit(item)" *ngIf="validateMail.includes(item)" matChipTrailingIcon
+                  matTooltip="{{ 'RESEND_MAIL_VALIDATION' | translate }}" matTooltipShowDelay="300"> email
+                </mat-icon>
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input (matChipInputTokenEnd)=" chipAdd('correos_notificaciones_m2m', $event, 5, true) "
+                (paste)="chipPaste('correos_notificaciones_m2m', $event)" [matChipInputAddOnBlur]="true"
+                [matChipInputFor]="notificationEmailList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                placeholder="{{ 'NOTIFICATION_EMAIL' | translate }}" />
+            </mat-chip-list>
+            <mat-error>
+              {{ formStatus?.correos_notificaciones_m2m | translate }}
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+        <ng-container formGroupName="ecu">
+          <div class="grid grid-sm-3 title-grid">
+
+            <mat-form-field>
+              <input #presionAceite formControlName="presion_aceite" matInput maxlength="50"
+                placeholder="{{ 'OIL_PRESSURE' | translate }}  ({{metricsAlias.pressure}})" type="number" required/>
+              <mat-hint align="end">
+                {{ presionAceite.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.ecu?.presion_aceite | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input #presion_combustible formControlName="presion_combustible" matInput maxlength="50" required
+                placeholder="{{ 'FUEL_PRESSURE' | translate }}   ({{metricsAlias.pressure}})" type="number" />
+              <mat-hint align="end">
+                {{ presion_combustible.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.ecu?.presion_combustible | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input #refrigerante formControlName="temperatura_refrigerante_motor" matInput maxlength="50" required
+                placeholder="{{ 'REFRIGERANT_TEMPERATURE' | translate }}  (ºC)" type="number" />
+              <mat-hint align="end">
+                {{ refrigerante.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.ecu?.temperatura_refrigerante_motor | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input #admision formControlName="temperatura_aire_admision" matInput maxlength="50" required
+                placeholder="{{ 'INTAKE_AIR_TEMPERATURE' | translate }} (ºC)" type="number" />
+              <mat-hint align="end">
+                {{ admision.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.ecu?.temperatura_aire_admision | translate }}
+              </mat-error>
+            </mat-form-field>
+
+
+            <mat-form-field>
+              <input #odometer formControlName="odometro" matInput maxlength="50"
+                placeholder="{{ 'ODOMETER' | translate }} ({{metricsAlias.distance}})" type="number" />
+              <mat-hint align="end">
+                {{ odometer.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.ecu?.odometro | translate }}
+              </mat-error>
+            </mat-form-field>
+
+
+            <mat-form-field>
+              <input #load formControlName="carga_motor" matInput  min="0" max="100" maxlength="50"
+                placeholder="{{ 'LOAD_MOTOR' | translate }} (%)" type="number" />
+              <mat-hint align="end">
+                {{ load.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.ecu?.carga_motor | translate }}
+              </mat-error>
+            </mat-form-field>
+
+
+            <mat-form-field>
+              <input #cAhorrado formControlName="combustible_ahorrado" matInput maxlength="50"
+                placeholder="{{ 'FUEL_SAVED' | translate }} ({{metricsAlias.volume}})" type="number" />
+              <mat-hint align="end">
+                {{ cAhorrado.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.ecu?.combustible_ahorrado | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input #cMuerto formControlName="combustible_muerto" matInput maxlength="50"
+                placeholder="{{ 'DEAD_FUEL' | translate }} ({{metricsAlias.volume}})" type="number" />
+              <mat-hint align="end">
+                {{ cMuerto.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.ecu?.combustible_muerto | translate }}
+              </mat-error>
+            </mat-form-field>
+
+
+            <mat-form-field>
+              <input #cTotal formControlName="combustible_total" matInput maxlength="50"
+                placeholder="{{ 'TOTAL_FUEL' | translate }}  ({{metricsAlias.volume}})" type="number" />
+              <mat-hint align="end">
+                {{ cTotal.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.ecu?.combustible_total | translate }}
+              </mat-error>
+            </mat-form-field>
+
+
+            <mat-form-field>
+              <input #porcentajeTorque formControlName="porcentaje_torque_motor" matInput maxlength="50"
+                placeholder="{{ 'MOTOR_TORQUE_PORCENTAGE' | translate }}" type="number" />
+              <mat-hint align="end">
+                {{ porcentajeTorque.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.ecu?.porcentaje_torque_motor | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input #rpm formControlName="rpm_motor" matInput maxlength="50"
+                placeholder="{{ 'RPM_MOTOR' | translate }}" type="number" />
+              <mat-hint align="end">
+                {{ rpm.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.ecu?.rpm_motor | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input #cruise formControlName="tiempo_crucero_activo" matInput maxlength="50"
+                placeholder="{{ 'ACTIVE_CRUISE_TIME' | translate }} ({{ 'HOURS' | translate }}) " type="number" />
+              <mat-hint align="end">
+                {{ cruise.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.ecu?.tiempo_crucero_activo | translate }}
+              </mat-error>
+            </mat-form-field>
+            
+            <mat-form-field>
+              <input #tMuerto formControlName="tiempo_muerto_motor" matInput maxlength="50"
+                placeholder="{{ 'ENGINE_IDLE_TIME' | translate }} ({{ 'HOURS' | translate }})" type="number" />
+              <mat-hint align="end">
+                {{ tMuerto.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.ecu?.tiempo_muerto_motor | translate }}
+              </mat-error>
+            </mat-form-field>
+
+
+            <mat-form-field>
+              <input #vel formControlName="velocidad" matInput maxlength="50"
+                placeholder="{{ 'VELOCITY' | translate }} ({{metricsAlias.velocity}})" type="number" />
+              <mat-hint align="end">
+                {{ vel.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.ecu?.velocidad | translate }}
+              </mat-error>
+            </mat-form-field>      
+          </div>
+        </ng-container>
+
+      </section>
+
+    </form>
+
+  </mat-card>
+</div>

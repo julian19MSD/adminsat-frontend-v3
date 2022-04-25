@@ -1,0 +1,75 @@
+<mat-card [class.list-item-selected]="shift?.isSelected" class="shift-item-wrapper" matRipple>
+
+  <div *ngIf="actionsCapabilities?.default" class="selector pr-2 pr-md-0">
+    <mat-checkbox (change)="checkedItem($event.checked)" [(ngModel)]="shift.isSelected" color="primary">
+    </mat-checkbox>
+  </div>
+
+  <div class="description">
+    <h2 class="mat-title mb-2 lh-normal">
+      {{shift.orden_cargue}}
+    </h2>
+    <div *ngIf="viewClienInfo" class="small">
+      <span class="font-weight-bold mr-1">{{'CLIENT' | translate}}:</span> {{shift.cliente_nombre}}
+    </div>
+    <div class="small"><span class="font-weight-bold mr-1">{{'ASSIGNATION_DATE' | translate}}
+      :</span> {{shift.fecha_hora_asignacion}}
+    </div>
+    <div *ngIf="shift.ruta" class="small mt-2">
+      <span class="font-weight-bold mr-2">{{'ASSIGNATED_ROUTE' | translate}}:</span>
+      <button color="primary" *ngIf="permissionsService.hasPermission(permissions.rutas.ver);else routeName"
+              mat-raised-button (click)="openRouteDetails(shift.ruta)">
+        {{shift.ruta_nombre}}
+      </button>
+      <ng-template #routeName>
+        {{shift.ruta_nombre}}
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="detail">
+    <div class="small">
+      <span class="font-weight-bold mr-1">{{'STARTING_MODE' | translate}}:</span>
+      {{shift.inicializacion_nombre}}
+    </div>
+    <div class="small">
+      <span class="font-weight-bold mr-1">{{'STARTING_DATE' | translate}}: </span>
+      {{shift.fecha_hora_inicio}}
+    </div>
+    <div class="small mt-1">
+      <span class="font-weight-bold mr-1">{{'FINISH_MODE' | translate}}: </span>
+      {{shift.finalizacion_nombre}}
+    </div>
+    <div class="small">
+      <span class="font-weight-bold mr-1">{{'FINISH_DATE' | translate}}: </span>
+      {{shift.fecha_hora_fin}}
+    </div>
+
+    <div class="small mt-1">
+      <span class="font-weight-bold mr-1">{{'STATE' | translate}}: </span>
+      {{shift.estado_nombre}}
+    </div>
+
+    <div *ngIf="shift.activo" class="small mt-2">
+      <span class="font-weight-bold mr-2">{{'ASSOCIATED_ASSET' | translate}}:</span>
+      <button *ngIf="permissionsService.hasPermission(permissions.activos.ver);else assetName" color="primary"
+              (click)="openAssetDetails(shift.activo)" mat-raised-button>
+        {{shift.activo_nombre}}
+      </button>
+      <ng-template #assetName>
+        {{shift.activo_nombre}}
+      </ng-template>
+    </div>
+  </div>
+
+  <button [matMenuTriggerFor]="detailsMenu" mat-icon-button type="button" class="more">
+    <mat-icon>more_vert</mat-icon>
+
+    <mat-menu #detailsMenu="matMenu">
+      <button (click)="openDetailDialog(shift.id, null,{enCurso: false})" mat-menu-item type="button">
+        <mat-icon>info_outline</mat-icon>
+        <span>{{'DETAILS' | translate}}</span>
+      </button>
+    </mat-menu>
+  </button>
+</mat-card>

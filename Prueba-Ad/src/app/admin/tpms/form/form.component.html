@@ -1,0 +1,82 @@
+<div class="p-1 p-lg-2 h-100 fadeInUp">
+    <div *ngIf="loader" [innerHTML]="loaderContent" class="loader-container" id="internalLoader"></div>
+    <mat-card class="main-card-container">
+        <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" id="tpmsForm">
+            <section class="mt-4" id="basic-data">
+                <div class="grid grid-sm-2 title-grid">
+                    <h2 class="dark info-subtitle">
+                        {{ "BASIC_DATA" | translate }}
+                    </h2>
+                </div>
+
+                <div class="grid grid-sm-2 grid-md-3 mt-3">
+                    <div *ngIf="clients.length > 1" class="w-100">
+                        <adms-select [ctrl]="formGroup.get('cliente')" [options]="clients"
+                            placeholder="{{ 'CLIENT' | translate }}" required="true">
+                        </adms-select>
+                    </div>
+                    <mat-form-field class="w-100">
+                        <input #tpmsReference formControlName="referencia" matInput maxlength="30"
+                            placeholder="{{ 'REFERENCE' | translate }}" required type="text" />
+                        <mat-hint align="end">
+                            {{ tpmsReference.value?.length || 0 }}/30
+                        </mat-hint>
+                        <mat-error>
+                            {{ formStatus?.reference | translate }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="w-100">
+                        <mat-select formControlName="posicion" placeholder="{{ 'POSITION' | translate }}" required>
+                          <mat-option *ngFor="let posicion of choices.posicion_choices" [value]="posicion.id">
+                            {{ posicion.value | titlecase }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error>
+                          {{ formStatus?.posicion | translate }}
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field class="w-100">
+                        <mat-select formControlName="estado" placeholder="{{ 'STATE' | translate }}" required>
+                          <mat-option *ngFor="let estado of choices.estado_choices" [value]="estado.id">
+                            {{ estado.value | titlecase }}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error>
+                          {{ formStatus?.estado | translate }}
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field class="w-100">
+                        <mat-select formControlName="fabricante" placeholder="{{'MANUFACTURER'|translate}}" required>
+                          <mat-option *ngFor="let tireManufacturer of tireManufacturers" [value]="tireManufacturer.id">
+                            {{tireManufacturer.nombre | titlecase}}
+                          </mat-option>
+                        </mat-select>
+                        <mat-error>
+                            {{ formStatus?.fabricante | translate }}
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field class="w-100">
+                        <input formControlName="presion" matInput min="0"
+                               placeholder="{{'PRESSURE'|translate}}"
+                               type="number">
+                        <mat-error >
+                            {{ formStatus?.presion | translate }}
+                        </mat-error>
+                      </mat-form-field>
+
+                      <mat-form-field class="w-100">
+                        <input formControlName="temperatura" matInput min="0"
+                               placeholder="{{'TEMPERATURE'|translate}}"
+                               type="number">
+                        <mat-error >
+                            {{ formStatus?.temperatura | translate }}
+                        </mat-error>
+                      </mat-form-field>
+                </div>
+            </section>
+        </form>
+    </mat-card>
+</div>

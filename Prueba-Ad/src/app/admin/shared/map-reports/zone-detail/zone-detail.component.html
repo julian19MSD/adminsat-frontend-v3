@@ -1,0 +1,141 @@
+<div *ngIf="loader" [innerHTML]="loaderContent" class="loader-container" id="internalLoader"></div>
+<div class="fadeInLeft" [class.report-details]="instance" [class.ph-item]="!instance">
+
+    <ng-container *ngIf="instance;else phItem">
+
+        <div class="header-wrapper p-2">
+            <div class="overflow-hidden text-center">
+                <h2 class="title px-4 text-center mb-0 text-ellipsis">{{ instance?.nombre }}</h2>
+            </div>
+
+
+            <div class="close-button">
+                <button matTooltip="{{'BACK_TO_LIST'|translate}}" matTooltipShowDelay="300" (click)="closeDetail(true)" mat-icon-button>
+          <mat-icon>close</mat-icon>
+        </button>
+            </div>
+        </div>
+
+
+        <section id="basic-data">
+            <div class="my-2 d-flex flex-row flex-nowrap align-items-center align-content-center">
+                <h2 class="info-subtitle">{{'BASIC_DATA' | translate}}</h2>
+
+                <button mat-icon-button *ngIf="permissionsService.hasPermission(permissions.zonasControl.eliminar)" (click)="delete(instance.id, instance.nombre)" matTooltip="{{'DELETE_CONTROLZONE'|translate}}" matTooltipShowDelay="300" type="button">
+          <mat-icon class="text-danger ">delete</mat-icon>
+        </button>
+
+                <button mat-icon-button matTooltip="{{'EDIT_CONTROLZONE'|translate}}" *ngIf="permissionsService.hasPermission(permissions.zonasControl.editar)"  (click)="startEditZone()" matTooltipShowDelay="300">
+          <mat-icon>edit</mat-icon>
+        </button>
+
+            </div>
+
+
+            <div class="item mt-3">
+                <label matTooltip="{{'COUNTRY'|translate}}" matTooltipShowDelay="300">{{'COUNTRY' |translate}}:</label>
+                <div class="value">{{instance?.country_name || '--'}}</div>
+            </div>
+
+            <div class="item">
+                <label matTooltip="{{'DEPARTMENT'|translate}}" matTooltipShowDelay="300">{{'DEPARTMENT'|translate}}:</label>
+                <div class="value">{{instance?.department_name || '--'}}</div>
+            </div>
+
+            <div class="item">
+                <label matTooltip="{{'MUNICIPALITY'|translate}}" matTooltipShowDelay="300">{{'MUNICIPALITY'|translate}}:</label>
+                <div class="value">{{instance?.municipality_name || '--'}}</div>
+            </div>
+
+            <div *ngIf="permissionsService.hasPermission(permissions.clientes.ver)" class="item">
+                <label>{{'CLIENT' | translate}}:</label>
+                <div class="value">{{instance?.cliente_nombre}}</div>
+            </div>
+
+            <div class="item">
+                <label matTooltip="{{'RISK'|translate}}" matTooltipShowDelay="300">{{'RISK'|translate}}:</label>
+                <div class="value">{{instance?.riesgo_nombre || '--'}}</div>
+            </div>
+
+            <div class="item">
+                <label matTooltip="{{'INSTALLATION_TYPE'|translate}}" matTooltipShowDelay="300">{{'INSTALLATION_TYPE'|translate}}:</label>
+                <div class="value">{{instance?.installation_type_name || '--'}}</div>
+            </div>
+
+            <div class="item">
+                <label matTooltip="{{'SUB_INSTALLATION_TYPE'|translate}}" matTooltipShowDelay="300">{{'SUB_INSTALLATION_TYPE'|translate}}:</label>
+                <div class="value">{{instance?.sub_installation_type_name || '--'}}</div>
+            </div>
+
+            <div class="item">
+                <label matTooltip="{{'ZONE'|translate}}" matTooltipShowDelay="300">{{'ZONE'|translate}}:</label>
+                <div class="value">{{instance?.zone_name || '--'}}</div>
+            </div>
+
+            <div class="item">
+                <label matTooltip="{{'SUB_ZONE'|translate}}" matTooltipShowDelay="300">{{'SUB_ZONE'|translate}}:</label>
+                <div class="value">{{instance?.sub_zone_name || '--'}}</div>
+            </div>
+
+        
+            <div class="item">
+                <label matTooltip="{{'MODE'|translate}}" matTooltipShowDelay="300">{{'MODE'|translate}}:</label>
+                <div class="value">{{instance?.modo_nombre}}</div>
+            </div>
+
+
+
+            <div *ngIf="instance?.activos?.length > 0" class="item mt-3">
+                <label>{{'ASSOCIATED_ASSET' | translate}}:</label>
+                <div class="value">
+                    <mat-chip-list>
+                        <ng-container *ngFor="let asset of instance?.activos">
+                            <mat-chip *ngIf="permissionsService.hasPermission(permissions.activos.ver);else noassetperms" class="cursor-pointer" matTooltip="{{'ASSET_DETAILS_HELP'|translate}}" matTooltipShowDelay="300" selected>
+                                {{asset.nombre}}
+                            </mat-chip>
+                            <ng-template #noassetperms>
+                                <mat-chip>{{asset.nombre}}</mat-chip>
+                            </ng-template>
+                        </ng-container>
+                    </mat-chip-list>
+                </div>
+            </div>
+
+
+
+
+        </section>
+
+    </ng-container>
+
+
+    <ng-template #phItem>
+        <div class="ph-col-12">
+            <div class="ph-row mb-3">
+                <div class="ph-col-3 empty"></div>
+                <div class="ph-col-6 big ph-brightness"></div>
+                <div class="ph-col-3 empty"></div>
+                <div class="ph-col-4 empty"></div>
+                <div class="ph-col-4 ph-brightness"></div>
+                <div class="ph-col-4 empty"></div>
+            </div>
+
+            <div *ngFor="let i of [1,2]" class="ph-row mt-5">
+                <div class="ph-col-4 mb-3 big ph-brightness"></div>
+                <div class="ph-col-8 empty"></div>
+
+                <ng-container *ngFor="let i of [1,2,3,4]">
+                    <div class="ph-col-2 ph-brightness"></div>
+                    <div class="ph-col-1 empty"></div>
+                    <div class="ph-col-9 ph-brightness"></div>
+                </ng-container>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row flex-nowrap justify-content-center mt-3">
+            <div class="ph-card-avatar ph-brightness mx-1"></div>
+            <div class="ph-card-avatar ph-brightness mx-1"></div>
+        </div>
+    </ng-template>
+
+</div>

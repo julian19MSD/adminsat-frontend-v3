@@ -1,0 +1,44 @@
+body.custom:not(.dark) {
+  @each $width in (1, 2, 3) {
+
+    @include vendor-border($width, $primary) {
+    }
+
+    @each $breakpoint, $value in $grid-breakpoints {
+      @include media-breakpoint-up($breakpoint) {
+        @include vendor-border($width, $primary, $breakpoint) {
+        }
+      }
+    }
+
+    @each $side, $name in $sides {
+
+      @if $width == 1 {
+        .b#{$side}-divider {
+          border-#{$name}: 1px solid mat-color($foreground, divider) !important;
+        }
+      }
+
+      @include vendor-border-side($side, $name, $width, $primary) {
+      }
+
+      @each $breakpoint, $value in $grid-breakpoints {
+        @include media-breakpoint-up($breakpoint) {
+
+          @if $width == 1 {
+            .b#{$side}-#{$breakpoint}-divider {
+              border-#{$name}: 1px solid mat-color($foreground, divider) !important;
+            }
+          }
+
+          @include vendor-border-side($side, $name, $width, $primary, $breakpoint) {
+          }
+        }
+      }
+    }
+  }
+
+  .asset-icon-selected {
+    border: 2px solid mat-color($primary) !important;
+  }
+}

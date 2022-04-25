@@ -1,0 +1,30 @@
+<div class="header-form-wrapper px-md-1">
+  <div class="back-button">
+    <a *ngIf="config?.backUrl" [routerLink]="config?.backUrl" matTooltipShowDelay="300"
+       [matTooltip]="config?.backUrlHelp" mat-icon-button>
+      <mat-icon> arrow_back</mat-icon>
+    </a>
+  </div>
+
+  <h1 class="mat-title mb-0">{{config?.title|translate}}</h1>
+
+  <div *ngIf="config?.addActionUrl" class="mr-2">
+    <a [routerLink]="config?.addActionUrl" matTooltipShowDelay="300"
+       matTooltip="{{'CREATE'|translate}}" mat-icon-button>
+      <mat-icon>add</mat-icon>
+    </a>
+  </div>
+
+  <div >
+    <button id="submit-1" [attr.form]="config?.formId" type="submit" color="primary" mat-raised-button type="submit">
+      {{config?.defaultActionText|translate}}
+    </button>
+  </div>
+
+  <div *ngIf="config?.defaultActionSecondText" >
+    <button id="submit-2" [attr.form]="config?.formId" color="primary" mat-raised-button type="submit">
+      {{config?.defaultActionSecondText|translate}}
+    </button>
+  </div>
+
+</div>

@@ -1,0 +1,29 @@
+<div class="filter-bottom-sheet">
+  <div class="filter-bottom-sheet-title">
+    <h5>{{'FILTER_TRACKING_NOTIFICATIONS'| translate}}</h5>
+    <mat-divider></mat-divider>
+  </div>
+
+  <form [formGroup]="formGroup" class="grid grid-sm-1 align-items-center pt-3" id="filterForm">
+
+    <adms-select  [ctrl]="formGroup.get('cliente__in')" [multiple]="true"
+      [options]="data.clients" placeholder="{{'CARRIER'|translate}}">
+    </adms-select>
+
+  </form>
+</div>
+
+<div class="filter-bottom-sheet-controls">
+  <mat-divider class="mt-2 mb-2"></mat-divider>
+  <div class="container-fluid">
+    <div class="row justify-content-end">
+      <button (click)="close($event,false, false)" class="m-1" mat-button type="button">
+        {{'CANCEL'| translate}}
+      </button>
+      <button class="m-1" form="filterForm" mat-raised-button type="reset">{{'CLEAR'| translate}}</button>
+      <button (click)="close($event,true, true)" class="m-1" color="primary" mat-raised-button type="button">
+        {{'FILTER'| translate}}
+      </button>
+    </div>
+  </div>
+</div>

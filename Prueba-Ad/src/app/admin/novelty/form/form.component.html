@@ -1,0 +1,36 @@
+<div class="p-1 p-lg-2 h-100 fadeInUp">
+  <div *ngIf="loader" [innerHTML]="loaderContent" class="loader-container" id="internalLoader"></div>
+
+  <mat-card class="main-card-container">
+    <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" id="noveltyForm">
+      <div class="container-fluid">
+        <div class="row align-content-center align-items-center">
+
+          <div *ngIf="clients.length > 1" class="col-12 col-md-6 mt-3">
+            <adms-select [ctrl]="formGroup.get('cliente')" [options]="clients"
+                         placeholder="{{'CLIENT'|translate}}" required="true"></adms-select>
+          </div>
+
+          <div class="col-12 col-md-6 mt-3">
+            <adms-select [ctrl]="formGroup.get('novedad_padre')" [options]="noveltyOptions"
+                         placeholder="{{'NOVELTY_PARENT'|translate}}"></adms-select>
+          </div>
+
+          <mat-form-field class="col-12 col-md-6 mt-3">
+            <input formControlName="es" matInput placeholder="{{'SPANISH_NAME'|translate}}" required type="text">
+            <mat-error *ngIf="formGroup.get('es').invalid">
+              {{formStatus?.es | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="col-12 col-md-6 mt-3">
+            <input formControlName="en" matInput placeholder="{{'ENGLISH_NAME'|translate}}" required type="text">
+            <mat-error *ngIf="formGroup.get('en').invalid">
+              {{formStatus?.en | translate}}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+  </mat-card>
+</div>

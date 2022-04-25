@@ -1,0 +1,209 @@
+<div class="filter-bottom-sheet">
+  <div class="filter-bottom-sheet-title">
+    <h5>{{'FILTER_LOCATIONS'| translate}}</h5>
+    <mat-divider></mat-divider>
+  </div>
+
+  <form [formGroup]="formGroup" class="grid grid-md-3 align-items-center pt-3" id="filterForm">
+
+    <mat-form-field>
+      <mat-chip-list #nombreList formControlName="nombre__in">
+        <mat-chip (removed)="chipRemove('nombre__in',name)" *ngFor="let name of formGroup.get('nombre__in').value"
+                  removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('nombre__in',$event)"
+               (paste)="chipPaste('nombre__in',$event)"
+               [matChipInputAddOnBlur]="true"
+               [matChipInputFor]="nombreList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               placeholder="{{'NAME'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_5'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #placaList formControlName="placa__in">
+        <mat-chip (removed)="chipRemove('placa__in',name)" *ngFor="let name of formGroup.get('placa__in').value"
+                  removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('placa__in',$event)"
+               (paste)="chipPaste('placa__in',$event)"
+               [matChipInputAddOnBlur]="true"
+               [matChipInputFor]="placaList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               placeholder="{{'PLATE'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_5'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #identificadorList formControlName="identificador__in">
+        <mat-chip (removed)="chipRemove('identificador__in',name)"
+                  *ngFor="let name of formGroup.get('identificador__in').value"
+                  removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('identificador__in',$event)"
+               (paste)="chipPaste('identificador__in',$event)"
+               [matChipInputAddOnBlur]="true"
+               [matChipInputFor]="identificadorList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               placeholder="{{'DEVICE'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_5'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #punto_interes_nombreList formControlName="punto_interes_nombre__in">
+        <mat-chip (removed)="chipRemove('punto_interes_nombre__in',name)"
+                  *ngFor="let name of formGroup.get('punto_interes_nombre__in').value"
+                  removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('punto_interes_nombre__in',$event)"
+               (paste)="chipPaste('punto_interes_nombre__in',$event)"
+               [matChipInputAddOnBlur]="true"
+               [matChipInputFor]="punto_interes_nombreList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               placeholder="{{'POINTS_OF_INTEREST'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_5'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #actor_vial_nombreList formControlName="actor_vial_nombre__in">
+        <mat-chip (removed)="chipRemove('actor_vial_nombre__in',name)"
+                  *ngFor="let name of formGroup.get('actor_vial_nombre__in').value"
+                  removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('actor_vial_nombre__in',$event)"
+               (paste)="chipPaste('actor_vial_nombre__in',$event)"
+               [matChipInputAddOnBlur]="true"
+               [matChipInputFor]="actor_vial_nombreList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               placeholder="{{'ACTOR_ROAD_NAME'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_5'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #actor_vial_apellidosList formControlName="actor_vial_apellidos__in">
+        <mat-chip (removed)="chipRemove('actor_vial_apellidos__in',name)"
+                  *ngFor="let name of formGroup.get('actor_vial_apellidos__in').value"
+                  removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('actor_vial_apellidos__in',$event)"
+               (paste)="chipPaste('actor_vial_apellidos__in',$event)"
+               [matChipInputAddOnBlur]="true"
+               [matChipInputFor]="actor_vial_apellidosList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               placeholder="{{'ACTOR_ROAD_LASTNAME'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_5'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #evento_nombreList formControlName="evento_nombre__in">
+        <mat-chip (removed)="chipRemove('evento_nombre__in',name)"
+                  *ngFor="let name of formGroup.get('evento_nombre__in').value"
+                  removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('evento_nombre__in',$event)"
+               (paste)="chipPaste('evento_nombre__in',$event)"
+               [matChipInputAddOnBlur]="true"
+               [matChipInputFor]="evento_nombreList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               placeholder="{{'EVENT_NAME'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_5'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="calidad_gps" placeholder="{{'COORDINATES'|translate}}">
+        <mat-option>--</mat-option>
+        <mat-option class="text-capitalize" value="true">{{'VALID'|translate}}</mat-option>
+        <mat-option class="text-capitalize" value="false">{{'INVALID'|translate}}</mat-option>
+        <mat-option class="text-capitalize" value="last">{{'LAST_KNOWN'|translate}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{ 'DATE_FROM' | translate }}</mat-label>
+      <input #dtFrom [max]="formGroup.get('fecha__lte').value" [owlDateTimeTrigger]="dtRangeFrom"
+             [owlDateTime]="dtRangeFrom" formControlName="fecha__gte"
+             matInput>
+      <button (click)="formGroup.get('fecha__gte').reset(null);" *ngIf="dtFrom.value" mat-icon-button matSuffix
+              type="button">
+        <mat-icon>
+          clear
+        </mat-icon>
+      </button>
+      <button [owlDateTimeTrigger]="dtRangeFrom" mat-icon-button matSuffix type="button">
+        <mat-icon>
+          calendar_today
+        </mat-icon>
+      </button>
+      <mat-error>
+        {{formStatus?.fecha__gte|translate}}
+      </mat-error>
+      <owl-date-time #dtRangeFrom></owl-date-time>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{ 'DATE_TO' | translate }}</mat-label>
+      <input #dtTo [min]="formGroup.get('fecha__gte').value" [owlDateTimeTrigger]="dtRangeTo" [owlDateTime]="dtRangeTo"
+             formControlName="fecha__lte"
+             matInput>
+      <button (click)="formGroup.get('fecha__lte').reset(null);" *ngIf="dtTo.value" mat-icon-button matSuffix
+              type="button">
+        <mat-icon>clear</mat-icon>
+      </button>
+      <button [owlDateTimeTrigger]="dtRangeTo" mat-icon-button matSuffix type="button">
+        <mat-icon>calendar_today</mat-icon>
+      </button>
+      <mat-error>
+        {{formStatus?.fecha__lte|translate}}
+      </mat-error>
+      <owl-date-time #dtRangeTo></owl-date-time>
+    </mat-form-field>
+
+    <div>
+      <mat-slide-toggle color="primary" formControlName="fuera_servicio">
+        {{'OUT_OF_SERVICE'|translate}}
+      </mat-slide-toggle>
+    </div>
+
+    <div *ngIf="alarms.length >0">
+      <mat-slide-toggle color="primary" formControlName="alarmas">
+        {{'ALARMS'|translate}}
+      </mat-slide-toggle>
+    </div>
+  </form>
+</div>
+
+<div class="filter-bottom-sheet-controls">
+  <mat-divider class="my-2"></mat-divider>
+  <div class="container-fluid">
+    <div class="row justify-content-end">
+      <button (click)="close($event,false, false)" class="m-1" mat-button type="button">
+        {{'CANCEL'| translate}}
+      </button>
+      <button class="m-1" form="filterForm" mat-raised-button type="reset">{{'CLEAR'| translate}}</button>
+      <button (click)="close($event,true,false)" class="m-1" color="primary" mat-raised-button type="button">
+        {{'FILTER'| translate}}
+      </button>
+    </div>
+  </div>
+</div>

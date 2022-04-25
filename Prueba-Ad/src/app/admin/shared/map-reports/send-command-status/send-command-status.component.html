@@ -1,0 +1,87 @@
+<div class="detail-container">
+
+  <mat-toolbar color="primary">
+    <h1 class="w-100 text-ellipsis">{{'COMMAND_LIST' | translate}} {{ data?.commands?.nombre }}</h1>
+    <button mat-button mat-dialog-close>
+      {{'CLOSE' | translate}}
+    </button>
+    <button mat-raised-button class="ml-1" (click)="updateStatusCommand()">
+      {{'UPDATE'| translate}}
+    </button>
+  </mat-toolbar>
+
+  <div class="container-fluid">
+
+    <mat-card *ngIf="listCommands.length === 0;else phContent" class="mw-600-px bl-primary-3">
+      <h1 class="mat-title">{{'NO_RESULT'|translate}}</h1>
+    </mat-card>
+
+    <ng-template #phContent>
+      <div class="row">
+        <div class=" table-responsive mt-2">
+          <table #myTable mat-table [dataSource]="listCommands"  class="my-table mat-elevation-z8">
+
+            <ng-container matColumnDef="activo_nombre">
+              <th class="text-center" mat-header-cell *matHeaderCellDef> <span class="text-center  ">
+                  {{'ASSETS' |
+                  translate}}</span> </th>
+              <td class="text-center" mat-cell *matCellDef="let element"> <span
+                  class="text-center  ">{{element.asset_name}}</span> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="equipo">
+              <th class="text-center" mat-header-cell *matHeaderCellDef><span class="text-center  ">
+                  {{'IDENTIFIER' |
+                  translate}}</span> </th>
+              <td class="text-center" mat-cell *matCellDef="let element"><span class="text-center  ">
+                  {{element.identifier}}</span> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="comando_nombre">
+              <th class="text-center" mat-header-cell *matHeaderCellDef><span class="text-center  ">
+                  {{'COMMAND_NAME'
+                  | translate}}</span> </th>
+              <td class="text-center" mat-cell *matCellDef="let element"><span class="text-center  ">
+                  {{element.command}}</span> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <th class="text-center" mat-header-cell *matHeaderCellDef><span class="text-center  ">
+                  {{'STATUS'
+                  | translate}}</span> </th>
+              <td class="text-center" mat-cell *matCellDef="let element"><span class="text-center  ">
+                  {{element.status_nombre || '--'}}</span> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="respuesta_msg">
+              <th class="text-center" mat-header-cell *matHeaderCellDef><span class="text-center  ">
+                  {{'RESPONSE'
+                  | translate}}</span> </th>
+              <td class="text-center" mat-cell *matCellDef="let element"><span class="text-center  ">
+                  {{element.response_message || '--' }}</span> </td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+              <th class="text-center" mat-header-cell *matHeaderCellDef> {{'ACTION' | translate}} </th>
+              <td class="text-center" mat-cell *matCellDef="let element" class="action-link">
+                <div class="text-center">
+
+                  <button *ngIf="element.id !== null" matTooltipShowDelay="300" (click)="openDetails(element)"
+                    matTooltip="{{'DETAILS'|translate}}" mat-icon-button type="button">
+                    <mat-icon>ballot</mat-icon>
+                  </button>
+
+                </div>
+
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+          </table>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

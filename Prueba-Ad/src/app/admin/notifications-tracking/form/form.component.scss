@@ -1,0 +1,34 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "./src/assets-sources/scss/app/utilities/variables";
+@import "~src/assets-sources/scss/app/mixins/flex";
+
+.tracking-wrapper {
+    display: grid;
+    column-gap: 8px;
+    grid-template-areas: 'time assets assets';
+    margin: auto;
+    padding: 0 1rem;
+    padding-top: 1rem; 
+    align-items: center;
+    // min-height: 40px;
+    // max-width: 1000px !important;
+  
+    .time {
+        grid-area: time;
+        align-self: start;
+    }
+  
+    .assets {
+      grid-area: assets;
+    }
+ 
+  }
+
+  
+@include media-breakpoint-down(md) {
+    .tracking-wrapper {
+      grid-template-areas: 'time' 'assets' ;
+    }
+  }

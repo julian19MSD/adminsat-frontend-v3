@@ -1,0 +1,90 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "./src/assets-sources/scss/app/utilities/variables";
+@import "~src/assets-sources/scss/app/mixins/flex";
+
+table {
+  width: 100%;
+}
+
+
+.ecu-asset-wrapper {
+  display: grid;
+  column-gap: 20px;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: 'selector table-asset';
+  margin: auto;
+
+  .selector {
+    min-width: 200px;
+    overflow: auto;
+    grid-area: selector;
+    transition: height 0.3s ease-out;
+  }
+
+  &.item-select {
+    grid-template-columns: auto 1fr;
+    grid-template-areas: 'empty card-title''selector table-asset';
+
+    .selector {
+      min-width: 200px;
+
+      min-height: min-content;
+      max-height: 829px;
+      overflow: auto;
+      grid-area: selector;
+    }
+  }
+
+
+  .table-asset {
+    grid-area: table-asset;
+    width: 100%;
+  }
+
+  .empty {
+    height: 30px;
+    grid-area: empty;
+  }
+
+  .card-title {
+    width: 100%;
+    height: 30px;
+    grid-area: card-title;
+  }
+
+}
+
+@include media-breakpoint-down(sm) {
+  .ecu-asset-wrapper {
+    grid-template-columns: auto;
+    grid-template-areas: 'selector''card-title''table-asset' 'empty';
+
+    &.item-select {
+      grid-template-columns: auto;
+      grid-template-areas: 'selector''card-title''table-asset' 'empty';
+
+      
+    .selector {
+      width: 100%;
+      max-height: 144px;
+    }
+
+    .empty {
+      height: 0px;
+
+    }
+    }
+
+    .selector {
+      width: 100%;
+      max-height: 144px;
+    }
+
+    .empty {
+      height: 0px;
+
+    }
+  }
+}

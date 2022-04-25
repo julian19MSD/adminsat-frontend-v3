@@ -1,0 +1,5 @@
+
+body.custom:not(.dark) {
+  @include angular-material-theme($theme);
+}
+

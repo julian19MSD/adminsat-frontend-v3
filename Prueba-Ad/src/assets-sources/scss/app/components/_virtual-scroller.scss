@@ -1,0 +1,15 @@
+
+.gid-scroller {
+  .scrollable-content {
+    display: grid;
+    gap: 0.25rem;
+    justify-content: center;
+    padding: 0.5rem 0;
+
+    @include media-breakpoint-down(xs) {
+      grid-template-columns: repeat(auto-fill, 100%);
+      gap: 0.25rem;
+      padding: 0.25rem 0;
+    }
+  }
+}

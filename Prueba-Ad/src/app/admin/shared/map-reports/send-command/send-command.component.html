@@ -1,0 +1,41 @@
+<div class="detail-container">
+
+  <mat-toolbar color="primary">
+    <h1 class="w-100  text-ellipsis">{{ data?.commands?.nombre }}</h1>
+    <button mat-button mat-dialog-close>
+      {{'CANCEL' | translate}}
+    </button>
+    <button mat-raised-button [disabled]="formGroup.get('commandsId').value.length === 0" class="ml-1 text-center" (click)="sendCommands()">
+      {{'SEND'| translate}}
+    </button>
+  </mat-toolbar>
+
+  <div class="p-2 px-sm-3 pb-sm-4 overflow-auto">
+    <div class="mat-title lh-initial mb-0">{{data?.commands?.identificador}}</div>
+    <div class="grid grid-sm-1 grid-md-2 p-0 mt-3">
+
+      <div class="d-flex flex-nowrap  align-items-center flex-row">
+        <adms-select [ctrl]="formGroup.get('commandsId')" [multiple]="true" [options]="data.commands.comandos"
+          class="w-100" placeholder="{{'COMMANDS'|translate}}">
+        </adms-select>
+        <button matTooltipShowDelay="300" (click)="addAll('commandsId')"
+          matTooltip="{{'SELECT_ALL'|translate}}" mat-icon-button type="button">
+          <mat-icon>select_all</mat-icon>
+        </button>
+        <button (click)="formGroup.get('commandsId').reset([])" matTooltipShowDelay="300"
+          matTooltip="{{'UNSELECT_ALL'|translate}}" mat-icon-button type="button">
+          <mat-icon>clear_all</mat-icon>
+        </button>
+      </div>
+
+      <div *ngIf="formGroup.get('commandsId').value.length > 0">
+        <h2 class="dark info-subtitle">{{'ORDER_COMMANDS' | translate}}</h2>
+
+        <adms-send-command-associations-preview (disassociate)="formGroup.get('commandsId').reset($event)"
+          [confirmDisassociation]="false" [items]="data.commands.comandos" [selected]="formGroup.get('commandsId').value">
+        </adms-send-command-associations-preview>
+      </div>
+
+    </div>
+  </div>
+</div>

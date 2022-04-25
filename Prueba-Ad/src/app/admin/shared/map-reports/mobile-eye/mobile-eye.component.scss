@@ -1,0 +1,24 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+
+.grid-wrapper {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem;
+
+  .counter-wrapper {
+    justify-self: end;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .grid-wrapper {
+    grid-template-columns: 1fr;
+
+    .counter-wrapper {
+      justify-self: start;
+    }
+  }
+
+}

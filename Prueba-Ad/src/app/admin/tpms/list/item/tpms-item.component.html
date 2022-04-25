@@ -1,0 +1,44 @@
+<mat-card [class.list-item-selected]="tpms?.isSelected"  class="tpms-item-wrapper" matRipple>
+    <div *ngIf="actionsCapabilities?.delete" class="selector pr-2 pr-md-0">
+      <mat-checkbox (change)="checkedItem($event.checked)" [(ngModel)]="tpms.isSelected" color="primary">
+      </mat-checkbox>
+    </div>
+
+    <div class="description">
+      <h2 class="tpms-name align-middle">
+        {{ tpms?.referencia }}
+      </h2>
+      <div *ngIf="viewClienInfo" class="small">
+        <span class="font-weight-bold mr-1">{{ "CLIENT" | translate }}:</span>
+        {{ tpms?.cliente_nombre }}
+      </div>
+
+    </div>
+    <div class="external">
+        <div  class="small">
+            <span class="font-weight-bold mr-1">{{ "MANUFACTURER" | translate }}:</span>
+            {{ tpms?.fabricante_nombre }}
+          </div>
+    </div>
+
+    <button [matMenuTriggerFor]="detailsMenu" class="more" mat-icon-button type="button">
+        <mat-icon>more_vert</mat-icon>
+
+        <mat-menu #detailsMenu="matMenu">
+          <button (click)="openDetailDialog(tpms?.id)" mat-menu-item type="button">
+            <mat-icon>info_outline</mat-icon>
+            <span>{{ "DETAILS" | translate }}</span>
+          </button>
+          <a
+            *ngIf="actionsCapabilities?.edit"
+            [routerLink]="['form', tpms?.id]"
+            class="text-decoration-none"
+            mat-menu-item
+          >
+            <mat-icon>edit</mat-icon>
+            <span>{{ "EDIT" | translate }}</span>
+          </a>
+        </mat-menu>
+      </button>
+
+  </mat-card>

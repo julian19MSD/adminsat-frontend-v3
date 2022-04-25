@@ -1,0 +1,15 @@
+.text-contrast {
+  color: mat-color($dark-primary, default-contrast) !important;
+}
+
+.text-foreground {
+  color: mat-color($dark-foreground, text) !important;
+}
+
+a {
+  color: mat-color($dark-foreground, text) !important;
+}
+
+.text-danger {
+  color: mat-color($dark-warn) !important;
+}

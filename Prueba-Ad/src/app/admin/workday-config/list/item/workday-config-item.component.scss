@@ -1,0 +1,65 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "./src/assets-sources/scss/app/utilities/variables";
+@import "~src/assets-sources/scss/app/mixins/flex";
+
+.workday-item-wrapper {
+  display: grid;
+  column-gap: 8px;
+  grid-template-columns: auto  1fr 1fr 1fr auto;
+  grid-template-areas: 'selector description times-workday times-rest more';
+  margin: auto;
+  align-items: center;
+  min-height: 40px;
+  max-width: 1000px !important;
+
+  .workday-name {
+    font-size: 1.25rem;
+    margin-left: 15px;
+
+  }
+
+  .selector {
+    grid-area: selector;
+  }
+
+  .more {
+    grid-area: more;
+  }
+
+  .devices {
+    align-self: start;
+    grid-area: devices;
+  }
+
+  .description {
+    align-self: start;
+    margin-bottom: auto;
+    margin-top: auto;
+    grid-area: description;
+  }
+
+  .times-workday {
+    align-self: start;
+    grid-area: times-workday;
+  }
+
+  .times-rest {
+    align-self: start;
+    grid-area: times-rest;
+  }
+
+}
+
+@include media-breakpoint-down(xs) {
+  .workday-item-wrapper {
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas: 'selector description more' 'selector times-workday more' 'selector times-rest more';
+
+    .selector {
+      align-self: start;
+    }
+  }
+}
+

@@ -1,0 +1,431 @@
+@import "~src/assets-sources/scss/app/mixins/mixins";
+@import "~src/assets-sources/scss/app/utilities/variables";
+@import "~src/assets-sources/scss/app/mixins/flex";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+
+.map-report-wrapper {
+  width: 100%;
+  height: 100%;
+
+
+  .map-container {
+    .agm-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+
+      #agm-map {
+        width: 100%;
+        height: 100%;
+      }
+
+      .mini-map-control {
+        position: absolute;
+        //display: none;
+        bottom: 8px;
+      }
+
+      .mini-map-screen {
+        left: 8px;
+      }
+
+      .mini-map-player {
+        top: 8px;
+        left: 8px;
+        bottom: unset;
+        display: none;
+      }
+
+      .mini-map-zoom {
+        right: 8px;
+        display: none;
+      }
+
+    }
+
+    #agm-pano {
+      width: 100%;
+      height: 0;
+    }
+
+    .report-flap {
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-right: none;
+      border-radius: 4px 0 0 4px;
+      padding: 0 8px;
+      min-width: 40px;
+      z-index: 1;
+    }
+    .creation-flap {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      z-index: 1;
+    }
+
+    .map-controls-container {
+      position: absolute;
+      left: 10px;
+      bottom: 76px;
+      box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+      z-index: 1;
+      border-radius: 8px;
+
+      .map-controls {
+        color: #fff;
+        border-radius: 8px 8px 0 0;
+      }
+
+      &.no-street-view {
+        bottom: 37px;
+      }
+    }
+  }
+
+  .map-container.panorama {
+
+    .agm-container:hover {
+      height: 218px;
+
+      .mini-map-player,
+      .mini-map-zoom {
+        display: initial !important;
+      }
+    }
+
+    .agm-container {
+      background-color: #ccc;
+      bottom: 0;
+      border-radius: 8px;
+      border: 2px solid black;
+      box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
+      width: 218px;
+      height: 100px;
+      left: 20px;
+      opacity: 1;
+      position: absolute;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      transition: width 0.4s, height 0.4s, opacity 0.6s ease-in, margin-bottom 0.4s;
+      z-index: 7;
+      margin-bottom: 20px;
+
+      //.mini-map-control {
+      //  display: initial;
+      //}
+    }
+
+    #agm-pano {
+      height: 100%;
+    }
+  }
+
+  .map-container.panorama.expanded {
+    .agm-container {
+      width: 100%;
+      height: 50%;
+      border: none;
+      border-top: 2px solid black;
+      margin-bottom: 0;
+      left: 0;
+
+      .mini-map-player,
+      .mini-map-zoom {
+        display: initial !important;
+      }
+    }
+
+    #agm-pano {
+      height: 50%;
+    }
+  }
+
+
+  .report-container {
+    padding: 0;
+    width: 500px;
+    max-width: 100%;
+    height: 100%;
+    // background-color: mat-color($background, card) !important;
+    // color: mat-color($foreground, text) !important;
+
+
+    i,
+    em {
+      font-size: 1.5rem;
+    }
+
+    .report-list-wrapper {
+      height: 100%;
+
+      .historical-scroll-viewport {
+        height: calc(100% - 97px) !important;
+      }
+    }
+
+
+  }
+
+
+}
+
+@include media-breakpoint-down(sm) {
+  :host ::ng-deep {
+    .map-report-wrapper {
+      height: calc(100% - 40px) !important;
+
+
+      .report-container {
+        width: 100% !important;
+      }
+    }
+  }
+}
+
+@include media-breakpoint-down(md) {
+  :host ::ng-deep {
+    .map-report-wrapper {
+      .report-flap {
+        display: none;
+      }
+    }
+  }
+}
+
+:host ::ng-deep {
+  .map-report-wrapper {
+
+    .report-container {
+      .mat-drawer-inner-container {
+        overflow: initial;
+      }
+    }
+
+
+    .map-container.panorama {
+      #agm-map {
+        .gm-svpc {
+          visibility: hidden;
+        }
+      }
+    }
+
+    .map-container {
+
+      .gm-svpc {
+        box-shadow: none !important;
+        border-radius: 0 0 8px 8px !important;
+      }
+
+      .map-marker {
+        cursor: pointer;
+        top: -56px;
+        left: -20px;
+        width: 40px;
+        height: 56px;
+
+        .state {
+          position: absolute;
+          top: 3px;
+          left: 4px;
+          width: 33px;
+          height: 33px;
+          border-radius: 20px;
+          z-index: 1;
+        }
+
+        .ignition-wrapper {
+          width: 20px;
+          height: 20px;
+          background: transparent;
+          border-radius: 10px;
+          position: absolute;
+          right: -7px;
+          top: -5px;
+          border: 3px solid transparent;
+        }
+
+        .plate-wrapper {
+          padding: 4px;
+          background: $paper_color;
+          position: absolute;
+          line-height: normal;
+          left: -15px;
+          font-weight: bold;
+          font-size: 0.65rem;
+          max-width: 70px;
+          overflow: hidden;
+          margin-top: 6px;
+          width: 70px;
+          text-align: center;
+          border-radius: 8px;
+        }
+
+        .pulse {
+          position: absolute;
+          left: 0;
+          top: 0;
+          border-radius: 30px;
+          height: 40px;
+          width: 40px;
+          opacity: 0;
+          z-index: 2;
+        }
+
+        .bottom {
+          background: rgba(0, 0, 0, 0.2);
+          position: absolute;
+          bottom: -10px;
+          right: 12px;
+          z-index: -2;
+          border-radius: 50%;
+          height: 14px;
+          width: 14px;
+          @include vendor-prefix(transform, rotateX(45deg));
+        }
+
+        .course-wrapper {
+          position: absolute;
+          width: 35px;
+          bottom: -18px;
+          left: 3px;
+
+          path.st0 {
+            fill: white;
+          }
+        }
+      }
+
+
+      .map-marker.not-icon {
+        width: 30px;
+        height: 30px;
+
+        .ignition-wrapper {
+          border: 3px solid black;
+        }
+      }
+
+      .map-marker.single {
+        top: -9px;
+        left: -9px;
+        width: 14px;
+        height: 14px;
+        background-color: white;
+        border-radius: 10px;
+        border: 2px solid black;
+      }
+
+      .map-marker.direction {
+        top: -20px;
+        height: 40px;
+
+        svg {
+          width: 40px;
+          height: 40px;
+
+          .st0 {
+            fill: white;
+          }
+        }
+
+      }
+
+
+      .map-marker.ignition-on {
+        .ignition-wrapper {
+          background: $marker_ign_on_color;
+          border: 3px solid black;
+        }
+      }
+
+      .map-marker.ignition-off {
+        .ignition-wrapper {
+          background: $marker_ign_off_color;
+          border: 3px solid black;
+        }
+      }
+
+      .map-marker.not-icon:not(.ignition-off):not(.ignition-on) .ignition-wrapper {
+        background: white;
+      }
+
+
+      .map-marker.single .pulse {
+        left: -5px;
+        top: -5px;
+        border-radius: 15px;
+        height: 15px;
+        width: 15px;
+      }
+
+
+
+      .map-marker.notification {
+        z-index: 3;
+
+        .pulse {
+          border: 5px solid $marker_focus_color;
+          @include vendor-prefix(animation, pulsate 1s ease-out infinite);
+        }
+      }
+
+      .map-marker.alarm {
+        z-index: 4;
+
+        .pulse {
+          border: 5px solid rgba($marker_ign_off_color, 0.7);
+          @include vendor-prefix(animation, pulsate 1s ease-out infinite);
+        }
+
+      }
+
+      .map-marker.start,
+      .map-marker.end {
+        z-index: 5;
+      }
+
+      .map-marker:hover {
+        z-index: 100001;
+      }
+
+      .focus {
+        div[style*="background-image: url("][style*="https://s3.amazonaws.com/adminsat/static/images/maps/cluster/m1.png"],
+        div[style*="background-image: url("][style*="https://s3.amazonaws.com/adminsat/static/images/maps/cluster/m2.png"],
+        div[style*="background-image: url("][style*="https://s3.amazonaws.com/adminsat/static/images/maps/cluster/m3.png"],
+        div[style*="background-image: url("][style*="https://s3.amazonaws.com/adminsat/static/images/maps/cluster/m4.png"],
+        div[style*="background-image: url("][style*="https://s3.amazonaws.com/adminsat/static/images/maps/cluster/m5.png"],
+        .map-marker:not(.selected) {
+          opacity: 0.4;
+        }
+      }
+
+      .map-marker.selected {
+        z-index: 6;
+
+        .bottom:after {
+          content: "";
+          border-radius: 50%;
+          height: 40px;
+          width: 40px;
+          position: absolute;
+          margin: -13px 0 0 -13px;
+          @include vendor-prefix(animation, pulsate 1s ease-out infinite);
+          opacity: 0;
+          -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+          filter: alpha(opacity=0);
+          @include vendor-prefix(box-shadow, 0 0 1px 2px rgba(black, 0.4));
+        }
+      }
+
+      .map-marker.single.selected {
+        background-color: $marker_focus_color;
+      }
+    }
+  }
+}
+

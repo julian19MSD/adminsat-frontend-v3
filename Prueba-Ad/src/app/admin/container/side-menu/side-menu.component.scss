@@ -1,0 +1,64 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~src/assets-sources/scss/app/mixins/flex";
+@import "~src/assets-sources/scss/app/utilities/variables";
+
+:host::ng-deep {
+  .main-sidenav-menu {
+    .mat-expansion-panel {
+      .mat-expansion-panel-body {
+        padding: 0 8px;
+      }
+    }
+  }
+}
+
+.main-sidenav-menu {
+  .menu-logo-container {
+    @include flexbox;
+    @include align-items(center);
+    @include justify-content(space-between);
+    @include flex-direction(row);
+    height: $mat-toolbar-height-mobile-portrait;
+
+    .menu-logo {
+      @include flexbox;
+      @include align-items(center);
+      @include justify-content(center);
+      height: 100%;
+      width: 100%;
+
+      img {
+        max-width: 95%;
+        max-height: 95%;
+      }
+    }
+  }
+
+  .mat-expansion-panel {
+    .mat-expansion-panel-header-title {
+      width: 24px;
+      min-width: 24px;
+      max-width: 24px;
+
+      .mat-icon {
+        height: 28px !important;
+      }
+    }
+
+    .mat-expansion-panel-header-description {
+      @include align-items(center);
+    }
+
+
+    .submenu {
+      padding: 0 16px;
+      height: 32px;
+      width: 100%;
+      text-decoration: none;
+      @include flexbox;
+      @include align-items(center);
+
+    }
+  }
+}

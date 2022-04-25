@@ -1,0 +1,489 @@
+<div class="fadeInLeft" [class.report-details]="instance" [class.ph-item]="!instance">
+
+  <ng-container *ngIf="instance;else phItem">
+
+    <div class="header-wrapper p-2">
+      <div class="overflow-hidden text-center">
+        <button (click)="openAssetDetails(instance.activo)"
+          *ngIf="permissionsService.hasPermission(permissions.activos.ver);else assetname"
+          class="title text-ellipsis mw-100" mat-button matTooltip="{{'ASSET_DETAILS_HELP'|translate}}"
+          matTooltipShowDelay="300">
+          {{ instance?.nombre }}
+        </button>
+        <ng-template #assetname>
+          <h2 class="title px-4 text-center mb-0 text-ellipsis">{{ instance?.nombre }}</h2>
+        </ng-template>
+      </div>
+
+      <div *ngIf="instance?.placa" class="text-center px-4">
+        <label class="p-0 mr-2">{{'PLATE' | translate}}:</label>
+        <span class="text-ellipsis">{{ instance?.placa }}</span>
+      </div>
+
+      <div class="close-button">
+        <button matTooltip="{{'BACK_TO_LIST'|translate}}" matTooltipShowDelay="300" (click)="closeDetail(true)"
+          *ngIf="'single' !== mode" mat-icon-button>
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <section id="photo" *ngIf="instance?.datos_json?.foto" class="photo-video">
+      <div *ngIf="loadingImg" class="m-0 p-0 ph-item justify-content-center">
+        <div class="ph-picture ph-col-4 ph-brightness"></div>
+      </div>
+      <a [href]="instance?.datos_json?.foto" target="_blank">
+        <img (error)="imageLoadError()" [hidden]="loadingImg" [src]="instance?.datos_json?.foto" alt="#">
+      </a>
+    </section>
+
+    <section id="basic-data">
+      <div class="my-2 d-flex flex-row flex-nowrap align-items-center align-content-center">
+        <h2 class="info-subtitle">{{'BASIC_DATA' | translate}}</h2>
+        <button (click)="instance.showTrama = !instance?.showTrama"
+          *ngIf="permissionsService.hasPermission(permissions.usuarios.verTrama)" mat-icon-button
+          matTooltip="{{'WEFT'|translate}}" matTooltipShowDelay="300">
+          <mat-icon class="color-white">info_outline</mat-icon>
+        </button>
+      </div>
+
+      <div *ngIf="instance?.showTrama" class="trama-container alert alert-info m-2 fadeInLeft">
+        {{instance?.datos_json?.trama}}
+      </div>
+
+      <div class="item mt-3">
+        <label matTooltip="{{'REPORT_INCOMING_DATE_HELP'|translate}}" matTooltipShowDelay="300">{{'DATE_DEVICE' |
+          translate}}
+          :</label>
+        <div [class.text-danger]="instance?.no_report?.un_dia" [class.text-info]="instance?.no_report?.tres_h"
+          [class.text-warning]="instance?.no_report?.doce_h" class="value">
+          {{instance?.fecha_hora_equipo }}
+        </div>
+      </div>
+
+      <div class="item">
+        <label matTooltip="{{'REPORT_SERVER_DATE_HELP'|translate}}" matTooltipShowDelay="300">{{'DATE_SERVER' |
+          translate}}
+          :</label>
+        <div class="value">{{instance?.fecha_hora_servidor}}</div>
+      </div>
+
+      <div *ngIf="permissionsService.hasPermission(permissions.clientes.ver)" class="item">
+        <label>{{'CLIENT' | translate}}:</label>
+        <div class="value">{{instance?.cliente_nombre}}</div>
+      </div>
+
+      <div class="item">
+        <label>{{'DEVICE' | translate}}:</label>
+        <div class="value">{{instance?.identificador}}</div>
+      </div>
+
+      <div [class.alert-danger]="instance?.tipo === 0" [class.alert-info]="instance?.tipo === 1"
+        [class.alert]="instance?.tipo >= 0" class="item">
+        <label>{{'EVENT' | translate}}:</label>
+        <div class="value">{{instance?.evento_nombre}}</div>
+      </div>
+
+      <div *ngIf="instance?.datos_json?.seg_evento" class="item">
+        <label>{{'TIME_IN_EVENT' | translate}}:</label>
+        <div class="value">{{instance?.datos_json?.seg_evento}}</div>
+      </div>
+
+
+      <div *ngIf="instance?.datos_json?.direccion" class="item">
+        <label>{{'ADDRESS' | translate}}:</label>
+        <div class="value">{{instance?.datos_json?.direccion }}</div>
+      </div>
+
+      <div *ngIf="instance?.calidad_gps === true || instance?.calidad_gps === null" class="item">
+        <label>{{'GEOGRAFIC_POINT' | translate}}:</label>
+        <div class="value">{{instance?.latitud}},&nbsp;{{ instance?.longitud}}</div>
+      </div>
+
+      <div *ngIf="instance?.punto_interes" class="item">
+        <label>{{'CLOSEST_POINT_OF_INTEREST' | translate}}:</label>
+        <div class="value">
+          {{instance?.punto_interes?.nombre }}
+          ({{instance?.punto_interes?.distancia}} {{metricsAlias?.distance}})
+        </div>
+      </div>
+
+      <div *ngIf="instance?.datos_json?.comentario" class="item">
+        <label>{{'COMMENT' | translate}}:</label>
+        <div class="value">{{instance?.datos_json?.comentario }}</div>
+      </div>
+
+      <div *ngIf="instance?.actor_vial" class="item flex-nowrap">
+        <label class="text-nowrap">{{'ACTOR_ROAD' | translate}}:</label>
+        <div class="value  overflow-hidden">
+          <button (click)="openRoadActorDetails(instance?.actor_vial)"
+            *ngIf="permissionsService.hasPermission(permissions.actorVial.ver);else noactorperms"
+            class="text-ellipsis mw-100 overflow-hidden" mat-button matTooltip="{{'ACTOR_ROAD_DETAILS_HELP'|translate}}"
+            matTooltipShowDelay="300">
+            {{ instance?.actor_vial_nombre }}
+          </button>
+
+          <ng-template #noactorperms>
+            <span>{{ instance?.actor_vial_nombre }}</span>
+          </ng-template>
+
+        </div>
+        <mat-icon *ngIf="instance?.datos_json?.av_no_autorizado" class="text-warning"
+          matTooltip="{{'ACTOR_ROAD_NO_AUTH'|translate}}" matTooltipShowDelay="300">
+          fingerprint
+        </mat-icon>
+        <mat-icon *ngIf="instance?.datos_json?.av_enturne" class="text-warning"
+          matTooltip="{{'ACTOR_ROAD_SHIFT_ASSIGNMENT'|translate}}" matTooltipShowDelay="300">
+          warning
+        </mat-icon>
+      </div>
+
+      <div *ngIf="instance?.estados?.length > 0" class="item mt-2">
+        <label>{{'STATE(S)' | translate}}:</label>
+        <mat-chip-list>
+          <mat-chip *ngFor="let state of instance?.estados">{{ state.nombre }}</mat-chip>
+        </mat-chip-list>
+      </div>
+
+      <div *ngIf="instance?.activos?.length > 0" class="item mt-3">
+        <label>{{'ASSOCIATED_ASSET' | translate}}:</label>
+        <div class="value">
+          <mat-chip-list>
+            <ng-container *ngFor="let asset of instance?.activos">
+              <mat-chip *ngIf="permissionsService.hasPermission(permissions.activos.ver);else noassetperms"
+                class="cursor-pointer" matTooltip="{{'ASSET_DETAILS_HELP'|translate}}" matTooltipShowDelay="300"
+                selected>
+                {{asset.nombre}}
+              </mat-chip>
+              <ng-template #noassetperms>
+                <mat-chip>{{asset.nombre}}</mat-chip>
+              </ng-template>
+            </ng-container>
+          </mat-chip-list>
+        </div>
+      </div>
+
+      <div *ngIf="instance?.zonascontrol?.length > 0" class="item mt-3">
+        <label>{{'CONTROLZONES' | translate}}:</label>
+        <div class="value">
+          <mat-chip-list>
+            <ng-container *ngFor="let controlzone of instance?.zonascontrol">
+              <mat-chip (click)="openControlZoneDetails(controlzone.id)"
+                *ngIf="permissionsService.hasPermission(permissions.zonasControl.ver);else nocontrolzoneperms"
+                class="cursor-pointer" matTooltip="{{'CONTROLZONE_DETAILS_HELP'|translate}}" matTooltipShowDelay="300"
+                selected>
+                {{controlzone.nombre}}
+              </mat-chip>
+              <ng-template #nocontrolzoneperms>
+                <mat-chip>{{controlzone.nombre}}</mat-chip>
+              </ng-template>
+            </ng-container>
+          </mat-chip-list>
+        </div>
+      </div>
+
+      <ng-container  *ngIf="instance?.messages">
+
+        <div class="border m-2">
+          <div class="item" *ngFor="let message of instance?.messages">
+            <label *ngIf="message?.direction === 'Sent'; else received">{{'LAST_MESSAGE_SENT'| translate}}:</label>
+            <ng-template #received>
+              <label *ngIf="message?.direction === 'Received'">{{'LAST_MESSAGE_RECEIVED' | translate}}:</label>
+            </ng-template>
+            <div class="value text-justify">({{message.datetime}}) {{message?.content}}</div>
+          </div>
+        </div>
+      </ng-container>
+
+
+      <div class="item justify-content-center pt-4">
+
+        <ng-container *ngIf="instance?.calidad_gps === true || instance?.calidad_gps === null">
+
+          <button (click)="showAround(instance?.lat, instance?.long)" *ngIf="mode==='tracking'" class="m-2"
+            color="primary" mat-mini-fab matTooltip="{{'SHOW_ZOOM_AROUND'|translate}}" matTooltipShowDelay="300">
+            <mat-icon>zoom_out_map</mat-icon>
+          </button>
+
+          <a class="m-2 no-hover" color="primary"
+            href="https://zoom.earth/#{{instance?.lat}},{{instance?.long}},19z,sat" mat-mini-fab
+            matTooltip="{{'ZOOM_EARTH_LINK'|translate}}" matTooltipShowDelay="300" target="_blank">
+            <mat-icon>public</mat-icon>
+          </a>
+
+        </ng-container>
+
+        <ng-container *ngIf="'tracking' === mode">
+
+          <button (click)="getLocation( requestLocation[0])" *ngIf="1 === requestLocation.length"
+            [disabled]="waitingCommandResponse[instance?.activo]" class="m-2" color="primary" mat-mini-fab
+            matTooltip="{{'REQUEST_LOCATION_HELP'|translate}}" matTooltipShowDelay="300">
+            <mat-icon>my_location</mat-icon>
+          </button>
+
+          <ng-container *ngIf="1 < requestLocation.length">
+            <button [disabled]="waitingCommandResponse[instance?.activo]" [matMenuTriggerFor]="locationMenu" class="m-2"
+              color="primary" mat-mini-fab matTooltip="{{'REQUEST_LOCATION_HELP'|translate}}" matTooltipShowDelay="300">
+              <mat-icon>my_location</mat-icon>
+            </button>
+            <mat-menu #locationMenu="matMenu">
+              <button (click)="getLocation(request)" *ngFor="let request of requestLocation " mat-menu-item>
+                {{request.nombre}} - {{request.identificador}}
+              </button>
+            </mat-menu>
+          </ng-container>
+
+          <ng-container *ngIf="canSendCommands">
+            <button (click)="openCommand(aviableCommands[0])" *ngIf="1 === aviableCommands.length"
+              [disabled]="waitingCommandResponse[instance?.activo]" class="m-2" color="primary" mat-mini-fab
+              matTooltip="{{'TRACKING_SEND_COMMAND_HELP'|translate}}" matTooltipShowDelay="300">
+              <mat-icon>settings</mat-icon>
+            </button>
+
+            <ng-container *ngIf="1 < aviableCommands.length">
+              <button [disabled]="waitingCommandResponse[instance?.activo]" [matMenuTriggerFor]="commandMenu"
+                class="m-2" color="primary" mat-mini-fab matTooltip="{{'TRACKING_SEND_COMMAND_HELP'|translate}}"
+                matTooltipShowDelay="300">
+                <mat-icon>settings</mat-icon>
+              </button>
+
+              <mat-menu #commandMenu="matMenu">
+                <button (click)="openCommand(aviableCommand)" *ngFor="let aviableCommand of aviableCommands "
+                  mat-menu-item>
+                  {{aviableCommand.nombre}} - {{aviableCommand.identificador}}
+                </button>
+              </mat-menu>
+            </ng-container>
+          </ng-container>
+
+          <button (click)="getLastCommands(instance?.activo)" [disabled]="waitingCommandResponse[instance?.activo]"
+            class="m-2" color="primary" mat-mini-fab matTooltip="{{'REQUEST_COMMANDS_LIST'|translate}}"
+            matTooltipShowDelay="300">
+            <mat-icon>list_alt</mat-icon>
+          </button>
+        </ng-container>
+
+
+        <button (click)="openMobileyeDetails()" *ngIf="instance?.mobile_eye" class="m-2" color="primary" mat-mini-fab
+          matTooltip="{{'MOBILE_EYE_EVENTS'|translate}}" matTooltipShowDelay="300">
+          <em class="icon-mobileye"></em>
+        </button>
+
+        <button (click)="openSensorDetails()" *ngIf="instance?.hasSensors" class="m-2" color="primary" mat-mini-fab
+          matTooltip="{{'SENSORS_TRACKING_HELP'|translate}}" matTooltipShowDelay="300">
+          <em class="icon-temp"></em>
+        </button>
+
+        <!--          <button *ngIf="permissionsService.hasPermission(permissions.puntosInteres.crear)" class="m-2" color="primary"-->
+        <!--                  mat-mini-fab-->
+        <!--                  matTooltip="{{'POINT_OF_INTEREST_CREATE_TRACKING_HELP'|translate}}"-->
+        <!--                  matTooltipShowDelay="300">-->
+        <!--            <mat-icon>add_location</mat-icon>-->
+        <!--          </button>-->
+
+      </div>
+
+      <div *ngIf="waitingCommandResponse[instance.activo]" class="text-center mt-2">
+        <mat-spinner [diameter]="40"></mat-spinner>
+        <span>{{'WAITING_DEVICE_ANSWER' | translate}}</span>
+      </div>
+    </section>
+
+    <section id="shift-assignment" *ngIf="instance?.rutas?.length > 0" class="mt-3 ">
+      <h2 class="info-subtitle  mb-2">{{'SHIFT_ASSIGNMENT' | translate}}</h2>
+
+      <div *ngFor="let ruta of instance?.rutas;let i = index" class="mt-3">
+
+        <div *ngIf="ruta?.origen  || ruta?.destino" class="item">
+          <label>{{'ROUTE' | translate}}:</label>
+          <div class="value">{{ ruta?.origen }} - {{ ruta?.destino }}</div>
+        </div>
+
+        <div *ngIf="ruta?.via " class="item">
+          <label>{{'WAY' | translate}}:</label>
+          <div class="value">{{ ruta?.via}}</div>
+        </div>
+
+        <div *ngIf="ruta?.orden_cargue" class="item">
+          <label>{{'LOAD_ORDER' | translate}}:</label>
+          <div class="value">{{ ruta?.orden_cargue }}</div>
+        </div>
+
+        <div *ngIf="ruta?.id_carga" class="item">
+          <label>{{'LOAD_ID' | translate}}:</label>
+          <div class="value">{{ ruta?.id_carga }}</div>
+        </div>
+
+        <div *ngIf="ruta?.planilla" class="item">
+          <label>{{'PLANILLA' | translate}}:</label>
+          <div class="value">{{ ruta?.planilla }}</div>
+        </div>
+
+        <div *ngIf="ruta?.estado_nombre" class="item">
+          <label>{{'STATE' | translate}}:</label>
+          <div class="value">{{ ruta?.estado_nombre }}</div>
+        </div>
+
+        <div *ngIf="ruta?.eta" class="item">
+          <label>{{'ETA' | translate}}:</label>
+          <div class="value">{{ ruta?.eta }}</div>
+        </div>
+        <mat-divider *ngIf="i !== 0"></mat-divider>
+      </div>
+    </section>
+
+    <section id="indicators" class="my-3">
+      <h2 class="info-subtitle ">{{'INDICATORS' | translate}}</h2>
+
+      <div class="indicators-wrapper">
+        <ng-container [ngSwitch]="instance?.canal_comunicacion ">
+          <div *ngSwitchCase="0" class="indicator" matTooltip="{{'SENDED_VIA_CELLULAR'|translate}}"
+            matTooltipShowDelay="300">
+            <mat-icon class="mr-2">sim_card</mat-icon>
+            <div class="value">{{'CELLULAR_COMUNICATION' | translate}}</div>
+          </div>
+
+          <div *ngSwitchCase="1" class="indicator" matTooltip="{{'SENDED_VIA_SATELLITE'|translate}}"
+            matTooltipShowDelay="300">
+            <em class="icon-satellite mr-2"></em>
+            <div class="value">{{'SATELLITAL_COMUNICATION' | translate}}</div>
+          </div>
+        </ng-container>
+
+        <div *ngIf=" instance?.datos_json?.jamming" class="indicator" matTooltip="{{'JAMMING_DETECTED'|translate}}"
+          matTooltipShowDelay="300">
+          <em class="icon-jamming mr-2"></em>
+          <div class="value">{{'JAMMING_DETECTED' | translate}}</div>
+        </div>
+
+        <ng-container [ngSwitch]="instance?.io_json?.ign">
+          <div *ngSwitchCase="true" class="indicator" matTooltip="{{'STATE_IGNITION'|translate}}"
+            matTooltipShowDelay="300">
+            <mat-icon class="text-success mr-2">power_settings_new</mat-icon>
+            <div class="value">{{'IGNITION_ON' | translate}}</div>
+          </div>
+
+          <div *ngSwitchCase="false" class="indicator" matTooltip="{{'STATE_IGNITION'|translate}}"
+            matTooltipShowDelay="300">
+            <mat-icon class="text-danger mr-2">power_settings_new</mat-icon>
+            <div class="value">{{'IGNITION_OFF' | translate}}</div>
+          </div>
+        </ng-container>
+
+        <ng-container [ngSwitch]="instance?.calidad_gps">
+
+          <div *ngSwitchCase="true" class="indicator" matTooltip="{{'GPS_QUALITY'|translate}}"
+            matTooltipShowDelay="300">
+            <mat-icon class="text-success mr-2">gps_fixed</mat-icon>
+            <div class="value">{{'VALID_COORDINATES' | translate}}</div>
+          </div>
+
+          <div *ngSwitchCase="false" class="indicator" matTooltip="{{'GPS_QUALITY'|translate}}"
+            matTooltipShowDelay="300">
+            <mat-icon class="text-danger mr-2">gps_off</mat-icon>
+            <div class="value">{{'NO_COORDINATES' | translate}}</div>
+          </div>
+
+          <div *ngSwitchCase="null" class="indicator" matTooltip="{{'GPS_QUALITY'|translate}}"
+            matTooltipShowDelay="300">
+            <mat-icon class="text-warning mr-2">gps_off</mat-icon>
+            <div class="value">{{'LAST_LOCATION' | translate}}</div>
+          </div>
+        </ng-container>
+
+        <ng-container [ngSwitch]="instance?.io_json?.cnt">
+          <div *ngSwitchCase="true" class="indicator" matTooltip="{{'SEAT_BELT_STATE'|translate}}"
+            matTooltipShowDelay="300">
+            <em class="icon-seat-belt text-success mr-2"></em>
+            <div class="value">{{'SEAT_BELT_FASTENED' | translate}}</div>
+          </div>
+
+          <div *ngSwitchCase="false" class="indicator" matTooltip="{{'SEAT_BELT_STATE'|translate}}"
+            matTooltipShowDelay="300">
+            <em class="icon-seat-belt text-danger mr-2"></em>
+            <div class="value">{{'SEAT_BELT_UNFASTENED' | translate}}</div>
+          </div>
+        </ng-container>
+
+        <div *ngIf="instance?.datos_json?.rumbo !==null && instance?.datos_json?.rumbo !==undefined " class="indicator"
+          matTooltip="{{'COURSE'|translate}}" matTooltipShowDelay="300">
+          <mat-icon class="mr-2">explore</mat-icon>
+          <div class="value">{{ instance?.datos_json?.rumbo }} °</div>
+        </div>
+
+        <div *ngIf="instance?.velocidad || instance?.velocidad === 0" class="indicator"
+          matTooltip="{{'VELOCITY'|translate}}" matTooltipShowDelay="300">
+          <em class="icon-gauge mr-2"></em>
+          <div class="value">{{ instance?.velocidad}} {{metricsAlias?.velocity}}</div>
+        </div>
+
+        <div *ngIf="instance?.datos_json?.vel_max || instance?.datos_json?.vel_max === 0" class="indicator"
+          matTooltip="{{'MAXIMUM_SPEED_REACHED'|translate}}" matTooltipShowDelay="300">
+          <em class="icon-velocity-1 mr-2"></em>
+          <div class="value">{{ instance?.datos_json?.vel_max}} {{metricsAlias?.velocity}}</div>
+        </div>
+
+        <div *ngIf="instance?.datos_json?.lift_bat !==null && instance?.datos_json?.lift_bat !==undefined "
+          class="indicator" matTooltip="{{'ASSET_BATTERY_VOLTAGE'|translate}}" matTooltipShowDelay="300">
+          <mat-icon class="mr-2  text-success">bolt</mat-icon>
+          <div class="value">{{ instance?.datos_json?.lift_bat }} V</div>
+        </div>
+
+        <div *ngIf="instance?.datos_json?.altitud" class="indicator" matTooltip="{{'ALTITUDE'|translate}}"
+          matTooltipShowDelay="300">
+          <em class="icon-altitude mr-2"></em>
+          <div class="value">{{ instance?.datos_json?.altitud }} m</div>
+        </div>
+
+        <div *ngIf="instance?.bateria || instance?.bateria ===0" class="indicator"
+          matTooltip="{{'BATTERY_LEVEL'|translate}}" matTooltipShowDelay="300">
+          <em *ngIf="instance?.io_json?.alim_ext" class="icon-bat-charge mr-2"></em>
+          <em *ngIf="!instance?.io_json?.alim_ext && instance?.bateria >= 80"
+            class="icon-bat-full text-success mr-2"></em>
+          <em *ngIf="!instance?.io_json?.alim_ext && instance?.bateria < 80 && instance?.bateria > 30"
+            class="icon-bat-half text-warning mr-2"></em>
+          <em *ngIf="!instance?.io_json?.alim_ext && instance?.bateria <= 30"
+            class="icon-bat-empty text-danger mr-2"></em>
+          <div class="value">{{ instance?.bateria }}%</div>
+        </div>
+
+        <div *ngIf="instance?.temp !==null && instance?.temp !== undefined" class="indicator"
+          matTooltip="{{'DEVICE_TEMP'|translate}}" matTooltipShowDelay="300">
+          <em class="icon-temp mr-2"></em>
+          <div class="value">{{ instance?.temp }} °C</div>
+        </div>
+      </div>
+    </section>
+  </ng-container>
+
+
+  <ng-template #phItem>
+    <div class="ph-col-12">
+      <div class="ph-row mb-3">
+        <div class="ph-col-3 empty"></div>
+        <div class="ph-col-6 big ph-brightness"></div>
+        <div class="ph-col-3 empty"></div>
+        <div class="ph-col-4 empty"></div>
+        <div class="ph-col-4 ph-brightness"></div>
+        <div class="ph-col-4 empty"></div>
+      </div>
+
+      <div *ngFor="let i of [1,2]" class="ph-row mt-5">
+        <div class="ph-col-4 mb-3 big ph-brightness"></div>
+        <div class="ph-col-8 empty"></div>
+
+        <ng-container *ngFor="let i of [1,2,3,4]">
+          <div class="ph-col-2 ph-brightness"></div>
+          <div class="ph-col-1 empty"></div>
+          <div class="ph-col-9 ph-brightness"></div>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="d-flex flex-row flex-nowrap justify-content-center mt-3">
+      <div class="ph-card-avatar ph-brightness mx-1"></div>
+      <div class="ph-card-avatar ph-brightness mx-1"></div>
+    </div>
+  </ng-template>
+
+</div>

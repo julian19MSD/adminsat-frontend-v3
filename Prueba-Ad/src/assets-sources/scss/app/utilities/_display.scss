@@ -1,0 +1,7 @@
+@each $breakpoint, $value in $grid-breakpoints {
+    @include media-breakpoint-down($breakpoint) {
+      .d-down-#{$breakpoint}-none {
+        display: none !important;
+      }
+    }
+  }

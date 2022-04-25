@@ -1,0 +1,27 @@
+
+
+<mat-drawer-container class="vh-100">
+  <mat-drawer [style.background-image]="fondo$|async" mode="side" position="end" [opened]="!(isHandset$|async)">
+    <button class="center" *ngIf="false" mat-raised-button color="primary"  >Click y conoce mas!</button>
+  </mat-drawer>
+  <mat-drawer-content class="bg-color">
+    <div  class="login-main-content">
+      <div class="login-wrapper">
+        <div class="login-container d-flex justify-content-center align-items-center">
+          <div class="login-content">
+            <div class="login-header text-center">
+              <div class="site-logo">
+                <img [hidden]="noImg" [src]="logo$|async" (load)="noImg=false" alt="logo">
+              </div>
+            </div>
+            <div>
+              <router-outlet></router-outlet>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>
+
+

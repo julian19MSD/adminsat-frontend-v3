@@ -1,0 +1,169 @@
+<div class="filter-bottom-sheet">
+  <div class="filter-bottom-sheet-title">
+    <h5>{{'FILTER_ASSETS'| translate}}</h5>
+    <mat-divider></mat-divider>
+  </div>
+
+  <form [formGroup]="formGroup" class="grid grid-md-3 align-items-center pt-3" id="filterForm">
+
+    <adms-select *ngIf="data?.clients?.length >1" [ctrl]="formGroup.get('cliente__in')" [multiple]="true"
+                 [options]="data.clients" placeholder="{{'CLIENT'|translate}}">
+    </adms-select>
+
+    <mat-form-field>
+      <mat-chip-list #placa formControlName="placa__in">
+        <mat-chip (removed)="chipRemove('placa__in',name)"
+                  *ngFor="let name of formGroup.get('placa__in').value"
+                  removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('placa__in',$event,50)"
+               (paste)="chipPaste('placa__in',$event,50)"
+               [matChipInputAddOnBlur]="true"
+               [matChipInputFor]="placa"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               placeholder="{{'PLATE'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_50'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #nombre formControlName="nombre__in">
+        <mat-chip (removed)="chipRemove('nombre__in',name)"
+                  *ngFor="let name of formGroup.get('nombre__in').value"
+                  removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('nombre__in',$event,50)"
+               (paste)="chipPaste('nombre__in',$event,50)"
+               [matChipInputAddOnBlur]="true"
+               [matChipInputFor]="nombre"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               placeholder="{{'NAME'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_50'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #equiposList formControlName="equipos_identificador__in">
+        <mat-chip (removed)="chipRemove('equipos_identificador__in',name)"
+                  *ngFor="let name of formGroup.get('equipos_identificador__in').value"
+                  removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('equipos_identificador__in',$event,50)"
+               (paste)="chipPaste('equipos_identificador__in',$event,50)"
+               [matChipInputAddOnBlur]="true"
+               [matChipInputFor]="equiposList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               placeholder="{{'DEVICE'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_50'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #gruposList formControlName="grupo_nombre__in">
+        <mat-chip (removed)="chipRemove('grupo_nombre__in',name)"
+                  *ngFor="let name of formGroup.get('grupo_nombre__in').value"
+                  removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('grupo_nombre__in',$event)"
+               (paste)="chipPaste('grupo_nombre__in',$event)"
+               [matChipInputAddOnBlur]="true"
+               [matChipInputFor]="gruposList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               placeholder="{{'GROUP'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_5'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="tipo_activo" placeholder="{{'ASSET_TYPE'|translate}}">
+        <mat-option>--</mat-option>
+        <mat-option *ngFor="let item of data?.choices?.tipo_activo_choices" value="{{item.id}}"
+                    class="text-capitalize">
+          {{item.value}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+    <mat-form-field>
+      <mat-select formControlName="apagado_remoto" placeholder="{{'REMOTE_SHUTDOWN'|translate}}">
+        <mat-option>--</mat-option>
+        <mat-option *ngFor="let item of choices.have" [value]="item.id" class="text-capitalize">
+          {{item.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="sensor_combustible" placeholder="{{'FUEL_SENSOR'|translate}}">
+        <mat-option>--</mat-option>
+        <mat-option *ngFor="let item of choices.have" [value]="item.id" class="text-capitalize">
+          {{item.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="ecumonitor" placeholder="ECU/ECM">
+        <mat-option>--</mat-option>
+        <mat-option *ngFor="let item of choices.have" [value]="item.id" class="text-capitalize">
+          {{item.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="boton_panico" placeholder="{{'PANIC_BUTTON'|translate}}">
+        <mat-option>--</mat-option>
+        <mat-option *ngFor="let item of choices.have" [value]="item.id" class="text-capitalize">
+          {{item.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="vehiculo_seguro" placeholder="{{'SAFE_VEHICLE'|translate}}">
+        <mat-option>--</mat-option>
+        <mat-option *ngFor="let item of choices.secure" [value]="item.id" class="text-capitalize">
+          {{item.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select formControlName="is_active" placeholder="{{'STATE'|translate}}">
+        <mat-option>--</mat-option>
+        <mat-option *ngFor="let item of choices.state" [value]="item.id" class="text-capitalize">
+          {{item.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </form>
+</div>
+
+<div class="filter-bottom-sheet-controls">
+  <mat-divider class="mt-2 mb-2"></mat-divider>
+  <div class="container-fluid">
+    <div class="row justify-content-end">
+      <button (click)="close($event,false, false)" class="m-1" mat-button type="button">
+        {{'CANCEL'| translate}}
+      </button>
+      <button class="m-1" form="filterForm" mat-raised-button type="reset">{{'CLEAR'| translate}}</button>
+      <button (click)="close($event,true, true)" class="m-1" color="primary" mat-raised-button type="button">
+        {{'FILTER'| translate}}
+      </button>
+    </div>
+  </div>
+</div>
+
+
+

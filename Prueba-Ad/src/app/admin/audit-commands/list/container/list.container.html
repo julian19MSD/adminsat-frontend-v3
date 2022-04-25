@@ -1,0 +1,61 @@
+<div class="h-100 p-1 p-md-2  fadeInUp">
+  <div *ngIf="!totalListItemsCounter;else list" class="p-1 py-lg-2">
+    <mat-card *ngIf="!fetching;else phContent" class="mw-600-px bl-primary-3">
+      <h1 class="mat-title">{{'NO_RESULT'|translate}}</h1>
+    </mat-card>
+
+    <ng-template #phContent>
+      <div *ngFor="let asset of placeholderItems" class="pb-1">
+        <ng-container *ngTemplateOutlet="phItem"></ng-container>
+      </div>
+    </ng-template>
+  </div>
+
+  <ng-template #list>
+    <mat-card class="h-100 p-0">
+      <div #headerScroll class="header-wrapper bb-divider  overflow-x-auto" [class.hasClient]="clients?.length>1">
+
+        <div class="text-center"></div>
+        <div class="title-item">{{'DATE'|translate}}</div>
+        <div class="title-item">{{'USER'|translate}}</div>
+        <div class="title-item">{{'DEVICE'|translate}}</div>
+        <div class="title-item">{{'COMMANDS'|translate}}</div>
+        <div class="title-item">{{'ASSETS'|translate}}</div>
+        <div class="title-item">{{'RESPONSE'|translate}}</div>
+        <div class="title-item">{{'TECHNICAL_RESPONSE'|translate}}</div>
+        <div class="title-item">{{'SEND_COMMAND'|translate}}</div>
+        <div *ngIf="clients?.length>1" class="title-item">{{'CLIENT'|translate}}</div>
+
+      </div>
+
+      <cdk-virtual-scroll-viewport #cdkScroller (scroll)="updateScroll(headerScroll,$event)" class="w-100"
+        itemSize="48">
+        <div *cdkVirtualFor="let commands of listItems$ | async" class="w-100">
+          <adms-commands-item *ngIf="!fetching;else phItem"
+            (checkedChange)="onCheckedSingle($event, commands.id, commands.id)"
+            [actionsCapabilities]="listHeaderState.actionsCapabilities" [commands]="commands"
+            [viewClienInfo]="clients.length>1">
+          </adms-commands-item>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </mat-card>
+  </ng-template>
+
+</div>
+
+
+<ng-template #phItem>
+  <mat-card class="ph-wrapper p-0 bb-divider">
+    <div class="ph-item align-items-center p-0 h-100">
+      <div>
+        <div class="ph-row m-0">
+          <div class="ph-col-3 big ph-brightness m-0"></div>
+          <div class="ph-col-1 empty"></div>
+          <div class="ph-col-3 big ph-brightness m-0"></div>
+          <div class="ph-col-1 empty"></div>
+          <div class="ph-col-4 big ph-brightness m-0"></div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</ng-template>

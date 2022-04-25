@@ -1,0 +1,183 @@
+<div class="filter-bottom-sheet">
+  <div class="filter-bottom-sheet-title">
+    <h5>{{'SORT_WORKDAYS'| translate}}</h5>
+    <mat-divider></mat-divider>
+  </div>
+  <form [formGroup]="formGroup" class="grid grid-md-3 align-items-center pt-3" id="filterForm">
+
+    <mat-form-field>
+      <mat-label>{{'CLIENT'|translate}}</mat-label>
+      <mat-select formControlName="cliente__nombre">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'PLATE'|translate}}</mat-label>
+      <mat-select formControlName="activo__placa">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'TRAILER'|translate}}</mat-label>
+      <mat-select formControlName="enturnamiento__remolque">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'LOAD_ORDER'|translate}}</mat-label>
+      <mat-select formControlName="enturnamiento__orden_cargue">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'ORIGIN'|translate}}</mat-label>
+      <mat-select formControlName="enturnamiento__origen">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'DESTINATION'|translate}}</mat-label>
+      <mat-select formControlName="enturnamiento__destino">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'WAY'|translate}}</mat-label>
+      <mat-select formControlName="enturnamiento__via">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'PLANILLA'|translate}}</mat-label>
+      <mat-select formControlName="enturnamiento__planilla">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'NAME_ROAD_ACTOR'|translate}}</mat-label>
+      <mat-select formControlName="actor_vial__nombre">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'LASTNAME_ROAD_ACTOR'|translate}}</mat-label>
+      <mat-select formControlName="actor_vial__nombre">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'TOTAL_WORKDAYS'|translate}}</mat-label>
+      <mat-select formControlName="total_workdays">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'TOTAL_RESTDAYS'|translate}}</mat-label>
+      <mat-select formControlName="total_restdays">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'STATUS'|translate}}</mat-label>
+      <mat-select formControlName="status">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'STATUS_COLOR'|translate}}</mat-label>
+      <mat-select formControlName="status_color">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'START'|translate}}</mat-label>
+      <mat-select formControlName="start_dt">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{'CURRENT_DURATION'|translate}}</mat-label>
+      <mat-select formControlName="current_duration">
+        <mat-option [value]="null">----</mat-option>
+        <mat-option *ngFor="let option of choices.sort" [value]="option.id">
+          {{option.value|translate}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</div>
+
+<div class="filter-bottom-sheet-controls">
+  <mat-divider class="mt-2 mb-2"></mat-divider>
+  <div class="container-fluid">
+    <div class="row justify-content-end">
+      <button (click)="close($event,false)" class="m-1" mat-button type="button">
+        {{'CANCEL'| translate}}
+      </button>
+      <button class="m-1" form="filterForm" mat-raised-button type="reset">{{'CLEAR'| translate}}</button>
+      <button (click)="close($event,true)" class="m-1" color="primary" mat-raised-button type="button">
+        {{'SORT'| translate}}
+      </button>
+    </div>
+  </div>
+</div>

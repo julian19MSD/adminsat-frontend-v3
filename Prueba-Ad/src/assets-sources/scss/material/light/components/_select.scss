@@ -1,0 +1,8 @@
+body:not(.dark) {
+  .mat-select-panel {
+    .mat-option.mat-selected:not(.mat-option-multiple) {
+      background-color: mat-color($primary);
+      color: mat-color($primary, default-contrast);
+    }
+  }
+}

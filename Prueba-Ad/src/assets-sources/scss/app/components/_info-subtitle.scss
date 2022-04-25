@@ -1,0 +1,33 @@
+
+.info-subtitle {
+  padding: 10px;
+  margin-right: 48px;
+  margin-bottom: 0;
+  font-weight: 500;
+  text-transform: uppercase;
+  width: -moz-fit-content;
+  width: fit-content;
+  max-height: 41px;
+  font-size: 1rem;
+  line-height: 24px;
+  position: relative;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.info-subtitle:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -40px;
+  width: 0;
+  height: 41px;
+  border-top: 0 solid transparent;
+  border-bottom: 40px solid transparent;
+}
+
+

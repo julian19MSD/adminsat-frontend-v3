@@ -1,0 +1,63 @@
+<div class="p-1 p-lg-2 h-100 fadeInUp">
+
+  <div *ngIf="loader" [innerHTML]="loaderContent" class="loader-container" id="internalLoader"></div>
+
+  <mat-card class="main-card-container">
+
+    <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" id="workdayConfigForm">
+
+      <section id="basic_data">
+        <h1 class="dark info-subtitle mt-4">{{'BASIC_DATA' | translate}}</h1>
+        <div class="grid grid-md-3  pt-3">
+          <div *ngIf="clients.length > 1">
+            <adms-select [ctrl]="formGroup.get('cliente')" [options]="clients" placeholder="{{'CLIENT' | translate}}"
+              required="true">
+            </adms-select>
+          </div>
+          <mat-form-field>
+            <input formControlName="workday_duration" matInput placeholder="{{'WORKDAY_DURATION'|translate}} ({{'HOURS'|translate}})" required
+              min="6" max="24" type="number">
+            <mat-error>
+              {{formStatus?.workday_duration| translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input formControlName="workday_alert" matInput placeholder="{{'WORKDAY_ALERT'|translate}} ({{'HOURS'|translate}})" required min="1"
+              max="5" type="number">
+            <mat-error>
+              {{formStatus?.workday_alert| translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input formControlName="rest_duration" matInput placeholder="{{'REST_DURATION'|translate}} ({{'HOURS'|translate}})" required
+              min="6" max="24" type="number">
+            <mat-error>
+              {{formStatus?.rest_duration| translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input formControlName="rest_alert" matInput placeholder="{{'WORKDAY_ALERT'|translate}} ({{'HOURS'|translate}})" required min="1"
+              max="5" type="number">
+            <mat-error>
+              {{formStatus?.rest_alert| translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input formControlName="rest_limit_speed" matInput placeholder="{{'REST_LIMIT_SPEED'|translate}} ({{metricsAlias.velocity}})" required min="1"
+              max="5" type="number">
+            <mat-error>
+              {{formStatus?.rest_limit_speed| translate}}
+            </mat-error>
+          </mat-form-field>
+
+
+        </div>
+      </section>
+
+    </form>
+  </mat-card>
+</div>
