@@ -1,0 +1,177 @@
+<mat-card [class.list-item-selected]="asset?.isSelected" class="asset-item-wrapper" matRipple>
+  <div *ngIf="actionsCapabilities?.delete" class="selector pr-2 pr-md-0">
+    <mat-checkbox (change)="checkedItem($event.checked)" [(ngModel)]="asset.isSelected" color="primary">
+    </mat-checkbox>
+  </div>
+
+  <div class="asset-icon">
+    <div *ngIf="noImage" class="icon-image"></div>
+    <img (error)="noImage = true" (load)="noImage = false" [hidden]="noImage" [src]="asset?.icono" alt="icon"/>
+
+    <ng-container>
+      <div *ngIf="asset?.tipo_activo === 0" class="icon-safe-badge">
+        <mat-icon *ngIf="asset?.vehiculo_seguro; else noSafe" class="text-success"
+                  matTooltip="{{ 'SAFE_VEHICLE' | translate }}" matTooltipShowDelay="300">
+          check_circle
+        </mat-icon>
+        <ng-template #noSafe>
+          <mat-icon class="text-danger" matTooltip="{{ 'UNSAFE_VEHICLE' | translate }}" matTooltipShowDelay="300">
+            error
+          </mat-icon>
+        </ng-template>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="description">
+    <h2 class="asset-name">
+      {{ asset?.nombre }}
+    </h2>
+
+    <div *ngIf="asset?.tipo_activo == 0" class="small">
+      <span class="font-weight-bold mr-1">{{ "PLATE" | translate }}: </span
+      >{{ asset?.placa }}
+    </div>
+
+    <div *ngIf="viewClienInfo" class="small">
+      <span class="font-weight-bold mr-1">{{ "CLIENT" | translate }}:</span>
+      {{ asset?.cliente_nombre }}
+    </div>
+
+    <div *ngIf="asset?.activo_asociado" class="small">
+      <div class="font-weight-bold mr-1">
+        {{ "ASSOCIATED_ASSET" | translate }}:
+      </div>
+      <mat-chip-list>
+        <mat-chip
+          (click)="openDetailDialog(asset?.activo_asociado)"
+          class="cursor-pointer mt-2"
+          selected
+        >
+          {{ asset?.activo_asociado_nombre }}
+        </mat-chip>
+      </mat-chip-list>
+    </div>
+  </div>
+
+  <div class="external">
+    <div class="small mb-2">
+      <strong class="mr-1">{{ "STATE" | translate }}:</strong>
+      <span *ngIf="asset?.is_active; else inactive" class="text-success">{{
+        "ENABLED" | translate
+        }}</span>
+      <ng-template #inactive>
+        <span class="text-danger">{{ "DISABLED" | translate }}</span>
+      </ng-template>
+    </div>
+
+    <div
+      *ngIf="asset?.varios_json?.ecumonitor"
+      class="accessories"
+    >
+      <mat-icon class="mr-2 text-success"
+      >check_circle_outline
+      </mat-icon
+      >
+      <span class="small">{{
+        "ECU" | translate
+        }}</span>
+    </div>
+
+    <div
+      *ngIf="asset?.varios_json?.sensor_combustible"
+      class="accessories"
+    >
+      <mat-icon class="mr-2 text-success"
+      >check_circle_outline
+      </mat-icon
+      >
+      <span class="small">{{
+        "FUEL_SENSOR" | translate
+        }}</span>
+    </div>
+
+    <div
+      *ngIf="asset?.varios_json?.sensor_llantas"
+      class="accessories"
+    >
+      <mat-icon class="mr-2 text-success"
+      >check_circle_outline
+      </mat-icon
+      >
+      <span class="small">{{ "TIRE_SENSOR" | translate }}</span>
+    </div>
+
+    <div
+      *ngIf="asset?.varios_json?.boton_panico"
+      class="accessories"
+    >
+      <mat-icon class="mr-2 text-success">check_circle_outline</mat-icon>
+      <span class="small">{{ "PANIC_BUTTON" | translate }}</span>
+    </div>
+
+    <div
+      *ngIf="asset?.varios_json?.apagado_remoto"
+      class="accessories"
+    >
+      <mat-icon class="mr-2 text-success">check_circle_outline</mat-icon>
+      <span class="small">{{ "REMOTE_SHUTDOWN" | translate }}</span>
+    </div>
+
+    <div *ngIf="asset?.varios_json?.ignicion" class="accessories">
+      <mat-icon class="mr-2 text-success">check_circle_outline</mat-icon>
+      <span class="small">{{ "IGNITION" | translate }}</span>
+    </div>
+
+    <div *ngIf="asset?.varios_json?.own" class="accessories">
+      <mat-icon class="mr-2 text-success">check_circle_outline</mat-icon>
+      <span class="small">{{ "OWN_ASSET" | translate }}</span>
+    </div>
+  </div>
+
+  <div *ngIf="asset?.equipos?.length > 0" class="devices">
+    <div class="small font-weight-bold mb-2">
+      {{ "ASSOCIATED_DEVICES" | translate }}:
+    </div>
+    <mat-chip-list>
+      <ng-container *ngFor="let equipo of asset?.equipos">
+        <mat-chip (click)="openDeviceDetails(equipo.id)"
+                  *ngIf="permissionsService.hasPermission(permissions.equipos.ver);else nodeviceperms"
+                  class="cursor-pointer" selected>
+          {{ equipo.identificador }}
+        </mat-chip>
+
+        <ng-template #nodeviceperms>
+          <mat-chip>{{ equipo.identificador }}</mat-chip>
+        </ng-template>
+
+      </ng-container>
+    </mat-chip-list>
+  </div>
+
+  <button [matMenuTriggerFor]="detailsMenu" class="more" mat-icon-button type="button">
+    <mat-icon>more_vert</mat-icon>
+
+    <mat-menu #detailsMenu="matMenu">
+      <button (click)="openDetailDialog(asset?.id)" mat-menu-item type="button">
+        <mat-icon>info_outline</mat-icon>
+        <span>{{ "DETAILS" | translate }}</span>
+      </button>
+      <a
+        *ngIf="actionsCapabilities?.edit"
+        [routerLink]="['form', asset?.id]"
+        class="text-decoration-none"
+        mat-menu-item
+      >
+        <mat-icon>edit</mat-icon>
+        <span>{{ "EDIT" | translate }}</span>
+      </a>
+
+      <button (click)="getCertificate(asset?.id)" mat-menu-item type="button">
+        <mat-icon>article</mat-icon>
+        <span>{{ "REQUEST_MOBILITY_CERTIFICATE" | translate }}</span>
+      </button>
+
+    </mat-menu>
+  </button>
+</mat-card>

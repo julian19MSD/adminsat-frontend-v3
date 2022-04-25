@@ -1,0 +1,39 @@
+<mat-tab-group *ngIf="'tabs'=== mode;else phItem">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div class="ph-item align-items-center">
+        <div class="ph-col-auto">
+          <div class="ph-icon ph-brightness"></div>
+        </div>
+        <div>
+          <div class="ph-row">
+            <div class="ph-col-11 ph-brightness">
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-container *ngTemplateOutlet="phItem"></ng-container>
+
+  </mat-tab>
+</mat-tab-group>
+
+
+<ng-template #phItem>
+  <div class="ph-item mw-600-px">
+    <div class="ph-col-12">
+      <div class="ph-picture ph-brightness"></div>
+      <div class="ph-row">
+        <div class="ph-col-6 big ph-brightness"></div>
+        <div class="ph-col-4 empty big"></div>
+        <div class="ph-col-2 big ph-brightness"></div>
+        <div class="ph-col-4 ph-brightness"></div>
+        <div class="ph-col-8 empty"></div>
+        <div class="ph-col-6 ph-brightness"></div>
+        <div class="ph-col-6 empty"></div>
+        <div class="ph-col-12 ph-brightness"></div>
+      </div>
+    </div>
+  </div>
+</ng-template>

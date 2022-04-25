@@ -1,0 +1,52 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "~src/assets-sources/scss/app/mixins/flex";
+
+.task-container {
+  display: grid;
+  margin-left: auto;
+  margin-right: auto;
+  gap: 8px 16px;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: 'icon . file' 'icon . file' 'icon . file' 'icon . file' 'icon . file';
+  justify-items: center;
+  align-items: center;
+
+  .icon {
+    grid-area: icon;
+  }
+
+  .file {
+    grid-area: file;
+    width: fit-content;
+    height: fit-content;
+    line-height: 1;
+  }
+
+  .description {
+    justify-self: start;
+    margin-bottom: 0.5rem;
+  }
+
+  .info {
+    @include flexbox;
+    @include align-items(center);
+    @include flex-direction(row);
+    @include flex-wrap(nowrap);
+    line-height: 1;
+    width: 100%;
+  }
+
+  .details {
+    justify-self: start;
+  }
+}
+
+@include media-breakpoint-down(xs) {
+  .task-container {
+    grid-template-columns: auto 1fr;
+    grid-template-areas: 'icon .' 'icon .' 'icon . ' 'icon .' 'icon .' 'file file';
+    padding: 0.5rem;
+  }
+}

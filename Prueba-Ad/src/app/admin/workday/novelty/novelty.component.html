@@ -1,0 +1,61 @@
+<h1 class="mb-0" mat-dialog-title>{{'NEW_NOVELTY'|translate}}</h1>
+
+<mat-divider class="mt-3 mb-2"></mat-divider>
+
+<div class="w-600-px  py-2" mat-dialog-content>
+
+  <adms-ph *ngIf="loading; else loaded" mode="form"></adms-ph>
+
+  <ng-template #loaded>
+    <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup"
+          id="workNoveltyForm">
+      <div class="grid grid-md-2 align-items-center">
+
+
+        <div>
+          <adms-select [mainKey]="'event'" [ctrl]="formGroup.get('tipo')" [options]="tipoOptions"
+                       placeholder="{{'TYPE'|translate}}" required="true">
+          </adms-select>
+        </div>
+
+        <mat-form-field >
+          <mat-label>{{ 'DATETIME' | translate }}</mat-label>
+          <input #dtTo  [max]="today" [owlDateTime]="dtRangeTo"
+                 [owlDateTimeTrigger]="dtRangeTo" formControlName="start_dt" matInput required>
+          <button (click)="formGroup.get('start_dt').reset(null);" *ngIf="dtTo.value" mat-icon-button matSuffix
+                  type="button">
+            <mat-icon>clear</mat-icon>
+          </button>
+          <button [owlDateTimeTrigger]="dtRangeTo" mat-icon-button matSuffix type="button">
+            <mat-icon>calendar_today</mat-icon>
+          </button>
+          <mat-error>
+            {{formStatus?.start_dt|translate}}
+          </mat-error>
+          <owl-date-time #dtRangeTo></owl-date-time>
+        </mat-form-field>
+
+        <ng-container *ngIf="formGroup.get('tipo').value === 14">
+          <div class="grid-col">
+            <adms-select [mainKey]="'full_name'" [ctrl]="formGroup.get('actor_vial')" [options]="actorOptions"
+                        placeholder="{{'ROAD_ACTOR'|translate}}" ></adms-select>
+          </div>
+
+        </ng-container>
+
+      </div>
+    </form>
+  </ng-template>
+</div>
+
+<mat-divider class="mt-3 mb-2"></mat-divider>
+
+<div mat-dialog-actions class="justify-content-end">
+  <button class="m-1" mat-button type="button" mat-dialog-close>
+    {{'CANCEL'| translate}}
+  </button>
+  <button *ngIf="!loading" class="m-1" color="primary" form="workNoveltyForm" mat-raised-button type="submit">
+    {{'SAVE'| translate}}
+  </button>
+</div>
+

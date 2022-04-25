@@ -1,0 +1,180 @@
+<div class="p-1 p-lg-2 h-100 fadeInUp">
+
+  <div *ngIf="loader" [innerHTML]="loaderContent" class="loader-container" id="internalLoader"></div>
+
+  <mat-card class="main-card-container">
+    <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" id="sendCommandsForm">
+      <div class="grid grid-md-2 align-items-start py-2 px-0">
+        <div>
+          <h2 class="dark info-subtitle">{{'CONFIGURATION' | translate}}</h2>
+          <div class="p-2 mt-3">
+            <adms-select *ngIf="clients.length > 1" [ctrl]="formGroup.get('cliente')" [options]="clients"
+              placeholder="{{'CLIENT'|translate}}" required="true">
+            </adms-select>
+          </div>
+
+          <div class="p-2 mt-3">
+            <adms-select [ctrl]="formGroup.get('device_type')" [options]="deviceOptions"
+              placeholder="{{'DEVICE_TYPE'|translate}}">
+            </adms-select>
+          </div>
+
+          <div class="p-2 mt-3">
+            <div class="d-flex flex-nowrap  align-items-center flex-row">
+              <adms-select [ctrl]="formGroup.get('device')" [multiple]="true" [mainKey]="'nombre'"
+                [options]="devicesOptions" class="w-100" placeholder="{{'DEVICES'|translate}}">
+              </adms-select>
+              <button matTooltipShowDelay="300" (click)="addAll('devicesOptions','device')"
+                matTooltip="{{'SELECT_ALL'|translate}}" mat-icon-button type="button">
+                <mat-icon>select_all</mat-icon>
+              </button>
+              <button (click)="formGroup.get('device').reset([])" matTooltipShowDelay="300"
+                matTooltip="{{'UNSELECT_ALL'|translate}}" mat-icon-button type="button">
+                <mat-icon>clear_all</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="p-2 mt-3">
+            <div class="d-flex flex-nowrap  align-items-center flex-row">
+              <adms-select [ctrl]="formGroup.get('commandsId')" [multiple]="true" [options]="commandsOptions"
+                class="w-100" placeholder="{{'COMMANDS'|translate}}">
+              </adms-select>
+              <button matTooltipShowDelay="300" (click)="addAll('commandsOptions','commandsId')"
+                matTooltip="{{'SELECT_ALL'|translate}}" mat-icon-button type="button">
+                <mat-icon>select_all</mat-icon>
+              </button>
+              <button (click)="formGroup.get('commandsId').reset([])" matTooltipShowDelay="300"
+                matTooltip="{{'UNSELECT_ALL'|translate}}" mat-icon-button type="button">
+                <mat-icon>clear_all</mat-icon>
+              </button>
+            </div>
+          </div>
+
+          <div class="container-fluid" *ngIf="!this.formGroup.controls['commandsId'].disabled">
+            <div class="row">
+              <button (click)="addCustomCommand()" class="m-1" color="primary" mat-raised-button type="button">
+                <mat-icon><span class="material-icons-outlined">
+                  add_circle_outline</span></mat-icon>
+                <span>&nbsp;{{ "CREATE_CUSTOM_COMMANDS" | translate }}</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+        <div *ngIf="formGroup.get('commandsId').value.length > 0">
+          <h2 class="dark info-subtitle">{{'ORDER_COMMANDS' | translate}}</h2>
+
+          <adms-send-command-associations-preview (disassociate)="formGroup.get('commandsId').reset($event)"
+            [confirmDisassociation]="false" [items]="commandsOptions" [selected]="formGroup.get('commandsId').value">
+          </adms-send-command-associations-preview>
+          <div class="container">
+            <div class="row">
+              <button (click)="addCommand()" class="m-1" [disabled]="formGroup.get('device').value.length == 0 "
+                color="primary" mat-raised-button type="button">
+                <mat-icon>add_task</mat-icon>
+                <span>{{ "ADD_COMMANDS" | translate }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </form>
+
+    <div class="grid-col mt-3">
+      <h2 class="dark info-subtitle">{{'COMMAND_LIST' | translate}}</h2>
+
+      <div class="container-fluid mt-3">
+        <div class="row">
+          <button (click)="updateStatusCommand()" class="m-1" [disabled]='!canUpdateList' color="primary"
+            mat-raised-button type="button">
+            <mat-icon>update</mat-icon>
+            <span>{{ "UPDATE" | translate }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-2" [hidden]="listCommands.length === 0 ">
+        <div class="container-fluid">
+          <div class="row">
+            <div class=" table-responsive mt-2">
+              <table mat-table [dataSource]="listCommands" #myTable class="my-table mat-elevation-z8">
+
+                <ng-container matColumnDef="activo_nombre">
+                  <th class="text-center" mat-header-cell *matHeaderCellDef> <span class="text-center  ">
+                      {{'ASSETS' |
+                      translate}}</span> </th>
+                  <td class="text-center" mat-cell *matCellDef="let element"> <span
+                      class="text-center  ">{{element.asset_name}}</span> </td>
+                </ng-container>
+
+                <ng-container matColumnDef="equipo">
+                  <th class="text-center" mat-header-cell *matHeaderCellDef><span class="text-center  ">
+                      {{'IDENTIFIER' |
+                      translate}}</span> </th>
+                  <td class="text-center" mat-cell *matCellDef="let element"><span class="text-center  ">
+                      {{element.identifier}}</span> </td>
+                </ng-container>
+
+                <ng-container matColumnDef="comando_nombre">
+                  <th class="text-center" mat-header-cell *matHeaderCellDef><span class="text-center  ">
+                      {{'COMMAND_NAME'
+                      | translate}}</span> </th>
+                  <td class="text-center" mat-cell *matCellDef="let element"><span class="text-center  ">
+                      {{element.command}}</span> </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                  <th class="text-center" mat-header-cell *matHeaderCellDef><span class="text-center  ">
+                      {{'STATUS'
+                      | translate}}</span> </th>
+                  <td class="text-center" mat-cell *matCellDef="let element"><span class="text-center  ">
+                      {{element.status_nombre || '--'}}</span> </td>
+                </ng-container>
+
+                <ng-container matColumnDef="respuesta_msg">
+                  <th class="text-center" mat-header-cell *matHeaderCellDef><span class="text-center  ">
+                      {{'RESPONSE'
+                      | translate}}</span> </th>
+                  <td class="text-center" mat-cell *matCellDef="let element"><span class="text-center  ">
+                      {{element.response_message || '--' }}</span> </td>
+                </ng-container>
+
+                <!-- Action Column -->
+                <ng-container matColumnDef="action">
+                  <th class="text-center" mat-header-cell *matHeaderCellDef> {{'ACTION' | translate}} </th>
+                  <td class="text-center" mat-cell *matCellDef="let element" class="action-link">
+                    <div class="text-center">
+                      <button *ngIf="element.id === null" matTooltipShowDelay="300"
+                        (click)="deleteRowData(element.order)" matTooltip="{{'DELETE_COMMAND'|translate}}"
+                        mat-icon-button type="button">
+                        <mat-icon>clear</mat-icon>
+                      </button>
+                      <button *ngIf="element.id !== null" matTooltipShowDelay="300"
+                      (click)="openDetails(element)" matTooltip="{{'DETAILS'|translate}}"
+                      mat-icon-button type="button">
+                      <mat-icon>ballot</mat-icon>
+                    </button>
+
+                    </div>
+
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </mat-card>
+
+</div>

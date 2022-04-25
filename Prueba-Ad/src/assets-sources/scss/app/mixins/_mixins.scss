@@ -1,0 +1,107 @@
+@mixin vendor-prefix($name, $argument) {
+  -webkit-#{$name}: #{$argument};
+  -ms-#{$name}: #{$argument};
+  -moz-#{$name}: #{$argument};
+  -o-#{$name}: #{$argument};
+  #{$name}: #{$argument};
+}
+
+@mixin vendor-transition($value) {
+  -webkit-transition: #{$value};
+  -ms-transition: #{$value};
+  -moz-transition: #{$value};
+  -o-transition: #{$value};
+  transition: #{$value};
+}
+
+@mixin vendor-rotate($value) {
+  -webkit-transform: rotate(#{$value});
+  -ms-transform: rotate(#{$value});
+  -moz-transform: rotate(#{$value});
+  -o-transform: rotate(#{$value});
+  transform: rotate(#{$value});
+}
+
+@mixin vendor-keyframes($name) {
+
+  @-webkit-keyframes #{$name}{
+    @content;
+  }
+
+  @-ms-keyframes #{$name}{
+    @content;
+  }
+
+  @-moz-keyframes #{$name}{
+    @content;
+  }
+
+  @-o-keyframes #{$name}{
+    @content;
+  }
+
+  @keyframes #{$name}{
+    @content;
+  }
+}
+
+
+@mixin vendor-border-side($side, $name, $width, $primary, $breakpoint:null, $color-name:'primary') {
+  $class-name: 'b' + $side;
+
+  @if $breakpoint {
+    $class-name: $class-name + '-' + $breakpoint;
+  }
+  $class-name: $class-name + '-' + $color-name;
+  @if $width > 1 {
+    $class-name: $class-name + '-' + $width;
+  }
+
+  .#{$class-name} {
+    @content;
+    border-#{$name}: #{$width}px solid mat-color($primary) !important;
+  }
+}
+
+@mixin vendor-border( $width, $primary, $breakpoint: null, $color-name:'primary') {
+  $class-name: 'border';
+
+  @if $breakpoint {
+    $class-name: $class-name + '-' + $breakpoint;
+  }
+
+  $class-name: $class-name + '-' + $color-name;
+
+  @if $width > 1 {
+    $class-name: $class-name + '-' + $width;
+  }
+
+  .#{$class-name} {
+    @content;
+    border: #{$width}px solid mat-color($primary) !important;
+  }
+}
+
+
+@mixin vendor-grid($count, $breakpoint: null) {
+  $name: 'grid';
+
+  @if $breakpoint {
+    $name: $name + '-' + $breakpoint;
+  }
+  @if $count > 1 {
+    $name: $name + '-' + $count;
+  }
+
+  .#{$name} {
+    @content;
+    display: grid;
+    gap: 1rem;
+    @if $breakpoint == 'xs' or  $breakpoint == 'sm' {
+      padding: 0 0.5rem;
+    } @else {
+      padding: 0 1rem;
+    }
+    grid-template-columns: repeat($count, [col-start] 1fr);
+  }
+}

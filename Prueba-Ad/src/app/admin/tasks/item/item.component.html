@@ -1,0 +1,59 @@
+<mat-card class="task-container mw-md-600-px" matRipple>
+  <div class="icon">
+    <div [matTooltip]="task.estado_nombre" [ngSwitch]="task.estado" matTooltipShowDelay="300">
+      <mat-icon *ngSwitchCase="0" class="text-warning">
+        query_builder
+      </mat-icon>
+      <mat-icon *ngSwitchCase="1" class="text-warning">
+        autorenew
+      </mat-icon>
+      <mat-icon *ngSwitchCase="2" class="text-danger">
+        error
+      </mat-icon>
+      <mat-icon *ngSwitchCase="3" class="text-success">
+        check_circle
+      </mat-icon>
+      <mat-icon *ngSwitchCase="4" class="text-warning">
+        check_circle
+      </mat-icon>
+      <mat-icon *ngSwitchDefault>
+        check_circle
+      </mat-icon>
+    </div>
+  </div>
+
+  <div class="description">
+    {{task.descripcion}}
+  </div>
+
+  <div class="mat-small info">
+    <div class="mr-1 font-weight-bold">{{'CREATED_AT'|translate}}:</div>
+    <div>{{task.fecha_hora}}</div>
+  </div>
+
+  <div class="mat-small info">
+    <div class="mr-1 font-weight-bold">{{'LAST_UPDATE'|translate}}:</div>
+    <div>{{task.fecha_hora_actualizacion}}</div>
+  </div>
+
+  <div class="mat-small info">
+    <div class="mr-1 font-weight-bold text-nowrap">{{'PERCENTAGE_DONE'|translate}}:</div>
+    <mat-progress-bar [value]="task.porcentaje" mode="determinate"></mat-progress-bar>
+    <div class="ml-1">{{task.porcentaje}}%</div>
+  </div>
+
+  <div (click)="openDetailDialog(null,null,task,null)" *ngIf="task.detalles?.data || task.detalles_json?.task_error"
+       class="mat-small link text-info details">
+    {{ 'SEE_DETAILS'|translate }}
+  </div>
+
+  <div class="file">
+    <a *ngIf="task.archivo" [href]="task.archivo" class="primary-hover"
+       mat-icon-button matTooltip="{{'DOWNLOAD_FILE'|translate}}" matTooltipShowDelay="300"
+       target="_blank">
+      <mat-icon class="">cloud_download</mat-icon>
+    </a>
+  </div>
+</mat-card>
+
+

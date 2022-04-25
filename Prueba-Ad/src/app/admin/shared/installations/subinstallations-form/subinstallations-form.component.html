@@ -1,0 +1,42 @@
+<div class="form-container">
+
+  <mat-toolbar color="primary">
+    <h1>{{title|translate}} {{data?.name}}</h1>
+
+  </mat-toolbar>
+
+
+  <adms-ph *ngIf="loading; else loaded" mode="form"></adms-ph>
+
+  <ng-template #loaded>
+    <form (ngSubmit)="onSubmit($event)" class="m-3" [formGroup]="formGroup" id="installationsForm">
+
+      <div class=" align-items-center">
+
+        <mat-form-field class="w-100">
+          <input #installationsReference formControlName="name" matInput maxlength="30"
+            placeholder="{{ 'REFERENCE' | translate }}" required type="text" />
+          <mat-hint align="end">
+            {{ installationsReference.value?.length || 0 }}/30
+          </mat-hint>
+          <mat-error>
+            {{ formStatus?.reference | translate }}
+          </mat-error>
+        </mat-form-field>
+
+      </div>
+    </form>
+  </ng-template>
+
+
+  <div class="container-fluid">
+    <div class="row justify-content-end">
+      <button class="m-1" mat-button type="button" mat-dialog-close>
+        {{'CANCEL'| translate}}
+      </button>
+      <button *ngIf="!loading" class="m-1" color="primary" form="installationsForm" mat-raised-button type="submit">
+        {{'CREATE'| translate}}
+      </button>
+    </div>
+  </div>
+</div>

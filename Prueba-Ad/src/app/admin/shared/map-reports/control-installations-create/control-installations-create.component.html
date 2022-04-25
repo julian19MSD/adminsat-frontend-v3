@@ -1,0 +1,421 @@
+<div class="fadeInLeft" class="px-0  h-100">
+  <div *ngIf="loader" [innerHTML]="loaderContent" class="loader-container" id="internalLoader"></div>
+
+  <mat-card class="main-card-container">
+    <div class="header-wrapper">
+      <h4 class=" mb-1 pb-2 text-center" mat-dialog-title>
+        {{title|translate}}
+      </h4>
+
+      <button matTooltip="{{'BACK_TO_LIST'|translate}}" class="close-button" matTooltipShowDelay="300"
+        (click)="closeForm(true)" mat-icon-button>
+        <mat-icon>close</mat-icon>
+      </button>
+
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- please draw the area on the map  -->
+
+
+    <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" class="px-0 pt-3" id="controlInstallationForm">
+
+      <mat-error class="text-center">
+        <span *ngIf="sinPoligono">
+          {{ "PLEASE_DRAW_THE_ZONE_ON_THE_MAP"| translate }}</span>
+
+      </mat-error>
+
+      <section id="basic-data">
+
+        <div class="grid grid-sm-2 title-grid px-0">
+          <h2 class="dark info-subtitle">
+            {{ "BASIC_DATA" | translate }}
+          </h2>
+          <div class="w-100 text-center text-sm-left">
+            <mat-slide-toggle class="mat-primary" formControlName="is_active">
+              {{formGroup.get("is_active").value ? ("ENABLED" | translate) : ("DISABLED" | translate)}}
+            </mat-slide-toggle>
+
+          </div>
+        </div>
+
+
+        <div *ngIf="clients.length > 1" class="w-100 pt-3 px-3">
+          <adms-select [ctrl]="formGroup.get('cliente')" [options]="clients" placeholder="{{ 'CLIENT' | translate }}"
+            required="true">
+          </adms-select>
+        </div>
+
+        <mat-form-field class="w-100 px-3">
+          <input #controlName formControlName="nombre" matInput maxlength="100" placeholder="{{ 'NAME' | translate }}"
+            required type="text" />
+          <mat-hint align="end">
+            {{ controlName.value?.length || 0 }}/100
+          </mat-hint>
+          <mat-error>
+            {{ formStatus?.nombre | translate }}
+          </mat-error>
+        </mat-form-field>
+
+
+        <mat-form-field class="w-100  px-3 ">
+          <mat-select formControlName="country" placeholder="{{ 'COUNTRY' | translate }}">
+            <mat-option [value]="null">------</mat-option>
+            <mat-option *ngFor="let item of countrys" [value]="item.id">
+              {{ item.nombre | titlecase }}
+            </mat-option>
+          </mat-select>
+          <mat-error>
+            {{ formStatus?.country | translate }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100  px-3">
+          <mat-select formControlName="department" placeholder="{{ 'DEPARTMENT' | translate }}">
+            <mat-option [value]="null">------</mat-option>
+            <mat-option *ngFor="let item of departments" [value]="item.id">
+              {{ item.name | titlecase }}
+            </mat-option>
+          </mat-select>
+          <mat-error>
+            {{ formStatus?.department | translate }}
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-100  px-3">
+          <mat-select formControlName="municipality" placeholder="{{ 'MUNICIPALITY' | translate }}">
+            <mat-option [value]="null">------</mat-option>
+            <mat-option *ngFor="let item of municipalitys" [value]="item.id">
+              {{ item.name | titlecase }}
+            </mat-option>
+          </mat-select>
+          <mat-error>
+            {{ formStatus?.municipality | translate }}
+          </mat-error>
+        </mat-form-field>
+
+      </section>
+
+
+      <section id="configuration">
+        <h2 class="info-subtitle">{{'CONFIGURATION' | translate}}</h2>
+
+        <mat-form-field class="w-100 pt-3  px-3">
+          <mat-chip-list #notificationEmailList formControlName="correos_notificaciones_m2m" ngDefaultControl>
+            <mat-chip (removed)="chipRemove('correos_notificaciones_m2m', item)"
+              *ngFor=" let item of formGroup.get('correos_notificaciones_m2m') .value "
+              [ngClass]="{ 'text-danger': validateMail.includes(item) }" [removable]="true" [selectable]="false"
+              matTooltip="{{ getMailError(item) | translate }}" matTooltipShowDelay="300">
+              {{ item }}
+              <mat-icon (click)="onValidateMailSubmit(item)" *ngIf="validateMail.includes(item)" matChipTrailingIcon
+                matTooltip="{{ 'RESEND_MAIL_VALIDATION' | translate }}" matTooltipShowDelay="300"> email
+              </mat-icon>
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input (matChipInputTokenEnd)="chipAdd('correos_notificaciones_m2m', $event, 5, true) "
+              (paste)="chipPaste('correos_notificaciones_m2m', $event)" [matChipInputAddOnBlur]="true"
+              [matChipInputFor]="notificationEmailList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              placeholder="{{ 'NOTIFICATION_EMAIL' | translate }}" />
+          </mat-chip-list>
+          <mat-error>
+            {{ formStatus?.correos_notificaciones_m2m | translate }}
+          </mat-error>
+        </mat-form-field>
+
+
+        <div class="grid grid-sm-2 px-3">
+          <mat-form-field class="w-100 ">
+            <mat-select formControlName="riesgo" placeholder="{{ 'RISK' | translate }}">
+              <mat-option [value]="null">------</mat-option>
+              <mat-option [value]="0"> {{ "LOW" | translate }}</mat-option>
+              <mat-option [value]="1"> {{ "MEDIUM" | translate }}</mat-option>
+              <mat-option [value]="2"> {{ "HIGH" | translate }}</mat-option>
+              <mat-option [value]="3"> {{ "EXTREME" | translate }}</mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.riesgo | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input #velMax formControlName="velocidad_maxima" matInput min="0" maxlength="5"
+              placeholder="{{ 'MAXIMUM_SPEED' | translate }} ({{metricsAlias.velocity}})" type="number" />
+            <mat-hint align="end">
+              {{ velMax.value?.length || 0 }}/5
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.velocidad_maxima | translate }}
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+
+        <mat-form-field class="w-100 px-3">
+          <textarea #message formControlName="mensaje" maxlength="200" matInput
+            placeholder="{{'WARNING_MESSAGE'|translate}}" type="text">
+          </textarea>
+          <mat-hint align="end">
+            {{ message.value?.length || 0 }}/200
+          </mat-hint>
+          <mat-error>
+            {{formStatus?.mensaje | translate}}
+          </mat-error>
+        </mat-form-field>
+
+        <div class="grid grid-sm-2 px-3">
+          <mat-form-field class="w-100 ">
+            <mat-select formControlName="modo" placeholder="{{ 'MODE' | translate }}" required>
+              <mat-option [value]="null">------</mat-option>
+              <mat-option [value]="0"> {{ "INGRESS" | translate }}</mat-option>
+              <mat-option [value]="1"> {{ "OUTPUT" | translate }}</mat-option>
+              <mat-option [value]="2"> {{ "BOTH" | translate }}</mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.modo | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input #velMax formControlName="tiempo_maximo" matInput min="0" maxlength="5"
+              placeholder="{{ 'MAXIMUM_TIME' | translate }} {{'MINUTES' | translate}}" type="number" />
+            <mat-hint align="end">
+              {{ velMax.value?.length || 0 }}/5
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.tiempo_maximo | translate }}
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+      </section>
+
+      <section id="activos">
+        <div class="px-3">
+          <div class="d-flex flex-nowrap  align-items-center flex-row">
+            <adms-select [ctrl]="formGroup.get('activos')" [options]="assetsOptions" class="w-100" multiple="true"
+              placeholder="{{'ASSETS' | translate}}">
+            </adms-select>
+            <button matTooltipShowDelay="300" matTooltip="{{'SELECT_ALL'|translate}}"
+              (click)="addAll('assetsOptions','activos')" mat-icon-button type="button">
+              <mat-icon>select_all</mat-icon>
+            </button>
+            <button (click)="formGroup.get('activos').reset([])" matTooltipShowDelay="300"
+              matTooltip="{{'UNSELECT_ALL'|translate}}" mat-icon-button type="button">
+              <mat-icon>clear_all</mat-icon>
+            </button>
+          </div>
+          <adms-asset-associations-preview (disassociate)="formGroup.get('activos').reset($event)"
+            [confirmDisassociation]="false" [items]="assetsOptions" [selected]="formGroup.get('activos').value">
+          </adms-asset-associations-preview>
+        </div>
+      </section>
+
+      <section id="operation">
+        <h2 class="info-subtitle">{{'OPERATION_PARAMETERS' | translate}}</h2>
+
+        <div class="grid grid-sm-2 px-3">
+          <mat-form-field class="w-100 ">
+            <mat-select formControlName="zone" placeholder="{{ 'ZONE' | translate }}">
+              <mat-option [value]="null">------</mat-option>
+              <mat-option *ngFor="let item of zones" [value]="item.id">
+                {{ item.name | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.zone | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100 ">
+            <mat-select formControlName="sub_zone" placeholder="{{ 'SUB_ZONE' | translate }}">
+              <mat-option [value]="null">------</mat-option>
+              <mat-option *ngFor="let item of subzones" [value]="item.id">
+                {{ item.name | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.sub_zone | translate }}
+            </mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field class="w-100 ">
+            <mat-select formControlName="installation_type" placeholder="{{ 'INSTALLATION_TYPE' | translate }}">
+              <mat-option [value]="null">------</mat-option>
+              <mat-option *ngFor="let item of installationsType" [value]="item.id">
+                {{ item.name | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.installation_type | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100 ">
+            <mat-select formControlName="sub_installation_type"
+              placeholder="{{ 'SUB_INSTALLATION_TYPE' | translate }}">
+              <mat-option [value]="null">------</mat-option>
+              <mat-option *ngFor="let item of subinstallationsType" [value]="item.id">
+                {{ item.name | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.sub_installation_type | translate }}
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+      </section>
+
+      <section *ngIf="instance?.id && formGroup.get('installation_type').value != null" class="mt-4 pb-3" id="documentsInfo">
+        <div class="d-inline-flex">
+          <h2 class="dark info-subtitle">
+            {{ "OPERATINGS_WINDOWS" | translate }}
+          </h2>
+
+          
+            <button (click)="addEditWindowsOperatings()" mat-raised-button type="button">
+              {{ "ADD" | translate }}
+            </button>
+          
+        </div>
+
+        <div class="mw-400-px px-2 mt-4">
+          <adms-select [ctrl]="windowFormControl" [mainKey]="'name'" [options]="windowOptions"
+            placeholder="{{ 'SELECT_OPERATINGS_WINDOWS' | translate }}">
+          </adms-select>
+        </div>
+
+        <div class="px-2">
+          <ng-container *ngIf="window">
+
+            <mat-accordion>
+
+              <mat-expansion-panel (closed)="panelOpenState  = false" (opened)="panelOpenState  = true">
+
+                <mat-expansion-panel-header class="h-auto">
+                  <div class="grid grid-md-2 w-100 ">
+
+                    <div [class.bb-divider]="panelOpenState " class="w-100 py-2">
+                      <h4 class="mat-h4 font-weight-bold mb-0">
+                        {{ "START_TIME" | translate }}:
+                      </h4>
+                      <div class="mat-body">
+                        {{ window?.start_time }}
+                      </div>
+                    </div>
+
+                    <div [class.bb-divider]="panelOpenState " class="w-100 py-2">
+                      <h4 class="mat-h4 font-weight-bold mb-0">
+                        {{ "END_TIME" | translate }}:
+                      </h4>
+                      <div class="mat-body">
+                        {{ window?.end_time }}
+                      </div>
+                    </div>
+                  </div>
+                </mat-expansion-panel-header>
+
+
+                <div class="grid grid-md-2 mt-4">
+
+                  <div class="w-100 grid-col text-center bb-divider pb-2">
+                    <h4 class="mat-h4 font-weight-bold mb-0">
+                      {{ "DAYS_OPERATION" | translate }}:
+                    </h4>
+                    <div class="mat-body">
+
+                      <span class="rounded mx-2" *ngIf=" diasOperacion[1]">
+                        {{ 'MONDAY' | translate }}
+                      </span>
+                      <span class="rounded mx-2" *ngIf=" diasOperacion[2]">
+                        {{ 'TUESDAY' | translate }}
+                      </span>
+                      <span class="rounded mx-2" *ngIf=" diasOperacion[3]">
+                        {{ 'WEDNESDAY' | translate }}
+                      </span>
+                      <span class="rounded mx-2" *ngIf=" diasOperacion[4]">
+                        {{ 'THURSDAY' | translate }}
+                      </span>
+                      <span class="rounded mx-2" *ngIf=" diasOperacion[5]">
+                        {{ 'FRIDAY' | translate }}
+                      </span>
+                      <span class="rounded mx-2" *ngIf=" diasOperacion[6]">
+                        {{ 'SATURDAY' | translate }}
+                      </span>
+                      <span class="rounded mx-2" *ngIf=" diasOperacion[0]">
+                        {{ 'SUNDAY' | translate }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="w-100 bb-divider pb-2">
+                    <h4 class="mat-h4 font-weight-bold mb-0">
+                      {{ "DAILY_CAPACITY" | translate }}:
+                    </h4>
+                    <div class="mat-body">
+                      {{ window?.total_daily_capacity || '--' }}
+                    </div>
+                  </div>
+
+                  <div class="w-100 bb-divider pb-2">
+                    <h4 class="mat-h4 font-weight-bold mb-0">
+                      {{ "SIMULTANEOUS_CAPACITY" | translate }}:
+                    </h4>
+                    <div class="mat-body">
+                      {{ window?.simultaneous_capacity || '--' }}
+                    </div>
+                  </div>
+
+                  <div class="w-100 bb-divider pb-2">
+                    <h4 class="mat-h4 font-weight-bold mb-0">
+                      {{ "MIN_EXPECTED_DAILY" | translate }}:
+                    </h4>
+                    <div class="mat-body">
+                      {{ window?.min_expected_daily || '--' }}
+                    </div>
+                  </div>
+
+                  <div class="w-100 bb-divider pb-2">
+                    <h4 class="mat-h4 font-weight-bold mb-0">
+                      {{ "MAX_WAITING_ASSETS" | translate }}:
+                    </h4>
+                    <div class="mat-body">
+                      {{ window?.max_waiting_assets || '--' }}
+                    </div>
+                  </div>
+
+                  <div class="grid-col text-center">
+                    <button (click)="addEditWindowsOperatings(window?.id)" mat-icon-button
+                      matTooltip="{{ 'EDIT' | translate }}" matTooltipShowDelay="300" type="button">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button (click)="deleteWindow(window?.id)" mat-icon-button matTooltip="{{ 'DELETE' | translate }}"
+                      matTooltipShowDelay="300" type="button">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+
+            </mat-accordion>
+          </ng-container>
+        </div>
+      </section>
+    </form>
+
+    <mat-divider></mat-divider>
+    <div *ngIf="showButton" class=" d-flex justify-content-end">
+      <button class="m-1" mat-button type="button" (click)="closeForm(true)">
+        {{'CANCEL'| translate}}
+      </button>
+      <button class="m-1" color="primary" form="controlInstallationForm" mat-raised-button type="submit">
+        {{'SAVE'| translate}}
+      </button>
+    </div>
+  </mat-card>
+
+
+</div>

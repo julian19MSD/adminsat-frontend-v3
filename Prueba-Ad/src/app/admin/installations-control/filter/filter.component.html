@@ -1,0 +1,80 @@
+<div class="filter-bottom-sheet">
+  <div class="filter-bottom-sheet-title">
+    <h5>{{'FILTER_CONTROLZONES'| translate}}</h5>
+    <mat-divider></mat-divider>
+  </div>
+
+  <form [formGroup]="formGroup" class="grid grid-md-3 align-items-center pt-3" id="filterForm">
+
+    <!-- <adms-select *ngIf="data?.clients?.length >1" [ctrl]="formGroup.get('cliente__in')" [multiple]="true"
+      [options]="data.clients" placeholder="{{'CLIENT'|translate}}">
+    </adms-select> -->
+
+
+    <mat-form-field>
+      <mat-chip-list #nombreList formControlName="nombre__in">
+        <mat-chip (removed)="chipRemove('nombre__in',name)" *ngFor="let name of formGroup.get('nombre__in').value"
+          removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('nombre__in',$event)" (paste)="chipPaste('nombre__in',$event)"
+          [matChipInputAddOnBlur]="true" [matChipInputFor]="nombreList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes" placeholder="{{'NAME'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_5'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #activoList formControlName="activos__in">
+        <mat-chip (removed)="chipRemove('activos__in',name)" *ngFor="let name of formGroup.get('activos__in').value"
+          removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('activos__in',$event)" (paste)="chipPaste('activos__in',$event)"
+          [matChipInputAddOnBlur]="true" [matChipInputFor]="activoList"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes" placeholder="{{'ASSETS'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_5'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <adms-select  [ctrl]="formGroup.get('riesgo')" 
+      [options]="choices.modeZones" placeholder="{{'RISK'|translate}}">
+    </adms-select>
+
+
+
+    <mat-form-field>
+      <mat-label>{{ 'MAXIMUM_SPEED_FROM' | translate }} ({{metricsAlias?.velocity}})</mat-label>
+      <input   type="number"
+        formControlName="velocidad_maxima__gte" matInput>
+
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{ 'MAXIMUM_SPEED_TO' | translate }} ({{metricsAlias?.velocity}})</mat-label>
+      <input    type="number"
+        formControlName="velocidad_maxima__lte" matInput>
+
+    </mat-form-field>
+
+
+
+  </form>
+</div>
+
+<div class="filter-bottom-sheet-controls">
+  <mat-divider class="my-2"></mat-divider>
+  <div class="container-fluid">
+    <div class="row justify-content-end">
+      <button (click)="close($event,false, false)" class="m-1" mat-button type="button">
+        {{'CANCEL'| translate}}
+      </button>
+      <button class="m-1" form="filterForm" mat-raised-button type="reset">{{'CLEAR'| translate}}</button>
+      <button (click)="close($event,true,false)" class="m-1" color="primary" mat-raised-button type="button">
+        {{'FILTER'| translate}}
+      </button>
+    </div>
+  </div>
+</div>

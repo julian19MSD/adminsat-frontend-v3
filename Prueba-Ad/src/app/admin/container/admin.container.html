@@ -1,0 +1,62 @@
+<div class="site-wrapper">
+  <header class="bg-paper">
+    <div class="header-logo-container  bb-primary-3">
+      <div *ngIf="noLogoImg" class="ph-picture ph-brightness"></div>
+      <img (load)="noLogoImg=false" [hidden]="noLogoImg" [src]="logo" alt="logo">
+      <button (click)="sideNavToogle()" mat-icon-button>
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+
+    <div class="header-router-wrapper bg-paper bb-lg-primary-3">
+      <router-outlet #headerOutlet="outlet" class="d-none" name="header"></router-outlet>
+    </div>
+
+    <div class="header-controls-wrapper bg-paper bb-primary-3">
+      <adms-header-controls *ngIf="cliente" class="w-100"></adms-header-controls>
+    </div>
+
+    <div class="header-profile-wrapper bg-paper bb-primary-3">
+      <div [matMenuTriggerFor]="profileMenu" [matTooltip]="(userName$|async) || ('PROFILE'|translate)"
+           [style.background-image]="foto$|async"
+           class="header-profile-button mat-elevation-z1" matTooltipShowDelay="300">
+
+        <mat-menu #profileMenu="matMenu" [overlapTrigger]="false">
+          <a class="text-decoration-none" mat-menu-item routerLink="/profile">
+            <mat-icon>account_circle</mat-icon>
+            {{'EDIT_PROFILE'| translate}}
+          </a>
+          <a class="text-decoration-none" mat-menu-item routerLink="/profile/change-password">
+            <mat-icon>lock</mat-icon>
+            {{'CHANGE_PASSWORD'| translate}}
+          </a>
+          <a class="text-decoration-none" mat-menu-item routerLink="/profile/sessions">
+            <mat-icon>supervisor_account</mat-icon>
+            {{'OPENED_SESSIONS'| translate}}
+          </a>
+          <button (click)="setDarkMode()" mat-menu-item>
+            <mat-icon>invert_colors</mat-icon>
+            {{'DARK_MODE'| translate}}
+          </button>
+          <a class="text-decoration-none" mat-menu-item routerLink="/logout">
+            <mat-icon>power_settings_new</mat-icon>
+            {{'LOGOUT'| translate}}
+          </a>
+        </mat-menu>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <mat-drawer-container class="h-100">
+      <mat-drawer #drawer [mode]="modbileDevice? 'over':'side'" [opened]="!(sideNavCollapse$|async) && !modbileDevice"
+                  class="main-sidenav hide-scrollbar">
+        <adms-sidenav-menu (onClose)="sideNavToogle()" [logo]="logo"></adms-sidenav-menu>
+      </mat-drawer>
+      <mat-drawer-content class="bg-paper overflow-hidden">
+        <router-outlet #outlet="outlet"></router-outlet>
+      </mat-drawer-content>
+    </mat-drawer-container>
+  </main>
+
+</div>

@@ -1,0 +1,9 @@
+<div class="px-3">
+  <h1 class="mat-title mb-1">{{'SELECT_A_CLIENT'|translate}}</h1>
+  <mat-divider></mat-divider>
+  <div class="w-100 text-center">
+    <adms-select panelClass="w-100 mw-400-px" [ctrl]="data.ctrl" required="true" floatLabel="never"
+                 [options]="data.clients" placeholder="{{'CLIENTS' | translate}}">
+    </adms-select>
+  </div>
+</div>

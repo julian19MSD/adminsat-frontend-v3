@@ -1,0 +1,139 @@
+<div class="detail-container" [class.w-100]="fullWidth">
+
+  <mat-toolbar color="primary">
+    <h1 *ngIf="instance?.nombre;else phTittle">{{ instance?.nombre }}</h1>
+    <ng-template #phTittle>
+      <div class="ph-row">
+        <div class="ph-col-auto big ph-brightness">
+        </div>
+      </div>
+    </ng-template>
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+  <ng-template #loaded>
+    <div class="d-block overflow-auto">
+      <mat-tab-group (selectedIndexChange)="onTabChange($event)">
+        <mat-tab>
+
+          <ng-template mat-tab-label>
+            <mat-icon>home</mat-icon>
+          </ng-template>
+
+          <section id="basic_data">
+            <div class="info-subtitle  mt-3">{{'BASIC_DATA' | translate}}</div>
+            <div class="instance-detail-container">
+              <div *ngIf="permissionsService.hasPermission(permissions.clientes.ver)" class="instance-detail-item">
+                <div class="mat-body-2">{{'CUSTOMER' | translate}}</div>
+                <div class="mat-body-1">
+                  {{instance?.cliente_nombre || ('NOT_RECORDED'|translate)}}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'STATE' | translate}}</div>
+                <div *ngIf="instance?.is_active; else state" class="mat-body-1 text-success">
+                  {{'ENABLED'|translate}}
+                </div>
+                <ng-template #state>
+                  <div class="mat-body-1 text-danger">
+                    {{'DISABLED'|translate}}
+                  </div>
+                </ng-template>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'ORIGIN' | translate}}</div>
+                <div class="mat-body-1">
+                  {{instance?.origen || ('NOT_RECORDED'|translate)}}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DESTINATION' | translate}}</div>
+                <div class="mat-body-1">
+                  {{instance?.destino || ('NOT_RECORDED'|translate)}}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'WAY' | translate}}</div>
+                <div class="mat-body-1">
+                  {{instance?.via || ('NOT_RECORDED'|translate)}}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DIVPOLA' | translate}}</div>
+                <div class="mat-body-1">
+                  {{instance?.divipola || ('NOT_RECORDED'|translate)}}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+            </div>
+          </section>
+        </mat-tab>
+
+        <mat-tab label="{{'CONTROL_ZONES' | translate}}">
+          <div class="container-fluid dialog-map-container">
+            <div class="row h-100">
+
+              <div class="col-12 h-100 col-md-8 p-0 position-relative">
+                <div class="h-100" id="agm-map"></div>
+                <div class="map-control-utils">
+                  <button (click)="mapService.fitMap()" mat-icon-button
+                          matTooltip="{{'FIT_MAP'|translate}}"
+                          matTooltipShowDelay="300" type="button">
+                    <mat-icon>zoom_out_map</mat-icon>
+                  </button>
+                </div>
+              </div>
+
+              <div class="col-12 col-md-4 p-0 h-100 overflow-auto">
+                <div class="container-fluid" (mouseleave)="mapService.closeInfoWindow()">
+                  <ng-container *ngFor="let controlZone of instance.zonascontrol.features; let idx = index">
+                    <div class="row py-2 bg-hover cursor-pointer" (click)="mapService.fitMapToPolygon(controlZone)"
+                         (mouseenter)="mapService.openPolygonWindow(controlZone)">
+                      <div class="col-12 mt-2">
+                        <div [class.text-success]="0 === controlZone.properties.tipo"
+                             [class.text-danger]="2 === controlZone.properties.tipo">
+                          <div *ngIf="controlZone.properties.zonascontrol">{{controlZone.properties.nombre}}</div>
+                        </div>
+                      </div>
+
+                      <div class="col-12 mt-2">
+                        <h3 class="mat-h3 mb-0">
+                          <strong>{{'TIME_FROM_ORIGIN' | translate}}</strong>
+                        </h3>
+                        <div>{{controlZone.properties.tiempo_origen}}</div>
+                      </div>
+
+                    </div>
+                    <mat-divider></mat-divider>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-tab>
+
+        <mat-tab *ngIf="instance?.historico_cambios?.length > 0 || instance?.creacion?.fecha_hora"
+                 label="{{'HISTORICAL' | translate}}">
+          <adms-historical-changes [changes]="instance?.historico_cambios" [creation]="instance?.creacion">
+          </adms-historical-changes>
+        </mat-tab>
+
+      </mat-tab-group>
+    </div>
+  </ng-template>
+</div>

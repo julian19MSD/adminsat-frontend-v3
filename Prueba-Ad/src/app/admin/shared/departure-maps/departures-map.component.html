@@ -1,0 +1,26 @@
+<div class="detail-container">
+
+  <mat-toolbar color="primary">
+    <h1 >{{'DEPARTURE' | translate}}</h1>
+
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+
+  <ng-template #loaded>
+
+    <mat-tab-group (selectedIndexChange)="onTabChange($event)">
+
+
+      <mat-tab label="{{'CONTROLZONE' | translate}}">
+        <div class="dialog-map-container" id="cz-agm-map"></div>
+      </mat-tab>
+
+    </mat-tab-group>
+  </ng-template>
+</div>
+

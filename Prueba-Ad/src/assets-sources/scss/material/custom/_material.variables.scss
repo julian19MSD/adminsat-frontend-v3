@@ -1,0 +1,14 @@
+@import "material.palette";
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$primary: mat-palette($mat-adminsat);
+$accent: mat-palette($mat-amber, A200, A100, A400);
+$warn: mat-palette($mat-red);
+$theme: mat-light-theme($primary, $accent, $warn);
+$background: map-get($theme, background);
+$foreground: map-get($theme, foreground);
+$config: mat-typography-config();
+
+$paper_color: #e7e7e7;

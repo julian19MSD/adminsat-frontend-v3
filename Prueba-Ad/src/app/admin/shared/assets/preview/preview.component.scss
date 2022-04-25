@@ -1,0 +1,42 @@
+.preview-container {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: "assetIcon name info" "assetIcon plate info";
+  column-gap: 8px;
+  padding: 8px;
+
+  .asset-icon {
+    position: relative;
+    grid-area: assetIcon;
+    align-self: center;
+
+    .icon {
+      width: 40px;
+      height: 30px;
+      margin-right: 8px;
+    }
+
+    .safe-icon {
+      position: absolute;
+      top: -6px;
+      left: 0;
+      font-size: 1rem;
+    }
+  }
+
+  .name {
+    grid-area: name;
+    line-height: initial;
+    margin: 0;
+    word-break: break-all;
+  }
+
+  .plate {
+    grid-area: plate;
+    word-break: break-all;
+  }
+
+  .info {
+    grid-area: info;
+  }
+}

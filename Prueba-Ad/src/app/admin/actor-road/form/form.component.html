@@ -1,0 +1,862 @@
+<div class="p-1 p-lg-2 h-100 fadeInUp">
+  <div *ngIf="loader" [innerHTML]="loaderContent" class="loader-container" id="internalLoader"></div>
+  <mat-card class="main-card-container">
+    <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" id="actorRoadForm">
+
+      <section class="mt-4" id="profile">
+        <div class="w-100">
+          <adms-drop-zone (fileResult)="onFileChange('foto', $event) " [fileUrl]="filesUrl.foto"
+            [resetFiles]="resetFiles" model="foto" [defaultImage]="staticUrl + '/images/noimage.jpg'">
+          </adms-drop-zone>
+        </div>
+      </section>
+
+      <section class="mt-4" id="basic-data">
+
+        <div class="grid grid-sm-2 title-grid">
+          <h2 class="dark info-subtitle">
+            {{ "BASIC_DATA" | translate }}
+          </h2>
+          <div class="w-100 text-center text-sm-left">
+            <mat-slide-toggle class="mat-primary" formControlName="is_active">
+              {{formGroup.get("is_active").value ? ("ENABLED" | translate) : ("DISABLED" | translate)}}
+            </mat-slide-toggle>
+
+          </div>
+        </div>
+
+        <div class="grid grid-sm-2 grid-md-3 mt-3 ">
+
+          <mat-form-field class="w-100 grid-col">
+            <mat-select formControlName="tipo_actor" placeholder="{{ 'TYPE_ACTOR' | translate }}" required>
+              <mat-option *ngFor="let actor of ActorTypes" [value]="actor.id">
+                {{ actor.nombre | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.tipo_actor | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <div *ngIf="clients.length > 1" class="w-100">
+            <adms-select [ctrl]="formGroup.get('cliente')" [options]="clients" placeholder="{{ 'CLIENT' | translate }}"
+              required="true">
+            </adms-select>
+          </div>
+
+          <mat-form-field class="w-100">
+            <input #actorName formControlName="nombre" matInput maxlength="30" placeholder="{{ 'NAME' | translate }}"
+              required type="text" />
+            <mat-hint align="end">
+              {{ actorName.value?.length || 0 }}/30
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.nombre | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input #actorLastName formControlName="apellidos" matInput maxlength="30"
+              placeholder="{{ 'LAST_NAME' | translate }}" required type="text" />
+            <mat-hint align="end">
+              {{ actorLastName.value?.length || 0 }}/30
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.apellidos | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <mat-select formControlName="tipo_documento_identidad" placeholder="{{ 'DOCUMENT_TYPE' | translate }}"
+              required>
+              <mat-option *ngFor="let tipo_documento of choices.tipo_documento" [value]="tipo_documento.id">
+                {{ tipo_documento.value | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.tipo_documento_identidad | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input #actorNumberDoc formControlName="numero_documento_identidad" matInput maxlength="30"
+              placeholder="{{ 'DOCUMENT_NUMBER' | translate }}" required type="number" />
+            <mat-hint align="end">
+              {{ actorNumberDoc.value?.length || 0 }}/30
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.numero_documento_identidad | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input #actorTel formControlName="telefono" matInput maxlength="30"
+              placeholder="{{ 'TELEPHONE' | translate }}" type="number" />
+            <mat-hint align="end">
+              {{ actorTel.value?.length || 0 }}/30
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.telefono | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input #actorCel formControlName="celular" matInput maxlength="30"
+              placeholder="{{ 'CELLPHONE' | translate }}" type="number" />
+            <mat-hint align="end">
+              {{ actorCel.value?.length || 0 }}/30
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.celular | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input #actorCity formControlName="ciudad" matInput maxlength="30" placeholder="{{ 'CITY' | translate }}"
+              required type="text" />
+            <mat-hint align="end">
+              {{ actorCity.value?.length || 0 }}/30
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.ciudad | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input #actorAddress formControlName="direccion" matInput maxlength="30"
+              placeholder="{{ 'ADDRESS' | translate }}" type="text" />
+            <mat-hint align="end">
+              {{ actorAddress.value?.length || 0 }}/30
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.direccion | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field [class.invalid]=" validateMail.includes(formGroup.get('correo').value)" class="w-100">
+            <mat-label>
+              {{ "EMAIL" | translate }}
+            </mat-label>
+            <input formControlName="correo" matInput
+              matTooltip="{{ getMailError(formGroup.get('correo').value) | translate }}" matTooltipShowDelay="300" />
+            <button (click)="onValidateMailSubmit(formGroup.get('correo').value)"
+              *ngIf="validateMail.includes(formGroup.get('correo').value)" mat-icon-button matSuffix
+              matTooltip="{{ 'RESEND_MAIL_VALIDATION' | translate }}" matTooltipShowDelay="300" type="button">
+              <mat-icon>email</mat-icon>
+            </button>
+            <mat-error>
+              {{ formStatus?.correo | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100 grid-col">
+            <mat-chip-list #notificationEmailList formControlName="correos_notificaciones_m2m" ngDefaultControl>
+              <mat-chip (removed)="chipRemove('correos_notificaciones_m2m', item)"
+                *ngFor=" let item of formGroup.get('correos_notificaciones_m2m') .value "
+                [ngClass]="{ 'text-danger': validateMail.includes(item) }" [removable]="true" [selectable]="false"
+                matTooltip="{{ getMailError(item) | translate }}" matTooltipShowDelay="300">
+                {{ item }}
+                <mat-icon (click)="onValidateMailSubmit(item)" *ngIf="validateMail.includes(item)" matChipTrailingIcon
+                  matTooltip="{{ 'RESEND_MAIL_VALIDATION' | translate }}" matTooltipShowDelay="300"> email
+                </mat-icon>
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input (matChipInputTokenEnd)=" chipAdd('correos_notificaciones_m2m', $event, 5, true) "
+                (paste)="chipPaste('correos_notificaciones_m2m', $event)" [matChipInputAddOnBlur]="true"
+                [matChipInputFor]="notificationEmailList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                placeholder="{{ 'NOTIFICATION_EMAIL' | translate }}" />
+            </mat-chip-list>
+            <mat-error>
+              {{ formStatus?.correos_notificaciones_m2m | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+
+      </section>
+
+      <section  class="mt-4" id="platform">
+       
+        <div class="grid grid-sm-2 mt-3">
+          <h2 class="dark info-subtitle grid-col">
+            {{ "PLATFORM" | translate }}
+          </h2>
+          <mat-form-field class="w-100">
+            <input #ibutton formControlName="ibutton" matInput maxlength="16" placeholder="{{ 'IBUTTON' | translate }}"
+              type="number" />
+            <mat-hint align="end">
+              {{ ibutton.value?.length || 0 }}/30
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.ibutton | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <div>
+              <div class="d-flex flex-nowrap  align-items-center flex-row">
+                <adms-select [ctrl]="formGroup.get('activo')" [options]="assetsOptions"  class="w-100"
+                  multiple="false" placeholder="{{'ASSETS' | translate}}">
+                </adms-select>
+
+                <button (click)="formGroup.get('activo').reset(null)" matTooltipShowDelay="300"
+                  matTooltip="{{'UNSELECT_ALL'|translate}}" mat-icon-button type="button">
+                  <mat-icon>clear</mat-icon>
+                </button>
+              </div>
+              <adms-asset-associations-preview (disassociate)="formGroup.get('activo').reset(null)"
+                [confirmDisassociation]="false" [items]="assetsOptions" multiple="false" [selected]="[formGroup.get('activo').value]">
+              </adms-asset-associations-preview>
+
+          </div>
+        </div>
+
+      </section>
+
+      <section class="mt-4" id="personal-data">
+        <div class="grid grid-sm-2 title-grid">
+          <h2 class="dark info-subtitle">
+            {{ "PERSONAL_DATA" | translate }}
+          </h2>
+        </div>
+        <div class="grid grid-sm-2 grid-md-3 pb-3 mt-3" formGroupName="datos_personales_json">
+
+          <mat-form-field class="w-100">
+            <input (focus)="fechaNacimiento.open()" [matDatepicker]="fechaNacimiento" formControlName="fecha_nacimiento"
+              matInput placeholder="{{ 'BIRTHDATE' | translate }}">
+            <mat-datepicker-toggle [for]="fechaNacimiento" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #fechaNacimiento></mat-datepicker>
+            <mat-error>
+              {{formStatus?.datos_personales_json?.fecha_nacimiento | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <mat-select formControlName="sexo" placeholder="{{ 'SEX' | translate }}">
+              <mat-option *ngFor="let genero of choices.genero" [value]="genero.id.toString()">
+                {{ genero.value | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.datos_personales_json?.sexo | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input #actorNacionality formControlName="nacionalidad" matInput maxlength="50"
+              placeholder="{{ 'NATIONALITY' | translate }}" type="text" />
+            <mat-hint align="end">
+              {{ actorNacionality.value?.length || 0 }}/50
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.datos_personales_json?.nacionalidad | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input #actorChildrens formControlName="hijos" matInput maxlength="50"
+              placeholder="{{ 'NUMBER_OF_CHILDRENS' | translate }}" type="number" />
+            <mat-hint align="end">
+              {{ actorChildrens.value?.length || 0 }}/50
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.datos_personales_json?.hijos | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <mat-select formControlName="estado_civil"
+              placeholder="{{ 'CIVIL_STATUS' | translate }}">
+              <mat-option *ngFor="let estadoCivil of choices.estado_civil" [value]="estadoCivil.id.toString()">
+                {{ estadoCivil.value | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.datos_personales_json?.estado_civil | translate }}
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+
+        <mat-divider *ngIf="[0,4].includes(formGroup.get('datos_personales_json.estado_civil').value)"></mat-divider>
+        <div *ngIf="[0,4].includes(formGroup.get('datos_personales_json.estado_civil').value)" class="grid grid-sm-2 grid-md-3 pt-3 mt-3"
+          formGroupName="datos_personales_json">
+
+          <mat-form-field class="w-100">
+            <input (focus)="fecha_nacimiento_conyugue.open()" [matDatepicker]="fecha_nacimiento_conyugue"
+              formControlName="fecha_nacimiento_conyugue" matInput placeholder="{{ 'BIRTHDATE_SPOUSE' | translate }}">
+            <mat-datepicker-toggle [for]="fecha_nacimiento_conyugue" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #fecha_nacimiento_conyugue></mat-datepicker>
+            <mat-error>
+              {{formStatus?.datos_personales_json?.fecha_nacimiento_conyugue | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input #actorSpouseName formControlName="conyugue_nombres" matInput maxlength="50"
+              placeholder="{{ 'FIRST_NAME_SPOUSE' | translate }}" type="text" />
+            <mat-hint align="end">
+              {{ actorSpouseName.value?.length || 0 }}/50
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.datos_personales_json?.conyugue_nombres | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input #actorSpouseLastName formControlName="conyugue_apellidos" matInput maxlength="50"
+              placeholder="{{ 'LAST_NAME_SPOUSE' | translate }}" type="text" />
+            <mat-hint align="end">
+              {{ actorSpouseLastName.value?.length || 0 }}/50
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.datos_personales_json?.conyugue_apellidos | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <mat-select formControlName="conyugue_formacion" placeholder="{{ 'LEVEL_EDUCATION_SPOUSE' | translate }}">
+              <mat-option *ngFor="let formacionConyugue of choices.nivel_estudios"
+                [value]="formacionConyugue.id.toString()">
+                {{ formacionConyugue.value | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.datos_personales_json?.conyugue_formacion | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </section>
+
+
+      <section class="mt-4" id="academic-information">
+        <div class="grid grid-sm-2 title-grid">
+          <h2 class="dark info-subtitle">
+            {{ "ACADEMIC_INFORMATION" | translate }}
+          </h2>
+        </div>
+
+        <div class="grid grid-sm-2 grid-md-3 mt-3" formGroupName="formacion_json">
+          <mat-form-field class="w-100">
+            <mat-select formControlName="nivel_estudios" placeholder="{{ 'LEVEL_EDUCATION' | translate }}">
+              <mat-option *ngFor="let formacion of choices.nivel_estudios" [value]="formacion.id.toString()">
+                {{ formacion.value | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.formacion_json?.nivel_estudios | translate }}
+            </mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field  class="w-100">
+            <input #actorExpDriving formControlName="experiencia_conducion" matInput maxlength="50"
+              placeholder="{{ 'DRIVING_EXPERIENCE_YEARS' | translate }}" type="number" />
+            <mat-hint align="end">
+              {{ actorExpDriving.value?.length || 0 }}/50
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.formacion_json?.experiencia_conducion | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <div  class="grid-col">
+            <div class="mw-600-px">
+              <div class="text-center mb-2">
+                {{ "TECHNICAL_SPECIFICATIONS" | translate }}
+              </div>
+              <adms-drop-zone (fileResult)="onFileChange('runt', $event) " [fileUrl]="filesUrl.runt"
+                [resetFiles]="resetFiles" document="true" model="runt">
+              </adms-drop-zone>
+            </div>
+          </div>
+
+          <div class="grid-col">
+            <h4 class="dark info-subtitle-2">
+              {{ "LICENSE" | translate }} 1
+            </h4>
+          </div>
+
+          <mat-form-field  class="w-100">
+            <input #actorLicense formControlName="numero_licencia" matInput maxlength="50"
+              placeholder="{{ 'DRIVER_LICENSE_NUMBER' | translate }}" type="number" />
+            <mat-hint align="end">
+              {{ actorLicense.value?.length || 0 }}/50
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.formacion_json?.numero_licencia | translate }}
+            </mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field  class="w-100">
+            <mat-select formControlName="licencia_categoria" placeholder="{{ 'DRIVER_LICENSE_CATEGORY' | translate }}">
+              <mat-option *ngFor="let licencia of choices.tipo_licencia" [value]="licencia.id.toString()">
+                {{ licencia.value | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.formacion_json?.licencia_categoria | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field  class="w-100">
+            <input (focus)="fechaExpedicion.open()" [matDatepicker]="fechaExpedicion"
+              formControlName="licencia_fecha_expedicion" matInput
+              placeholder="{{ 'DRIVER_LICENSE_EXPEDITION_DATE' | translate }}">
+            <mat-datepicker-toggle [for]="fechaExpedicion" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #fechaExpedicion></mat-datepicker>
+            <mat-error>
+              {{formStatus?.formacion_json?.licencia_fecha_expedicion | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field  class="w-100">
+            <input (focus)="fechaVencimiento.open()" [matDatepicker]="fechaVencimiento"
+              formControlName="licencia_fecha_vencimiento" matInput
+              placeholder="{{ 'DRIVER_LICENSE_DUE_DATE' | translate }}">
+            <mat-datepicker-toggle [for]="fechaVencimiento" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #fechaVencimiento></mat-datepicker>
+            <mat-error>
+              {{formStatus?.formacion_json?.licencia_fecha_vencimiento | translate}}
+            </mat-error>
+          </mat-form-field>
+
+
+          <div class="grid-col">
+            <h4 class="dark info-subtitle-2">
+              {{ "LICENSE" | translate }} 2
+            </h4>
+          </div>
+
+          <mat-form-field  class="w-100">
+            <input #actorLicense_1 formControlName="numero_licencia_1" matInput maxlength="50"
+              placeholder="{{ 'DRIVER_LICENSE_NUMBER' | translate }}" type="number" />
+            <mat-hint align="end">
+              {{ actorLicense_1.value?.length || 0 }}/50
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.formacion_json?.numero_licencia_1 | translate }}
+            </mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field  class="w-100">
+            <mat-select formControlName="licencia_categoria_1"
+              placeholder="{{ 'DRIVER_LICENSE_CATEGORY' | translate }}">
+              <mat-option *ngFor="let licencia of choices.tipo_licencia" [value]="licencia.id.toString()">
+                {{ licencia.value | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.formacion_json?.licencia_categoria_1 | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field  class="w-100">
+            <input (focus)="fechaExpedicion_1.open()" [matDatepicker]="fechaExpedicion_1"
+              formControlName="licencia_fecha_expedicion_1" matInput
+              placeholder="{{ 'DRIVER_LICENSE_EXPEDITION_DATE' | translate }}">
+            <mat-datepicker-toggle [for]="fechaExpedicion_1" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #fechaExpedicion_1></mat-datepicker>
+            <mat-error>
+              {{formStatus?.formacion_json?.licencia_fecha_expedicion_1 | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field  class="w-100">
+            <input (focus)="fechaVencimiento_1.open()" [matDatepicker]="fechaVencimiento_1"
+              formControlName="licencia_fecha_vencimiento_1" matInput
+              placeholder="{{ 'DRIVER_LICENSE_DUE_DATE' | translate }}">
+            <mat-datepicker-toggle [for]="fechaVencimiento_1" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #fechaVencimiento_1></mat-datepicker>
+            <mat-error>
+              {{formStatus?.formacion_json?.licencia_fecha_vencimiento_1 | translate}}
+            </mat-error>
+          </mat-form-field>
+
+
+          <div class="grid-col">
+            <h4 class="dark info-subtitle-2">
+              {{ "LICENSE" | translate }} 3
+            </h4>
+          </div>
+
+          <mat-form-field  class="w-100">
+            <input #actorLicense_2 formControlName="numero_licencia_2" matInput maxlength="50"
+              placeholder="{{ 'DRIVER_LICENSE_NUMBER' | translate }}" type="number" />
+            <mat-hint align="end">
+              {{ actorLicense_2.value?.length || 0 }}/50
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.formacion_json?.numero_licencia_2 | translate }}
+            </mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field  class="w-100">
+            <mat-select formControlName="licencia_categoria_2"
+              placeholder="{{ 'DRIVER_LICENSE_CATEGORY' | translate }}">
+              <mat-option *ngFor="let licencia of choices.tipo_licencia" [value]="licencia.id.toString()">
+                {{ licencia.value | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.formacion_json?.licencia_categoria_2 | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field  class="w-100">
+            <input (focus)="fechaExpedicion_2.open()" [matDatepicker]="fechaExpedicion_2"
+              formControlName="licencia_fecha_expedicion_2" matInput
+              placeholder="{{ 'DRIVER_LICENSE_EXPEDITION_DATE' | translate }}">
+            <mat-datepicker-toggle [for]="fechaExpedicion_2" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #fechaExpedicion_2></mat-datepicker>
+            <mat-error>
+              {{formStatus?.formacion_json?.licencia_fecha_expedicion_2 | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field  class="w-100">
+            <input (focus)="fechaVencimiento_2.open()" [matDatepicker]="fechaVencimiento_2"
+              formControlName="licencia_fecha_vencimiento_2" matInput
+              placeholder="{{ 'DRIVER_LICENSE_DUE_DATE' | translate }}">
+            <mat-datepicker-toggle [for]="fechaVencimiento_2" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #fechaVencimiento_2></mat-datepicker>
+            <mat-error>
+              {{formStatus?.formacion_json?.licencia_fecha_vencimiento_2 | translate}}
+            </mat-error>
+          </mat-form-field>
+
+
+
+        </div>
+      </section>
+
+
+      <section class="mt-4" id="employment-information">
+        <div class="grid grid-sm-2 title-grid">
+          <h2 class="dark info-subtitle">
+            {{ "EMPLOYMENT_INFORMATION" | translate }}
+          </h2>
+        </div>
+
+        <div class="grid grid-sm-2 grid-md-3 mt-3" formGroupName="informacion_laboral_json">
+
+          <mat-form-field class="w-100">
+            <input (focus)="fechaIngreso.open()" [matDatepicker]="fechaIngreso" formControlName="fecha_ingreso" matInput
+              placeholder="{{ 'DATE_ADMISSION' | translate }}">
+            <mat-datepicker-toggle [for]="fechaIngreso" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #fechaIngreso></mat-datepicker>
+            <mat-error>
+              {{formStatus?.informacion_laboral_json?.fecha_ingreso | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <mat-select formControlName="grupo_trabajo" placeholder="{{ 'WORKGROUP' | translate }}">
+              <mat-option *ngFor="let trabajo of choices.grupo_trabajo" [value]="trabajo.id.toString()">
+                {{ trabajo.value | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.informacion_laboral_json?.grupo_trabajo | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <mat-select formControlName="tipo_contrato" placeholder="{{ 'TYPE_CONTRACT' | translate }}">
+              <mat-option *ngFor="let contrato of choices.tipo_contrato" [value]="contrato.id.toString()">
+                {{ contrato.value | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.informacion_laboral_json?.tipo_contrato | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <mat-select formControlName="tipo_vinculacion" placeholder="{{ 'TYPE_RELATIONSHIP' | translate }}">
+              <mat-option *ngFor="let vinculacion of choices.tipo_vinculacion" [value]="vinculacion.id.toString()">
+                {{ vinculacion.value | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.informacion_laboral_json?.tipo_vinculacion | translate }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field  class="w-100">
+            <mat-select formControlName="tipo_vehiculo" placeholder="{{ 'TYPE_VEHICULE_DRIVING' | translate }}">
+              <mat-option *ngFor="let vehiculo of vehicleTypes" [value]="vehiculo.id.toString()">
+                {{ vehiculo.nombre | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.informacion_laboral_json?.tipo_vehiculo | translate }}
+            </mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field class="w-100">
+            <input #actorCharge formControlName="cargo" matInput maxlength="50" placeholder="{{ 'CHARGE' | translate }}"
+              type="text" />
+            <mat-hint align="end">
+              {{ actorCharge.value?.length || 0 }}/50
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.informacion_laboral_json?.cargo | translate }}
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section class="mt-4" *ngIf="benefits.length > 0" id="employment-benefits">
+        <div class="grid grid-sm-2 title-grid">
+          <h2 class="dark info-subtitle">
+            {{ "EMPLOYMENT_BENEFITS" | translate }}
+          </h2>
+        </div>
+
+        <div class="grid grid-sm-2 grid-md-3 mt-3">
+
+          <mat-form-field class="w-100" *ngFor="let benefit of benefits">
+            <mat-select [ngModelOptions]="{standalone: true}" placeholder="{{benefit.tipo_nombre}}"
+              [(ngModel)]="detailsBenefit[benefit.tipo_nombre]">
+              <mat-option *ngFor="let benefitOpt of benefit.values" [value]="benefitOpt.id">
+                {{benefitOpt.nombre}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </section>
+
+      <section *ngIf="instance?.id" class="mt-4" id="ticketsInfo">
+        <div class="grid grid-sm-2 title-grid">
+          <h2 class="dark info-subtitle">
+            {{ "TICKETS" | translate }}
+          </h2>
+
+          <div class="w-100 text-center text-sm-left">
+            <button (click)="addEditTicket()" mat-raised-button type="button">
+              {{ "ADD" | translate }}
+            </button>
+          </div>
+        </div>
+
+        <div class="px-2 m-5">
+          <mat-accordion>
+            <ng-container *ngFor="let ticket of tickets; let i = index">
+              <mat-expansion-panel (closed)="ticket.open = false" (opened)="ticket.open = true" [expanded]="i === 0">
+
+                <mat-expansion-panel-header class="h-auto">
+                  <div class="grid grid-md-2 w-100 px-2">
+
+                    <div [class.bb-divider]="ticket.open" class="w-100 py-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">
+                        {{ "DATE" | translate }}:
+                      </h3>
+                      <div class="mat-body">
+                        {{ ticket.fecha }}
+                      </div>
+                    </div>
+
+                    <div [class.bb-divider]="ticket.open" class="w-100 py-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">
+                        {{ "STATE" | translate }}:
+                      </h3>
+                      <div class="mat-body">
+                        <div *ngIf=" ticket?.pago; else notPaid ">
+                          {{ "PAID_OUT"| translate }}
+                        </div>
+                        <ng-template #notPaid>
+                          <span class="text-danger">{{ "PENDING_PAYMENT" | translate }}</span>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </div>
+                </mat-expansion-panel-header>
+
+                <div class="grid grid-md-2 mt-4">
+                  <div class="w-100 bb-divider pb-2">
+                    <h3 class="mat-h3 font-weight-bold mb-0">
+                      {{ "TICKET_NUMBER" | translate }}:
+                    </h3>
+                    <div class="mat-body">
+                      {{ ticket.numero }}
+                    </div>
+                  </div>
+                  <div class="w-100 bb-divider pb-2">
+                    <h3 class="mat-h3 font-weight-bold mb-0">
+                      {{ "TICKET_CODE" | translate }}:
+                    </h3>
+                    <div class="mat-body">
+                      {{ ticket.codigo_infraccion }}
+                    </div>
+                  </div>
+
+                  <div class="w-100 bb-divider pb-2">
+                    <h3 class="mat-h3 font-weight-bold mb-0">
+                      {{ "VIEW_TICKET_VOUCHER" | translate }}
+                    </h3>
+                    <div class="text-center">
+                      <a *ngIf="ticket.comparendo; else notRegister" [href]="ticket.comparendo" mat-icon-button
+                        matTooltip="{{ 'VIEW_FILE_SAVED' | translate }}" matTooltipShowDelay="300" target="_blank">
+                        <mat-icon>description</mat-icon>
+                      </a>
+                      <ng-template #notRegister>
+                        {{ "NOT_RECORDED" | translate }}
+                      </ng-template>
+                    </div>
+                  </div>
+
+                  <div class="grid-col text-center">
+                    <button (click)="addEditTicket(ticket.id)" mat-icon-button matTooltip="{{ 'EDIT' | translate }}"
+                      matTooltipShowDelay="300" type="button">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button (click)="deleteTicket(ticket.id, ticket.codigo_infraccion)" mat-icon-button matTooltip="{{ 'DELETE' | translate }}"
+                      matTooltipShowDelay="300" type="button">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </mat-expansion-panel>
+
+            </ng-container>
+          </mat-accordion>
+        </div>
+      </section>
+
+
+
+      <section  class="mt-4" id="personal-data">
+        <div class="grid grid-sm-2 title-grid">
+          <h2 class="dark info-subtitle">
+            {{ "TESTS_PHYSICALS_APTITUDE" | translate }}
+          </h2>
+        </div>
+
+        <div class="grid grid-sm-2 grid-md-3 pb-3 mt-3">
+
+          <div class="w-100">
+            <div class="text-center mb-2">
+              {{ "TEST_ATTETION" | translate }}
+            </div>
+            <adms-drop-zone (fileResult)="onFileChange('examen_atencion', $event) " [fileUrl]="filesUrl.examen_atencion"
+              [resetFiles]="resetFiles" document="true" model="examen_atencion">
+            </adms-drop-zone>
+          </div>
+
+          <div class="w-100">
+            <div class="text-center mb-2">
+              {{ "TEST_ABILITY" | translate }}
+            </div>
+            <adms-drop-zone (fileResult)="onFileChange('examen_habilidad', $event) "
+              [fileUrl]="filesUrl.examen_habilidad" [resetFiles]="resetFiles" document="true" model="examen_habilidad">
+            </adms-drop-zone>
+          </div>
+
+          <div class="w-100">
+            <div class="text-center mb-2">
+              {{ "TEST_ACUITY" | translate }}
+            </div>
+            <adms-drop-zone (fileResult)="onFileChange('examen_agudeza', $event) " [fileUrl]="filesUrl.examen_agudeza"
+              [resetFiles]="resetFiles" document="true" model="examen_agudeza">
+            </adms-drop-zone>
+          </div>
+
+          <div class="w-100">
+            <div class="text-center mb-2">
+              {{ "TEST_PSYCHOSENSORIAL" | translate }}
+            </div>
+            <adms-drop-zone (fileResult)="onFileChange('examen_psicosensorica', $event) "
+              [fileUrl]="filesUrl.examen_psicosensorica" [resetFiles]="resetFiles" document="true"
+              model="examen_psicosensorica">
+            </adms-drop-zone>
+          </div>
+
+          <div class="w-100">
+            <div class="text-center mb-2">
+              {{ "TEST_VISIO" | translate }}
+            </div>
+            <adms-drop-zone (fileResult)="onFileChange('examen_visiometria', $event) "
+              [fileUrl]="filesUrl.examen_visiometria" [resetFiles]="resetFiles" document="true"
+              model="examen_visiometria">
+            </adms-drop-zone>
+          </div>
+
+          <div class="w-100">
+            <div class="text-center mb-2">
+              {{ "TEST_AUDIOMETRY" | translate }}
+            </div>
+            <adms-drop-zone (fileResult)="onFileChange('examen_audiometria', $event) "
+              [fileUrl]="filesUrl.examen_audiometria" [resetFiles]="resetFiles" document="true"
+              model="examen_audiometria">
+            </adms-drop-zone>
+          </div>
+
+          <div class="w-100">
+            <div class="text-center mb-2">
+              {{ "TEST_PSYCHOLOGY" | translate }}
+            </div>
+            <adms-drop-zone (fileResult)="onFileChange('examen_psicologia', $event) "
+              [fileUrl]="filesUrl.examen_psicologia" [resetFiles]="resetFiles" document="true"
+              model="examen_psicologia">
+            </adms-drop-zone>
+          </div>
+
+          <div class="w-100">
+            <div class="text-center mb-2">
+              {{ "TEST_MOTOR_COORDINATION" | translate }}
+            </div>
+            <adms-drop-zone (fileResult)="onFileChange('examen_coordinacion_motriz', $event) "
+              [fileUrl]="filesUrl.examen_coordinacion_motriz" [resetFiles]="resetFiles" document="true"
+              model="examen_coordinacion_motriz">
+            </adms-drop-zone>
+          </div>
+
+          <div class="w-100">
+            <div class="text-center mb-2">
+              {{ "TEST_MEDICAL" | translate }}
+            </div>
+            <adms-drop-zone (fileResult)="onFileChange('examen_medico', $event) " [fileUrl]="filesUrl.examen_medico"
+              [resetFiles]="resetFiles" document="true" model="examen_medico">
+            </adms-drop-zone>
+          </div>
+
+          <div class="w-100">
+            <div class="text-center mb-2">
+              {{ "TEST_THEORY" | translate }}
+            </div>
+            <adms-drop-zone (fileResult)="onFileChange('examen_prueba_teorica', $event) "
+              [fileUrl]="filesUrl.examen_prueba_teorica" [resetFiles]="resetFiles" document="true"
+              model="examen_prueba_teorica">
+            </adms-drop-zone>
+          </div>
+
+          <div class="w-100">
+            <div class="text-center mb-2">
+              {{ "TEST_PRACTICAL" | translate }}
+            </div>
+            <adms-drop-zone (fileResult)="onFileChange('examen_prueba_practica', $event) "
+              [fileUrl]="filesUrl.examen_prueba_practica" [resetFiles]="resetFiles" document="true"
+              model="examen_prueba_practica">
+            </adms-drop-zone>
+          </div>
+
+          <div class="w-100">
+            <div class="text-center mb-2">
+              {{ "TEST_ADMISSION" | translate }}
+            </div>
+            <adms-drop-zone (fileResult)="onFileChange('examen_prueba_ingreso', $event) "
+              [fileUrl]="filesUrl.examen_prueba_ingreso" [resetFiles]="resetFiles" document="true"
+              model="examen_prueba_ingreso">
+            </adms-drop-zone>
+          </div>
+
+        </div>
+      </section>
+
+    </form>
+  </mat-card>
+</div>

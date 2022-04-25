@@ -1,0 +1,266 @@
+<div class="item-wrapper bb-divider" [class.hasClient]="viewClienInfo" [class.mainAction]="actionsCapabilities.default"
+  [class.bg-alert-danger-deep]="shift.retraso_rango === 121" [class.bg-alert-danger]="shift.retraso_rango === 61"
+  [class.bg-alert-warning-deep]="shift.retraso_rango === 31" [class.bg-alert-warning]="shift.retraso_rango === 1"
+  [class.bg-alert-success]="shift.retraso_rango === 0" [class.list-item-selected]="shift.isSelected">
+
+  <div *ngIf="actionsCapabilities?.default" class="text-center">
+    <mat-checkbox (change)="checkedItem($event.checked)" [(ngModel)]="shift.isSelected" color="primary">
+    </mat-checkbox>
+  </div>
+
+  <div class="item-content">
+    <button type="button" [matMenuTriggerFor]="moreShiftMenu" mat-icon-button>
+      <mat-icon>more_vert</mat-icon>
+
+      <mat-menu #moreShiftMenu="matMenu">
+
+        <button type="button" mat-menu-item (click)="addObservation(shift)"
+          *ngIf="permissionsService.hasPermission(permissions.rutas.observaciones.crear)">
+          <mat-icon>speaker_notes</mat-icon>
+          <span>{{'ADD_OBSERVATION'|translate}}</span>
+        </button>
+
+        <ng-container *ngIf="permissionsService.hasPermission(permissions.rutas.enturnamientos.editar)">
+
+          <ng-container [ngSwitch]="shift.estado">
+            <button type="button" mat-menu-item (click)="pauseShiftAssignment(shift.id)" *ngSwitchCase="1">
+              <mat-icon>pause_circle_outline</mat-icon>
+              <span>{{'PAUSE_SHIFT_ASSIGNMENT'|translate}}</span>
+            </button>
+            <button type="button" mat-menu-item (click)="unPauseShiftAssignment(shift.id)" *ngSwitchCase="4">
+              <mat-icon>play_circle_outline</mat-icon>
+              <span>{{'START_SHIFT_ASSIGNMENT'|translate}}</span>
+            </button>
+          </ng-container>
+
+          <ng-container [ngSwitch]="shift.estado">
+            <button type="button" mat-menu-item (click)="startShiftAssignment(shift.id)" *ngSwitchCase="0">
+              <mat-icon>play_circle_outline</mat-icon>
+              <span>{{'START_SHIFT_ASSIGNMENT'|translate}}</span>
+            </button>
+            <button type="button" mat-menu-item (click)="resetShiftAssignment(shift.id)" *ngSwitchDefault>
+              <mat-icon>replay</mat-icon>
+              <span>{{'RESET_SHIFT_ASSIGNMENT'|translate}}</span>
+            </button>
+          </ng-container>
+
+        </ng-container>
+      </mat-menu>
+    </button>
+
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.activo?.placa" matTooltip="{{shift.activo?.placa || '--'}}"
+    matTooltipShowDelay="300">
+    <button (click)="openAssetDetails(shift.activo.id)"
+      *ngIf="shift?.activo?.id && permissionsService.hasPermission(permissions.activos.ver);else assetPlate"
+      class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+      {{shift.activo.placa}}
+    </button>
+    <ng-template #assetPlate>
+      <div class="text-ellipsis">
+        {{shift.activo?.placa || '--'}}
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.remolque" matTooltip="{{shift.remolque || '--'}}"
+    matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{shift.remolque || '--'}}
+    </div>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.departures" matTooltip="{{shift.departures || '0'}}"
+    matTooltipShowDelay="300">
+
+    <button class="w-100 mw-100 text-ellipsis"
+    *ngIf="shift?.departures > 0 ;else nulldeparture"
+    mat-stroked-button type="button" (click)="openApertures(shift.id)">
+      {{shift.departures || '0'}}
+    </button>
+
+  <ng-template #nulldeparture>
+    <div class="text-ellipsis">
+      0
+    </div>
+  </ng-template>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.orden_cargue" matTooltip="{{shift.orden_cargue }}"
+    matTooltipShowDelay="300">
+    <button *ngIf="shift.orden_cargue;else ordenCargue" class="w-100 mw-100 text-ellipsis" mat-stroked-button
+      type="button" (click)="openDetailDialog(shift.id,null,{enCurso: true})">
+      {{shift.orden_cargue || '--'}}
+    </button>
+    <ng-template #ordenCargue>
+      <div class="text-ellipsis">
+        {{shift.id_carga || '--'}}
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.cliente_enturne?.nombre"
+    matTooltip="{{shift.cliente_enturne?.nombre || '--'}}" matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{shift.cliente_enturne?.nombre || '--'}}
+    </div>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.origen" matTooltip="{{shift.origen || '--'}}"
+    matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{shift.origen || '--'}}
+    </div>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.destino" matTooltip="{{shift.destino || '--'}}"
+    matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{shift.destino || '--'}}
+    </div>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.via" matTooltip="{{shift.via || '--'}}"
+    matTooltipShowDelay="300">
+    <button (click)="openRouteDetails(shift.ruta)"
+      *ngIf="shift.via && shift.ruta && permissionsService.hasPermission(permissions.rutas.ver);else routeWay"
+      class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+      {{shift.via}}
+    </button>
+    <ng-template #routeWay>
+      <div class="text-ellipsis">
+        {{shift.via || '--'}}
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.ultimo_reporte?.actor_vial?.nombre"
+    matTooltip="{{shift.ultimo_reporte?.actor_vial?.nombre || '--'}}" matTooltipShowDelay="300">
+    <button (click)="openRoadActorDetails(shift.ultimo_reporte.actor_vial.id)"
+      *ngIf="shift.ultimo_reporte?.actor_vial?.id && permissionsService.hasPermission(permissions.actorVial.ver);else roadActor"
+      class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+      {{shift.ultimo_reporte?.actor_vial.nombre}}
+    </button>
+    <ng-template #roadActor>
+      <div class="text-ellipsis">
+        {{shift.ultimo_reporte?.actor_vial?.nombre || '--'}}
+      </div>
+    </ng-template>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.id_carga" matTooltip="{{shift.id_carga }}"
+    matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{shift.id_carga || '--'}}
+    </div>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.planilla" matTooltip="{{shift.planilla }}"
+    matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{shift.planilla || '--'}}
+    </div>
+  </div>
+
+  <div class="item-content">
+    <div class="text-ellipsis">
+      {{ shift.trailer || '--'}}
+    </div>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.producto" matTooltip="{{shift.producto || '--'}}"
+    matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{shift.producto}}
+    </div>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.ultimo_reporte?.fecha"
+    matTooltip="{{shift.ultimo_reporte?.fecha || '--'}}" matTooltipShowDelay="300"><a
+      [queryParams]="{ cliente: shift.cliente?.id,reportId: shift.activo?.id }" class="w-100 mw-100 text-ellipsis"
+      mat-stroked-button routerLink="/monitoring/tracking" target="_blank">
+      {{shift.ultimo_reporte?.fecha || '--'}} </a></div>
+  <div class="item-content" [class.text-success]="1 === shift.estado" [class.text-warning]="4 === shift.estado"
+    [matTooltipDisabled]="!shift.estado_nombre" matTooltip="{{shift.estado_nombre || '--'}}" matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{shift.estado_nombre || '--'}}
+    </div>
+  </div>
+
+  <div class="item-content" [class.text-success]="shift.ultimo_reporte?.zona_actual" matTooltipShowDelay="300"
+    [matTooltipDisabled]="!(shift.ultimo_reporte?.zonascontrol?.length === 1)"
+    matTooltip="{{!shift.ultimo_reporte?.zonascontrol?.length ? '--':shift.ultimo_reporte?.zonascontrol[0]?.nombre || '--'}}">
+    <ng-container *ngIf="shift.ultimo_reporte?.zonascontrol?.length > 1;else controlZoneOne">
+
+      <button [matMenuTriggerFor]="controlZoneMenu" class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+        {{shift.ultimo_reporte?.zonascontrol[0]?.nombre}}
+      </button>
+
+      <mat-menu #controlZoneMenu="matMenu">
+        <ng-container *ngIf="permissionsService.hasPermission(permissions.zonasControl.ver);else notControlZonePerms">
+          <ng-container *ngFor="let zone of shift.ultimo_reporte.zonascontrol ">
+            <button (click)="openControlZoneDetails(zone.id)" mat-menu-item>{{zone.nombre}}
+            </button>
+          </ng-container>
+        </ng-container>
+        <ng-template #notControlZonePerms>
+          <ng-container *ngFor="let zone of shift.ultimo_reporte.zonascontrol ">
+            <button mat-menu-item>{{zone.nombre}}
+            </button>
+          </ng-container>
+        </ng-template>
+      </mat-menu>
+    </ng-container>
+
+    <ng-template #controlZoneOne>
+      <ng-container *ngIf="shift.ultimo_reporte?.zonascontrol?.length > 0;else noControlZones">
+        <button (click)="openControlZoneDetails(shift.ultimo_reporte.zonascontrol[0].id)"
+          *ngIf="permissionsService.hasPermission(permissions.zonasControl.ver);else notControlZoneOnePerms"
+          class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+          {{shift.ultimo_reporte?.zonascontrol[0]?.nombre}}
+        </button>
+        <ng-template #notControlZoneOnePerms>
+          <div class="text-ellipsis">
+            {{shift.ultimo_reporte?.zonascontrol[0]?.nombre}}
+          </div>
+        </ng-template>
+      </ng-container>
+    </ng-template>
+
+    <ng-template #noControlZones>--</ng-template>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.alarmas" matTooltip="{{shift.alarmas || '--'}}"
+    matTooltipShowDelay="300">
+    <button (click)="openAlarmDetails(shift.id)" *ngIf="shift.alarmas;else noAlarmas" class="w-100 mw-100 text-ellipsis"
+      mat-stroked-button type="button">
+      {{shift.alarmas}}
+    </button>
+    <ng-template #noAlarmas>
+      <div>--</div>
+    </ng-template>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.ultimo_reporte?.retraso"
+    matTooltip="{{shift.ultimo_reporte?.retraso || '--'}}" matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{shift.ultimo_reporte?.retraso || '--'}}
+    </div>
+  </div>
+
+  <div class="item-content" [matTooltipDisabled]="!shift.eta" matTooltip="{{shift.eta || '--'}}"
+    matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{shift.eta || '--'}}
+    </div>
+  </div>
+
+  <div *ngIf="viewClienInfo" [matTooltipDisabled]="!viewClienInfo || !shift.transportador?.id" class="item-content"
+    matTooltip="{{shift.transportador?.nombre || '--'}}" matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{shift.transportador?.nombre || '--'}}
+    </div>
+  </div>
+
+</div>

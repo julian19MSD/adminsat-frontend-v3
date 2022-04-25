@@ -1,0 +1,22 @@
+<div class="preview-container border rounded">
+  <h3 class="mat-h3 name">
+    <strong>{{ data.identificador }}</strong>
+  </h3>
+  <div class="device mat-body-1">
+    <strong class="mr-2">{{ "DEVICE_TYPE" | translate }} :</strong
+    >{{ data.tipo_equipo_nombre }}
+  </div>
+  <div class="info">
+    <button
+      *ngIf="permissionsService.hasPermission(permissions.equipos.ver)"
+      (click)="openDetails()"
+      matTooltipShowDelay="300"
+      matTooltip="{{ 'DETAILS' | translate }}"
+      color="primary"
+      mat-icon-button
+      type="button"
+    >
+      <mat-icon>info_outline</mat-icon>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,70 @@
+
+.no-padding {
+  .mat-dialog-container {
+    padding: 0 !important;
+  }
+}
+
+.full-screen {
+  max-width: 97vw !important;
+  max-height: 97vh !important;
+
+  .mat-dialog-container {
+    height: auto !important;
+    padding: 0 !important;
+
+    .mat-tab-body-content {
+      overflow-y: auto;
+      max-height: calc(97vh - 113px);
+
+
+      .dialog-map-container {
+        height: calc(100vh - 142px);
+        width: 100vw;
+        max-width: 100%;
+      }
+
+    }
+  }
+
+
+}
+
+.max-full-screen {
+  min-width: 80vw !important;
+  min-height: 30vh !important;
+
+  .mat-dialog-container {
+    height: auto !important;
+    padding: 0 !important;
+    width: 100%;
+
+    .mat-tab-body-content {
+      overflow-y: auto;
+      max-height: calc(97vh - 113px);
+
+
+      .dialog-map-container {
+        height: calc(100vh - 142px);
+        width: 100vw;
+        max-width: 100%;
+      }
+
+    }
+  }
+
+
+}
+
+.full-height {
+  max-height: 98vh !important;
+
+  .mat-dialog-container {
+    height: auto !important;
+    padding: 0 !important;
+  }
+
+}
+
+
+

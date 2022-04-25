@@ -1,0 +1,127 @@
+<div class="h-100 p-1 p-md-2  fadeInUp">
+  <div *ngIf="!totalListItemsCounter;else list" class="p-1 py-lg-2">
+    <mat-card *ngIf="!fetching;else phContent" class="mw-600-px bl-primary-3">
+      <h1 class="mat-title">{{'NO_RESULT'|translate}}</h1>
+    </mat-card>
+
+    <ng-template #phContent>
+      <div *ngFor="let asset of placeholderItems" class="pb-1">
+        <ng-container *ngTemplateOutlet="phItem"></ng-container>
+      </div>
+    </ng-template>
+  </div>
+
+  <ng-template #list>
+    <mat-card class="h-100 p-0">
+      <div #headerScroll class="header-wrapper bb-divider  overflow-x-auto"
+           [class.hasClient]="clients?.length>1" [class.mainAction]="listHeaderState.actionsCapabilities?.default">
+
+        <div class="title-item">
+
+          <button type="button" [matMenuTriggerFor]="helpMenu" mat-icon-button>
+            <mat-icon>help</mat-icon>
+
+            <mat-menu #helpMenu="matMenu" class="help-menu-wrapper">
+
+              <div class="help-item bb-divider" mat-menu-item disabled>
+                <div class="bg-alert-danger-deep text-center">
+                  <mat-icon class="m-0">mood_bad</mat-icon>
+                </div>
+                <span class="text-foreground">{{'DELAY_GREATER_THAN_120'|translate}}</span>
+              </div>
+
+              <div class="help-item  bb-divider" mat-menu-item disabled>
+                <div class="bg-alert-danger text-center">
+                  <mat-icon class="m-0">sentiment_very_dissatisfied</mat-icon>
+                </div>
+                <span class="text-foreground">{{'DELAY_GREATER_THAN_60'|translate}}</span>
+              </div>
+
+              <div class=" help-item bb-divider" mat-menu-item disabled>
+                <div class="bg-alert-warning-deep text-center">
+                  <mat-icon class="m-0">sentiment_dissatisfied</mat-icon>
+                </div>
+                <span class="text-foreground">{{'DELAY_GREATER_THAN_30'|translate}}</span>
+              </div>
+
+              <div class="help-item bb-divider" mat-menu-item disabled>
+                <div class="bg-alert-warning text-center">
+                  <mat-icon class="m-0">sentiment_satisfied</mat-icon>
+                </div>
+                <span class="text-foreground">{{'DELAY_GREATER_THAN_0'|translate}}</span>
+              </div>
+
+              <div class=" help-item bb-divider" mat-menu-item disabled>
+                <div class="bg-alert-success text-center">
+                  <mat-icon class="m-0">sentiment_very_satisfied</mat-icon>
+                </div>
+                <span class="text-foreground">{{'AT_TIME'|translate}}</span>
+              </div>
+
+              <div class=" help-item" mat-menu-item disabled>
+                <div class="text-center">
+                  <mat-icon class="m-0">timer_off</mat-icon>
+                </div>
+                <span class="text-foreground">{{'UNKNOWN_DELAY'|translate}}</span>
+              </div>
+
+            </mat-menu>
+          </button>
+        </div>
+        <div *ngIf="listHeaderState.actionsCapabilities?.default" class="text-center"></div>
+        <div class="title-item">{{'PLATE'|translate}}</div>
+        <div class="title-item">{{'ASSET_HOOKED'|translate}}</div>
+        <div class="title-item">{{'DEPARTURES'|translate}}</div>
+        <div class="title-item">{{'LOAD_ORDER'|translate}}</div>
+        <div class="title-item">{{'FINAL_CLIENT'|translate}}</div>
+        <div class="title-item">{{'ORIGIN'|translate}}</div>
+        <div class="title-item">{{'DESTINATION'|translate}}</div>
+        <div class="title-item">{{'WAY'|translate}}</div>
+        <div class="title-item">{{'ROAD_ACTOR'|translate}}</div>
+        <div class="title-item">{{'LOAD_ID'|translate}}</div>
+        <div class="title-item">{{'PLANILLA'|translate}}</div>
+        <div class="title-item">{{'TRAILER'|translate}}</div>
+        <div class="title-item">{{'CONTENT'|translate}}</div>
+        <div class="title-item">{{'LAST_REPORT'|translate}}</div>
+        <div class="title-item">{{'STATE'|translate}}</div>
+        <div class="title-item">{{'CONTROL_ZONES'|translate}}</div>
+        <div class="title-item">{{'ALARMS'|translate}}</div>
+        <div class="title-item">{{'DELAY'|translate}}</div>
+        <div class="title-item">{{'ETA'|translate}}</div>
+        <div *ngIf="clients?.length>1" class="title-item">{{'CARRIER'|translate}}</div>
+      </div>
+
+      <cdk-virtual-scroll-viewport #cdkScroller (scroll)="updateScroll(headerScroll,$event)" class="w-100"
+                                   itemSize="48">
+        <div *cdkVirtualFor="let shift of filteredItems$ | async" class="w-100">
+          <adms-shift-assignment-item *ngIf="!fetching;else phItem"
+                                      [shift]="shift"
+                                      (refrehsList)="getListData()"
+                                      (checkedChange)="onCheckedSingle($event, shift.id, shift.orden_cargue)"
+                                      [actionsCapabilities]="listHeaderState.actionsCapabilities"
+                                      [viewClienInfo]="clients?.length>1"
+          >
+          </adms-shift-assignment-item>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </mat-card>
+  </ng-template>
+
+</div>
+
+
+<ng-template #phItem>
+  <mat-card class="ph-wrapper p-0 bb-divider">
+    <div class="ph-item align-items-center p-0 h-100">
+      <div>
+        <div class="ph-row m-0">
+          <div class="ph-col-3 big ph-brightness m-0"></div>
+          <div class="ph-col-1 empty"></div>
+          <div class="ph-col-3 big ph-brightness m-0"></div>
+          <div class="ph-col-1 empty"></div>
+          <div class="ph-col-4 big ph-brightness m-0"></div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</ng-template>

@@ -1,0 +1,40 @@
+<h1 class="mb-0" mat-dialog-title>{{'NEW_MESSAGE'|translate}}</h1>
+
+<mat-divider class="mt-3 mb-2"></mat-divider>
+
+<div class="w-600-px  py-2" mat-dialog-content>
+
+  <adms-ph *ngIf="loading; else loaded" mode="form"></adms-ph>
+
+  <ng-template #loaded>
+    <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" id="messageForm">
+      <div class="grid grid-md-2 align-items-center">
+
+
+        <mat-form-field class="grid-col">
+          <textarea  #contentMessage formControlName="content" matInput maxlength="144" placeholder="{{'CONTENT'|translate}}" required
+            type="text">
+          </textarea>
+          <mat-hint align="end">
+            {{ contentMessage.value?.length || 0 }}/144
+          </mat-hint>
+          <mat-error>
+            {{ formStatus?.content | translate }}
+          </mat-error>
+        </mat-form-field>
+
+      </div>
+    </form>
+  </ng-template>
+</div>
+
+<mat-divider class="mt-3 mb-2"></mat-divider>
+
+<div mat-dialog-actions class="justify-content-end">
+  <button class="m-1" mat-button type="button" mat-dialog-close>
+    {{'CANCEL'| translate}}
+  </button>
+  <button *ngIf="!loading" class="m-1" color="primary" form="messageForm" mat-raised-button type="submit">
+    {{'SEND'| translate}}
+  </button>
+</div>

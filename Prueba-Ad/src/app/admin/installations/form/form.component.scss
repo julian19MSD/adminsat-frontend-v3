@@ -1,0 +1,71 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "src/assets-sources/scss/app/mixins/flex";
+
+.form-container{
+  min-width: 40vw; 
+}
+
+@include media-breakpoint-down(sm) {
+  .form-container{
+    min-width: 90vw;  
+  }
+}
+
+:host ::ng-deep {
+  .gid-scroller {
+    .scrollable-content {
+      grid-template-columns: repeat(auto-fill, 100px);
+      grid-template-rows: 70px;
+
+      .icon-item {
+        width: 100px;
+        height: 70px;
+
+        .mat-radio-container {
+          display: none;
+        }
+
+        .mat-radio-label {
+          height: 100%;
+          width: 100%;
+          margin: 0;
+          padding: 0.25rem;
+
+          .mat-radio-label-content {
+            text-align: center;
+            width: 100%;
+            padding: 0;
+
+            img {
+              max-width: 90%;
+              max-height: 90%;
+            }
+          }
+        }
+      }
+    }
+
+    @include media-breakpoint-down(xs) {
+      .scrollable-content {
+        gap: 0.5rem;
+      }
+    }
+  }
+}
+
+.icon-wrapper {
+  height: 347px;
+  margin: 0.5rem;
+
+  .icon-item {
+    border: 1px solid silver;
+    border-radius: 5px;
+
+    .ph-picture {
+      margin: 0;
+      height: 50px;
+    }
+  }
+}

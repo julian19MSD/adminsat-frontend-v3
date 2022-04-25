@@ -1,0 +1,21 @@
+.link:hover {
+  color: #323232;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.bottom-right {
+  position: fixed !important;
+  bottom: 0.5rem !important;
+  right: 0.5rem !important;
+}
+
+.cursor-pointer,
+.cursor-pointer:hover {
+  cursor: pointer !important;
+}
+
+
+.grecaptcha-badge {
+  display: none !important;
+}

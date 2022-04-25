@@ -1,0 +1,40 @@
+<div class="detail-container">
+
+  <mat-toolbar color="primary">
+    <h1>{{ 'MOBILE_EYE_EVENTS'|translate }}</h1>
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+
+  <ng-template #loaded>
+    <div class="p-2 px-md-3 pb-md-4">
+      <div class="grid-wrapper">
+
+        <h1 class="mat-h2 mb-0 d-down-sm-none"><strong>{{'EVENT' | translate}}</strong></h1>
+        <h1 class="mat-h2 mb-0 d-down-sm-none"><strong>{{'QUANTITY' | translate}}</strong></h1>
+        <mat-divider class="grid-col mb-3 d-down-sm-none"></mat-divider>
+
+        <ng-container *ngFor="let item of info">
+          <div class="px-md-2">
+            <h3 class="mat-h3 mb-0 d-md-none"><strong>{{'EVENT' | translate}}</strong></h3>
+            <div>{{item.nombre}}</div>
+          </div>
+
+          <div class="px-md-2 counter-wrapper">
+            <strong class="mat-h3 mt-2 mr-1 d-md-none">{{'QUANTITY' | translate}}:</strong>
+            <span>{{item.count}}</span>
+          </div>
+
+          <mat-divider class="grid-col"></mat-divider>
+        </ng-container>
+      </div>
+
+    </div>
+  </ng-template>
+</div>
+
+

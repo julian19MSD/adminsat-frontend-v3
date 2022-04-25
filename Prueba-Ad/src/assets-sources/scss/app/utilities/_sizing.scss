@@ -1,0 +1,45 @@
+
+
+@for $i from 1 through 10 {
+  .mw-#{$i}00-px {
+    max-width: $i * 100px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .mw-#{$i}0 {
+    max-width: $i * 10% !important;
+  }
+
+  .w-#{$i}0 {
+    width: $i * 10% !important;
+  }
+
+  .w-#{$i}00-px {
+    width: $i * 100px !important;
+  }
+
+  @each $breakpoint, $value in $grid-breakpoints {
+    @include media-breakpoint-up($breakpoint) {
+      .mw-#{$breakpoint}-#{$i}00-px {
+        max-width: $i * 100px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+
+      .w-#{$breakpoint}-#{$i}00-px {
+        width: $i * 100px !important;
+      }
+    }
+  }
+
+
+}
+
+.w-fit-content {
+  width: fit-content !important;
+}
+
+.w-min-content {
+  width: min-content !important;
+}

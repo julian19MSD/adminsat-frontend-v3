@@ -1,0 +1,108 @@
+<div class="p-1 p-lg-2 h-100 fadeInUp">
+
+  <div *ngIf="loader" [innerHTML]="loaderContent" class="loader-container" id="internalLoader"></div>
+
+  <mat-card class="main-card-container">
+    <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" id="reportsForm">
+      <div class="grid grid-lg-2 align-items-start py-2 px-0">
+
+        <div>
+          <h2 class="dark info-subtitle">{{'RANGE' | translate}}</h2>
+          <div class="p-2 mt-3">
+            <adms-date-time-range [formGroup]="formGroup"></adms-date-time-range>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="dark info-subtitle">{{'TYPE_REPORT' | translate}}</h2>
+          <div class="p-2 mt-3">
+            <adms-select [mainKey]="'name'" [ctrl]="formGroup.get('reporte')" [options]="reportsOptions"
+              placeholder="{{'TYPE_REPORT'|translate}}" required="true">
+            </adms-select>
+          </div>
+          <div *ngIf="[1, 2, 3].includes(formGroup.get('reporte').value)">
+            <h2 class="dark info-subtitle">{{'FORMAT' | translate}}</h2>
+            <div class="p-2 mt-3">
+              <adms-select [ctrl]="formGroup.get('tipo')" [translate]="true" [options]="formats.excellHojas"
+                placeholder="{{'TYPE_REPORT'|translate}}" required="true">
+              </adms-select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 p-0">
+        <h2 class="dark info-subtitle">{{'FILTERS' | translate}}</h2>
+        <div class="col-sm-6 mt-1">
+          <adms-select *ngIf="clients.length > 1" [ctrl]="formGroup.get('cliente')" [options]="clients"
+            placeholder="{{'CLIENT'|translate}}" required="true">
+          </adms-select>
+        </div>
+        <div *ngIf="formGroup.get('cliente').value != null">
+          <div class="col-12 " *ngIf="[1000].includes(formGroup.get('reporte').value)">
+            <div class="d-flex flex-nowrap  align-items-center flex-row">
+              <adms-select [ctrl]="formGroup.get('actores_viales')" [options]="roadActorOptions" required="true"
+                class="w-100" multiple="true" placeholder="{{'ROAD_ACTORS' | translate}}">
+              </adms-select>
+              <button matTooltipShowDelay="300" (click)="addAll('roadActorOptions','actores_viales')"
+                matTooltip="{{'SELECT_ALL'|translate}}" mat-icon-button type="button">
+                <mat-icon>select_all</mat-icon>
+              </button>
+              <button (click)="formGroup.get('actores_viales').reset([])" matTooltipShowDelay="300"
+                matTooltip="{{'UNSELECT_ALL'|translate}}" mat-icon-button type="button">
+                <mat-icon>clear_all</mat-icon>
+              </button>
+            </div>
+            <adms-road-actor-associations-preview (disassociate)="formGroup.get('actores_viales').reset($event)"
+              [confirmDisassociation]="false" [items]="roadActorOptions"
+              [selected]="formGroup.get('actores_viales').value">
+            </adms-road-actor-associations-preview>
+          </div>
+          <div class="col-12 " *ngIf="[1, 2, 3].includes(formGroup.get('reporte').value)">
+            <div class="d-flex flex-nowrap  align-items-center flex-row">
+              <adms-select [ctrl]="formGroup.get('activos')" [options]="assetsOptions" required="true" class="w-100"
+                multiple="true" placeholder="{{'ASSETS' | translate}}">
+              </adms-select>
+              <button matTooltipShowDelay="300" matTooltip="{{'SELECT_ALL'|translate}}"
+                (click)="addAll('assetsOptions','activos')" mat-icon-button type="button">
+                <mat-icon>select_all</mat-icon>
+              </button>
+              <button (click)="formGroup.get('activos').reset([])" matTooltipShowDelay="300"
+                matTooltip="{{'UNSELECT_ALL'|translate}}" mat-icon-button type="button">
+                <mat-icon>clear_all</mat-icon>
+              </button>
+            </div>
+            <adms-asset-associations-preview (disassociate)="formGroup.get('activos').reset($event)"
+              [confirmDisassociation]="false" [items]="assetsOptions" [selected]="formGroup.get('activos').value">
+            </adms-asset-associations-preview>
+          </div>
+          <div class="col-12 " *ngIf="[1000].includes(formGroup.get('reporte').value)">
+            <div class="d-flex flex-nowrap  align-items-center flex-row">
+              <adms-select [ctrl]="formGroup.get('eventos')" [options]="eventsOptions" required="true" class="w-100"
+                multiple="true" placeholder="{{'EVENTS' | translate}}">
+              </adms-select>
+              <button matTooltipShowDelay="300" matTooltip="{{'SELECT_ALL'|translate}}"
+                (click)="addAll('eventsOptions','eventos')" mat-icon-button type="button">
+                <mat-icon>select_all</mat-icon>
+              </button>
+              <button (click)="formGroup.get('eventos').reset([])" matTooltipShowDelay="300"
+                matTooltip="{{'UNSELECT_ALL'|translate}}" mat-icon-button type="button">
+                <mat-icon>clear_all</mat-icon>
+              </button>
+            </div>
+            <app-simple-association-preview (disassociate)="formGroup.get('eventos').reset($event)"
+              [confirmDisassociation]="false" [items]="eventsOptions" [selected]="formGroup.get('eventos').value">
+            </app-simple-association-preview>
+          </div>
+
+        </div>
+      </div>
+
+    </form>
+    <div id="elementoConsulta"  *ngIf="formGroup.get('reporte').value === 2 " class="p-2 mt-3">
+      <app-ecu  *ngIf="consult==='ECU'"  (chargeCompleted)="gotoElement($event)" [ecuItems]="ECU"></app-ecu>
+    </div>
+
+  </mat-card>
+</div>
+

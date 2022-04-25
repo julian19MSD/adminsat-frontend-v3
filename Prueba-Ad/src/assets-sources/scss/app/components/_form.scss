@@ -1,0 +1,11 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+
+.main-card-container {
+  max-width: $max-content-width;
+  height: 100%;
+  overflow: auto;
+  padding: 0.25rem 0 !important;
+  margin: auto;
+}

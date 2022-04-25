@@ -1,0 +1,27 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+
+.opened-session-wrapper {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto minmax(14px, auto) minmax(14px, auto) minmax(14px, auto);
+  column-gap: 8px;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+
+  .close-button {
+    width: fit-content;
+    height: fit-content;
+    grid-row: 1 / -1;
+    grid-column-start: 2;
+  }
+}
+
+
+@include media-breakpoint-down(xs) {
+  .opened-session-wrapper {
+    padding: 0.5rem;
+  }
+}

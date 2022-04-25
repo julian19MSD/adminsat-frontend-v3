@@ -1,0 +1,315 @@
+<div class="detail-container">
+
+  <mat-toolbar color="primary">
+    <h1 *ngIf="instance?.activo_nombre;else phTittle">{{ instance?.activo_nombre }}</h1>
+    <ng-template #phTittle>
+      <div class="ph-row">
+        <div class="ph-col-auto big ph-brightness">
+        </div>
+      </div>
+    </ng-template>
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+
+  <ng-template #loaded>
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>home</mat-icon>
+        </ng-template>
+
+        <div class="home-tab-container">
+
+          <div class="safe">
+            <div class="mat-body-2 d-flex justify-content-center aling-items-center">
+
+              <mat-icon class="text-danger mr-2">error</mat-icon>
+              <span>{{instance.status}}</span>
+
+            </div>
+          </div>
+
+          <mat-list class="info">
+
+            <ng-container *ngIf="permissionsService.hasPermission(permissions.clientes.ver)">
+              <mat-list-item>
+                <div class="mat-body-2 mr-2">{{'CLIENT' | translate}}:</div>
+                <div class="mat-body-1">{{instance?.cliente?.nombre}}</div>
+              </mat-list-item>
+              <mat-divider class="mt-2"></mat-divider>
+            </ng-container>
+
+            <ng-container *ngIf="instance?.activo_placa">
+              <mat-list-item>
+                <div class="mat-body-2 mr-2">{{'PLATE' | translate}}:</div>
+                <div class="mat-body-1">{{instance?.activo_placa}}</div>
+              </mat-list-item>
+              <mat-divider class="mt-2"></mat-divider>
+            </ng-container>
+
+
+            <ng-container *ngIf="instance?.actor_vial?.full_name">
+              <mat-list-item>
+                <div class="mat-body-2 mr-2">{{'ROAD_ACTOR' | translate}}:</div>
+                <div class="mat-body-1">{{instance?.actor_vial?.full_name}}</div>
+              </mat-list-item>
+              <mat-divider class="mt-2"></mat-divider>
+            </ng-container>
+
+
+            <ng-container *ngIf="instance?.origen">
+              <mat-list-item>
+                <div class="mat-body-2 mr-2">{{'ORIGIN' | translate}}:</div>
+                <div class="mat-body-1">{{instance?.origen}}</div>
+              </mat-list-item>
+              <mat-divider class="mt-2"></mat-divider>
+            </ng-container>
+
+            <ng-container *ngIf="instance?.destino">
+              <mat-list-item>
+                <div class="mat-body-2 mr-2">{{'DESTINATION' | translate}}:</div>
+                <div class="mat-body-1">{{instance?.destino}}</div>
+              </mat-list-item>
+              <mat-divider class="mt-2"></mat-divider>
+            </ng-container>
+
+            <ng-container *ngIf="instance?.via">
+              <mat-list-item>
+                <div class="mat-body-2 mr-2">{{'WAY' | translate}}:</div>
+                <div class="mat-body-1">{{instance?.via}}</div>
+              </mat-list-item>
+              <mat-divider class="mt-2"></mat-divider>
+            </ng-container>
+
+            <ng-container *ngIf="instance?.remolque">
+              <mat-list-item>
+                <div class="mat-body-2 mr-2">{{'ASSET_HOOKED' | translate}}:</div>
+                <div class="mat-body-1">{{instance?.remolque}}</div>
+              </mat-list-item>
+              <mat-divider class="mt-2"></mat-divider>
+            </ng-container>
+          </mat-list>
+        </div>
+      </mat-tab>
+
+      <mat-tab *ngIf="instance?.rutas.length > 0" label="{{'SHIFT_ASSIGNMENT' | translate}}">
+        <div class="p-2">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="table-responsive mt-2  ">
+
+                <table mat-table [dataSource]="instance.rutas">
+
+                  <!-- columna orden -->
+                  <ng-container matColumnDef="orden">
+                    <th mat-header-cell *matHeaderCellDef> {{"LOAD_ORDER" | translate}} </th>
+                    <td mat-cell *matCellDef="let row">
+                      {{row.orden_cargue }}
+                    </td>
+                  </ng-container>
+
+                  <!-- columna estado -->
+                  <ng-container matColumnDef="estado">
+                    <th mat-header-cell *matHeaderCellDef> {{"STATE" | translate}} </th>
+                    <td mat-cell *matCellDef="let row">
+                      {{row.estado || "--"}}
+                    </td>
+                  </ng-container>
+
+                  <!-- columna conductor1 -->
+                  <ng-container matColumnDef="conductor1">
+                    <th mat-header-cell *matHeaderCellDef> {{"DRIVER_ONE" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row?.actores_viales[0]?.full_name || "--"}} </td>
+                  </ng-container>
+
+                  <!-- columna conductor2 -->
+                  <ng-container matColumnDef="conductor2">
+                    <th mat-header-cell *matHeaderCellDef> {{"DRIVER_TWO" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row?.actores_viales[1]?.full_name|| "--"}} </td>
+                  </ng-container>
+
+                  <!-- columna origen -->
+                  <ng-container matColumnDef="origen">
+                    <th mat-header-cell *matHeaderCellDef> {{"ORIGIN" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.origen || "--"}} </td>
+                  </ng-container>
+
+
+                  <!-- columna DESTINO -->
+                  <ng-container matColumnDef="destino">
+                    <th mat-header-cell *matHeaderCellDef> {{"DESTINITY" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.destino || "--"}} </td>
+                  </ng-container>
+
+                  <!-- columna via -->
+                  <ng-container matColumnDef="via">
+                    <th mat-header-cell *matHeaderCellDef> {{"WAY" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.via || "--"}} </td>
+                  </ng-container>
+
+                  <!-- columna inicio -->
+                  <ng-container matColumnDef="fechaInicio">
+                    <th mat-header-cell *matHeaderCellDef> {{"START_DATE" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.fecha_hora_inicio_real || "--"}} </td>
+                  </ng-container>
+
+                  <!-- columna fin -->
+                  <ng-container matColumnDef="fechaFin">
+                    <th mat-header-cell *matHeaderCellDef> {{"END_DATE" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.fecha_hora_fin || "--"}} </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab *ngIf="instance?.events.length > 0" label="{{'WORK_REVIEWS' | translate}}">
+
+        <div class="p-2">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="table-responsive mt-2  ">
+
+                <table mat-table [dataSource]="instance.events">
+
+                  <!-- columna evento -->
+                  <ng-container matColumnDef="evento">
+                    <th mat-header-cell *matHeaderCellDef> {{"EVENT" | translate}} </th>
+                    <td mat-cell *matCellDef="let row">
+                      {{row.event }}
+                    </td>
+                  </ng-container>
+
+
+                  <!-- columna actor -->
+                  <ng-container matColumnDef="actor">
+                    <th mat-header-cell *matHeaderCellDef> {{"ROAD_ACTOR" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.actor_vial_nombre || "--"}} </td>
+                  </ng-container>
+
+
+                  <!-- columna hora -->
+                  <ng-container matColumnDef="hora">
+                    <th mat-header-cell *matHeaderCellDef> {{"DATETIME" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.datetime || "--"}}        
+                      <button  mat-icon-button  (click)="recalculateWorkday(row.id, row.datetime_formated, row.event)" *ngIf="permissionsService.hasPermission(permissions.rutas.jornadaLaboral.editar); else date"
+                      matTooltip="{{ 'EDIT_DATE' | translate }}" matTooltipShowDelay="300" type="button">
+                      <mat-icon>mode_edit</mat-icon>
+                    </button>
+                    <ng-template #date>
+                      <div class="text-ellipsis">
+                        {{row.datetime || '--'}}
+                      </div>
+                    </ng-template>                  
+                  </td>
+                  </ng-container>
+
+                  <!-- columna duracion -->
+                  <ng-container matColumnDef="duracion">
+                    <th mat-header-cell *matHeaderCellDef> {{"DURATION" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.durationParse || "--"}} </td>
+                  </ng-container>
+
+                  <!-- columna tiempo agregado -->
+                  <ng-container matColumnDef="tiempo_agregado">
+                    <th mat-header-cell *matHeaderCellDef> {{"ADDED_TIME" | translate}} </th>
+                    <td mat-cell *matCellDef="let row"> {{row.added_time || "--"}} </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumnsevents"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumnsevents;"></tr>
+                </table>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab *ngIf="instance?.observations?.length > 0" label="{{'OBSERVATIONS' | translate}}">
+        <div class="p-2">
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let observation of instance.observations" class="pt-2 pb-2 pt-sm-0 pb-sm-0">
+              <mat-expansion-panel-header class="flex-wrap" style="height: 48px">
+                <mat-panel-title>
+                  {{observation.username}}
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{observation.observation }}
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+
+              <ng-template matExpansionPanelContent>
+                <mat-divider class="mb-2"></mat-divider>
+                <div class="row">
+                  <div class="col-md-6 col-12 mt-2">
+                    <div class="mat-body-2">{{'USERNAME' | translate}}</div>
+                    <div class="mat-body-1">
+                      {{observation?.username || ('CORE_FLAGS.NOT_RECORDED'|translate)}}
+                    </div>
+                    <mat-divider class="mt-2"></mat-divider>
+                  </div>
+
+                  <div class="col-md-6 col-12 mt-2">
+                    <div class="mat-body-2">{{'OBSERVATION' | translate}}</div>
+                    <div class="mat-body-1">
+                      {{observation?.observation || ('CORE_FLAGS.NOT_RECORDED'|translate)}}
+                    </div>
+                    <mat-divider class="mt-2"></mat-divider>
+                  </div>
+
+                  <div class="col-md-6 col-12 mt-2">
+                    <div class="mat-body-2">{{'ADDED_TIME' | translate}}</div>
+                    <div class="mat-body-1">
+                      {{observation?.added_time || ('CORE_FLAGS.NOT_RECORDED'|translate)}}
+                    </div>
+                    <mat-divider class="mt-2"></mat-divider>
+                  </div>
+
+                  <div class="col-md-6 col-12 mt-2">
+                    <div class="mat-body-2">{{'OBSERVATION_DATE' | translate}}</div>
+                    <div class="mat-body-1">
+                      {{observation?.observation_dt || ('CORE_FLAGS.NOT_RECORDED'|translate)}}
+                    </div>
+                    <mat-divider class="mt-2"></mat-divider>
+                  </div>
+
+                </div>
+              </ng-template>
+
+            </mat-expansion-panel>
+
+          </mat-accordion>
+        </div>
+      </mat-tab>
+
+      <mat-tab *ngIf="instance?.total_workdays || instance?.total_restdays" label="{{'GLOBAL_DATA' | translate}}">
+        <mat-list>
+          <mat-list-item *ngIf="instance?.total_workdays" class="h-auto pt-2">
+            <div class="mat-body-2 mr-2">{{'TOTAL_WORKDAYS' | translate}}:</div>
+            <div class="mat-body-1">{{instance?.total_workdays}}</div>
+          </mat-list-item>
+          <mat-divider class="mt-2"></mat-divider>
+
+          <mat-list-item *ngIf="instance?.total_restdays" class="h-auto pt-2">
+            <div class="mat-body-2 mr-2">{{'TOTAL_RESTDAYS' | translate}}:</div>
+            <div class="mat-body-1">{{instance?.total_restdays}}</div>
+          </mat-list-item>
+          <mat-divider class="mt-2"></mat-divider>
+        </mat-list>
+
+      </mat-tab>
+
+    </mat-tab-group>
+  </ng-template>
+</div>

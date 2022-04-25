@@ -1,0 +1,63 @@
+<div class="h-100 p-1 p-md-2  fadeInUp">
+  <div *ngIf="!totalListItemsCounter;else list" class="p-1 py-lg-2">
+    <mat-card *ngIf="!fetching;else phContent" class="mw-600-px bl-primary-3">
+      <h1 class="mat-title">{{'NO_RESULT'|translate}}</h1>
+    </mat-card>
+
+    <ng-template #phContent>
+      <div *ngFor="let asset of placeholderItems" class="pb-1">
+        <ng-container *ngTemplateOutlet="phItem"></ng-container>
+      </div>
+    </ng-template>
+  </div>
+
+  <ng-template #list>
+    <mat-card class="h-100 p-0">
+      <div #headerScroll class="header-wrapper bb-divider  overflow-x-auto  "
+           >
+
+        <div class="title-item">{{'ASSET'|translate}}</div>
+        <div class="title-item">{{'ROAD_ACTOR'|translate}}</div>
+        <div class="title-item">{{'CELLPHONE'|translate}}</div>
+        <div class="title-item">{{'DATETIME'|translate}}</div>
+        <div class="title-item">{{'EVENT_TYPE'|translate}}</div>
+        <div class="title-item">{{'RECEIVED_VALUE'|translate}}</div>
+        <div class="title-item">{{'LIMIT'|translate}}</div>
+        <div class="title-item">{{'DETAIL'|translate}}</div>
+
+      </div>
+
+      <cdk-virtual-scroll-viewport #cdkScroller (scroll)="updateScroll(headerScroll,$event)" class="w-100"
+                                   itemSize="48">
+        <div *cdkVirtualFor="let alarm of listItems$ | async" class="w-100">
+          <adms-ecu-alarm-item *ngIf="!fetching;else phItem"
+                                      [alarm]="alarm"
+                                      (refrehsList)="getListData()"
+                                      (checkedChange)="onCheckedSingle($event, alarm.id, alarm.enturnamiento)"
+                                      [actionsCapabilities]="listHeaderState.actionsCapabilities"
+                                      [viewClienInfo]="clients?.length>1"
+          >
+          </adms-ecu-alarm-item>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </mat-card>
+  </ng-template>
+
+</div>
+
+
+<ng-template #phItem>
+  <mat-card class="ph-wrapper p-0 bb-divider">
+    <div class="ph-item align-items-center p-0 h-100">
+      <div>
+        <div class="ph-row m-0">
+          <div class="ph-col-3 big ph-brightness m-0"></div>
+          <div class="ph-col-1 empty"></div>
+          <div class="ph-col-3 big ph-brightness m-0"></div>
+          <div class="ph-col-1 empty"></div>
+          <div class="ph-col-4 big ph-brightness m-0"></div>
+        </div>
+      </div>
+    </div>
+  </mat-card>
+</ng-template>

@@ -1,0 +1,7 @@
+body:not(.dark) {
+  *::-webkit-scrollbar-thumb,
+  *::-webkit-scrollbar-thumb:active,
+  *::-webkit-scrollbar-thumb:hover {
+    background: mat-color($primary);
+  }
+}

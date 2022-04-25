@@ -1,0 +1,14 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "src/assets-sources/scss/app/mixins/flex";
+
+.form-container{
+  min-width: 40vw; 
+}
+
+@include media-breakpoint-down(sm) {
+  .form-container{
+    min-width: 90vw;  
+  }
+}

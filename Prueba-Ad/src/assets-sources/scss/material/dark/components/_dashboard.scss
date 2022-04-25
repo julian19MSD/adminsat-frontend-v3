@@ -1,0 +1,20 @@
+.gridster {
+  .gridster-item {
+    .title,
+    .delete {
+      background: mat-color($dark-primary) !important;
+      color: mat-color($dark-primary, default-contrast) !important;
+    }
+  }
+}
+
+
+.dashboard-edit {
+  background: mat-color($dark-background, card) !important;
+}
+
+@include media-breakpoint-down(md) {
+  .dashboard-edit {
+    background: mat-color($dark-background, background) !important;
+  }
+}

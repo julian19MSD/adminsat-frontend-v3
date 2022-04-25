@@ -1,0 +1,123 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "~src/assets-sources/scss/app/mixins/flex";
+@import "~src/assets-sources/scss/app/utilities/variables";
+
+
+.site-wrapper {
+  display: grid;
+  grid-template-columns: 100vw;
+  grid-template-rows: #{$mat-toolbar-height-desktop} calc(100vh - #{$mat-toolbar-height-desktop});
+  grid-template-areas: 'header' 'main';
+  max-width: 2000px;
+  margin: 0 auto;
+
+  header {
+    grid-area: header;
+    display: grid;
+    grid-template-columns: 250px 1fr auto auto;
+    grid-template-rows: 100%;
+    grid-template-areas: 'logo router controls profile';
+    align-items: center;
+    z-index: 2;
+
+
+    .header-logo-container {
+      grid-area: logo;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      grid-template-rows: 1fr;
+      align-items: center;
+      height: 100%;
+
+      .ph-picture {
+        width: 75%;
+        height: 50%;
+        justify-self: center;
+        margin: 0;
+      }
+
+      img {
+        justify-self: center;
+        max-width: 96%;
+        max-height: 56px;
+      }
+    }
+
+    .header-router-wrapper {
+      grid-area: router;
+      height: 100%;
+    }
+
+    .header-controls-wrapper {
+      grid-area: controls;
+    }
+
+    .header-profile-wrapper {
+      grid-area: profile;
+    }
+
+    .header-profile-wrapper,
+    .header-controls-wrapper {
+      @include flexbox;
+      @include flex-direction(row);
+      @include align-items(center);
+      height: 100%;
+    }
+
+    .header-profile-button {
+      cursor: pointer;
+      min-width: 0;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      margin: 0 8px;
+    }
+  }
+
+  main {
+    grid-area: main;
+
+    .main-sidenav {
+      width: 250px;
+    }
+  }
+}
+
+
+@include media-breakpoint-down(md) {
+  .site-wrapper {
+    grid-template-rows: #{$mat-toolbar-height-mobile-portrait * 2} calc(100vh - #{$mat-toolbar-height-mobile-portrait * 2});
+
+    header {
+      grid-template-columns: auto 1fr auto;
+      grid-template-rows: 1fr 1fr;
+      row-gap: 0.5rem;
+      grid-template-areas: 'logo controls profile' 'router router router';
+
+      .header-logo-container {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr;
+
+        img {
+          display: none;
+        }
+      }
+
+      .header-router-wrapper {
+        box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+        border-radius: 4px;
+        margin: 0 0.25rem 0.5rem 0.25rem;
+      }
+    }
+
+    main {
+      .mat-drawer-container {
+        position: inherit;
+      }
+    }
+  }
+}

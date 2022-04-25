@@ -1,0 +1,9 @@
+.cdk-virtual-scroll-content-wrapper {
+  padding: 0.5rem;
+}
+
+@include media-breakpoint-down(sm) {
+  .cdk-virtual-scroll-content-wrapper {
+    padding: 0.25rem;
+  }
+}

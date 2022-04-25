@@ -1,0 +1,96 @@
+<div (click)="setDetail(location.id)" class="location-item-wrapper" [class.bg-hover]="!disabled" [class.disabled]="disabled">
+
+  <h2 *ngIf="'tracking'=== mode" class="mat-h2 mb-0 grid-col text-ellipsis">
+    {{location?.nombre}}
+  </h2>
+
+  <div class="info-wrapper">
+
+    <div class="info-item">
+      <label>{{'DATE_DEVICE' | translate}}:</label>
+      <div [ngClass]="{'text-danger': location?.no_report?.un_dia, 'text-warning': location?.no_report?.doce_h,
+      'text-info': location?.no_report?.tres_h}">
+        {{location?.fecha_hora_equipo }}
+      </div>
+    </div>
+
+    <div [class.alert-danger]="location?.tipo === 0" [class.alert-info]="location?.tipo === 1"
+         [class.alert]="location?.tipo >= 0" class="info-item">
+      <label>{{'EVENT' | translate}}:</label>
+      <div>{{location?.evento_nombre }}</div>
+    </div>
+
+    <div class="info-item">
+      <label>{{'ADDRESS' | translate}}:</label>
+      <div [class.text-info]="!location?.direccion">
+        {{location?.direccion || ('NOT_RECORDED' | translate | uppercase)}}
+      </div>
+    </div>
+  </div>
+
+  <div class="info-icon-wrapper d-down-xs-none">
+    <div *ngIf="location?.velocidad" class="info-icon" matTooltip="{{'VELOCITY'|translate}}"
+         matTooltipShowDelay="300">
+      <em class="icon-gauge mr-2"></em>
+      <span>
+        {{ location?.velocidad }} {{metricsAlias?.velocity}}
+      </span>
+    </div>
+
+    <div *ngIf="location?.bateria || location?.bateria ===0" class="info-icon"
+         matTooltip="{{'BATTERY_LEVEL'|translate}}"
+         matTooltipShowDelay="300">
+      <em *ngIf="location?.alim_ext" class="icon-bat-charge"></em>
+      <em *ngIf="!location?.alim_ext && location?.bateria >= 80"
+          class="icon-bat-full text-success"></em>
+      <em *ngIf="!location?.alim_ext && location?.bateria < 80 && location?.bateria > 30"
+          class="icon-bat-half text-warning"></em>
+      <em *ngIf="!location?.alim_ext && location?.bateria <= 30"
+          class="icon-bat-empty text-danger"></em>
+      <span>
+        {{ location?.bateria }}%
+      </span>
+    </div>
+  </div>
+
+  <div class="icon-wrapper d-down-xs-none">
+
+    <ng-container [ngSwitch]="location?.canal_comunicacion">
+      <mat-icon *ngSwitchCase="0" matTooltip="{{'SENDED_VIA_CELLULAR'|translate}}" matTooltipShowDelay="300">
+        sim_card
+      </mat-icon>
+
+      <em *ngSwitchCase="1" matTooltip="{{'SENDED_VIA_SATELLITE'|translate}}" matTooltipShowDelay="300"
+          class="icon-satellite"></em>
+    </ng-container>
+
+    <ng-container [ngSwitch]="location?.cinturon">
+      <em *ngSwitchCase="true" matTooltip="{{'SEAT_BELT_STATE'|translate}}" matTooltipShowDelay="300"
+          class="icon-seat-belt text-success mr-2"></em>
+
+      <em *ngSwitchCase="false" matTooltip="{{'SEAT_BELT_STATE'|translate}}" matTooltipShowDelay="300"
+          class="icon-seat-belt text-danger mr-2"></em>
+    </ng-container>
+
+    <mat-icon *ngIf="location?.ignicion === true ||  location?.ignicion === false"
+              matTooltip="{{'STATE_IGNITION'|translate}}"
+              matTooltipShowDelay="300"
+              [ngClass]="{'text-success': location?.ignicion,'text-danger': !location?.ignicion}">
+      power_settings_new
+    </mat-icon>
+
+    <ng-container [ngSwitch]="location?.calidad_gps">
+      <mat-icon *ngSwitchCase="true" matTooltip="{{'VALID_COORDINATES'|translate}}" matTooltipShowDelay="300"
+                class="text-success">gps_fixed
+      </mat-icon>
+
+      <mat-icon *ngSwitchCase="false" matTooltip="{{'NO_COORDINATES'|translate}}" matTooltipShowDelay="300"
+                class="text-danger">gps_off
+      </mat-icon>
+
+      <mat-icon *ngSwitchCase="null" matTooltip="{{'LAST_LOCATION'|translate}}" matTooltipShowDelay="300"
+                class="text-warning">gps_off
+      </mat-icon>
+    </ng-container>
+  </div>
+</div>

@@ -1,0 +1,140 @@
+<div class="w-800-px mw-100">
+  <h1 class="bb-divider mb-1 pb-2" mat-dialog-title>
+    {{title|translate}}
+  </h1>
+
+  <div class="py-2" mat-dialog-content>
+
+    <adms-ph *ngIf="loader; else loaded" mode="form"></adms-ph>
+
+    <ng-template #loaded>
+
+      <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" id="assetDocumentForm">
+        <div class="grid grid-sm-2 p-0">
+
+          <adms-select [ctrl]="formGroup.get('tipo_documento')" [options]="documentsTypes"
+                       placeholder="{{'DOCUMENT_TYPE'|translate}}" required="true">
+          </adms-select>
+
+          <mat-form-field *ngIf="formGroup.get('tipo_documento').value===17" class="w-100">
+            <input formControlName="nombre_otro" matInput placeholder="{{'DOCUMENT_NAME'|translate}}"
+                   required type="text">
+            <mat-error *ngIf="formGroup.get('nombre_otro').invalid">
+              {{formStatus?.nombre_otro | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input formControlName="numero_documento" matInput placeholder="{{'DOCUMENT_NUMBER'|translate}}"
+                   required type="text">
+            <mat-error *ngIf="formGroup.get('numero_documento').invalid">
+              {{formStatus?.numero_documento | translate}}
+            </mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field class="w-100">
+            <input formControlName="compania" matInput placeholder="{{'COMPANY'|translate}}" type="text">
+            <mat-error *ngIf="formGroup.get('compania').invalid">
+              {{formStatus?.compania | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input formControlName="dias_notificacion" matInput placeholder="{{'NOTIFICATION_DAYS'|translate}}"
+                   required type="number">
+            <mat-error *ngIf="formGroup.get('dias_notificacion').invalid">
+              {{formStatus?.dias_notificacion | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="grid-col">
+            <mat-chip-list #notificationEmailList formControlName="correos_notificaciones_m2m" ngDefaultControl>
+              <mat-chip (removed)="chipRemove('correos_notificaciones_m2m',item)"
+                        *ngFor="let item of formGroup.get('correos_notificaciones_m2m').value"
+                        [ngClass]="{'text-danger': formGroup.get('validate_mail').value.includes(item)}"
+                        [removable]="true"
+                        [selectable]="false">
+                {{item}}
+                <mat-icon matChipRemove>cancel</mat-icon>
+              </mat-chip>
+              <input (matChipInputTokenEnd)="chipAdd('correos_notificaciones_m2m',$event,5, true)"
+                     (paste)="chipPaste('correos_notificaciones_m2m', $event,5, true)"
+                     [matChipInputAddOnBlur]="true"
+                     [matChipInputFor]="notificationEmailList"
+                     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                     placeholder="{{'NOTIFICATION_EMAIL'|translate }}"/>
+            </mat-chip-list>
+            <mat-error>
+              {{formStatus?.correos_notificaciones_m2m |translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <input (focus)="fechaExpedicion.open()" [matDatepicker]="fechaExpedicion"
+                   [max]="formGroup.get('vigencia_desde').value"
+                   formControlName="fecha_expedicion" matInput placeholder="{{ 'EXPEDITION_DATE' | translate }}"
+                   required>
+            <mat-datepicker-toggle [for]="fechaExpedicion" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #fechaExpedicion></mat-datepicker>
+            <mat-error>
+              {{formStatus?.fecha_expedicion | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <input (focus)="vigenciaDesde.open()" [matDatepicker]="vigenciaDesde"
+                   [max]="formGroup.get('vigencia_hasta').value"
+                   [min]="formGroup.get('fecha_expedicion').value" formControlName="vigencia_desde" matInput
+                   placeholder="{{ 'EFFECTIVE_FROM'| translate }}" required>
+            <mat-datepicker-toggle [for]="vigenciaDesde" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #vigenciaDesde></mat-datepicker>
+            <mat-error>
+              {{formStatus?.vigencia_desde | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input formControlName="valor" matInput placeholder="{{'VALUE'|translate}}" type="number" min="0" currency-mask>
+            <mat-error *ngIf="formGroup.get('valor').invalid">
+              {{formStatus?.valor | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="">
+            <input (focus)="vigenciaHasta.open()" [matDatepicker]="vigenciaHasta"
+                   [min]="formGroup.get('vigencia_desde').value"
+                   formControlName="vigencia_hasta" matInput placeholder="{{ 'EFFECT_UNTIL'| translate }}" required>
+            <mat-datepicker-toggle [for]="vigenciaHasta" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #vigenciaHasta></mat-datepicker>
+            <mat-error>
+              {{formStatus?.vigencia_hasta | translate}}
+            </mat-error>
+          </mat-form-field>
+
+        </div>
+
+        <div class="grid-col">
+          <div class="mw-600">
+            <div class="text-center w-100">{{'VOUCHER' | translate}}</div>
+            <adms-drop-zone (dropZoneFileSelect)="updateFormData('comprobante', $event)"
+                            [document]="true" [fileUrl]="instance?.comprobante"
+                            model="comprobante"></adms-drop-zone>
+          </div>
+        </div>
+      </form>
+    </ng-template>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="justify-content-end" mat-dialog-actions>
+    <button class="m-1" mat-button mat-dialog-close type="button">
+      {{'CANCEL'| translate}}
+    </button>
+    <button class="m-1" color="primary" form="assetDocumentForm" mat-raised-button type="submit">
+      {{'SAVE'| translate}}
+    </button>
+  </div>
+
+</div>

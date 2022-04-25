@@ -1,0 +1,46 @@
+<div class="header-dashboard-wrapper">
+  <h1 class="mat-title mb-0 text-ellipsis">{{'DASHBOARD'|translate}}</h1>
+
+  <div class="client">
+    <ng-container *ngIf="selectClientsOptions?.length > 1">
+      <adms-select panelClass="w-100 d-down-md-none" [ctrl]="clientCrtl" required="true"
+                   floatLabel="never" [options]="selectClientsOptions" placeholder="{{'CLIENTS' | translate}}">
+      </adms-select>
+
+      <button class="d-lg-none" mat-icon-button (click)="openClientSelectorForMobile()">
+        <mat-icon>supervised_user_circle</mat-icon>
+      </button>
+    </ng-container>
+  </div>
+
+  <button (click)="sendHeaderClick('refresh')" mat-icon-button type="button">
+    <mat-icon matTooltipShowDelay="300" matTooltip="{{'REFRESH'|translate}}">refresh</mat-icon>
+  </button>
+
+  <div [class.dashboard-edit]="isEditing" class="dashboard-controls">
+    <button (click)="editClick()" mat-icon-button type="button">
+      <mat-icon *ngIf="!isEditing; else closeEdit" matTooltipShowDelay="300" matTooltip="{{'EDIT'|translate}}">
+        edit
+      </mat-icon>
+      <ng-template #closeEdit>
+        <mat-icon matTooltipShowDelay="300" matTooltip="{{'CANCEL'|translate}}">cancel</mat-icon>
+      </ng-template>
+    </button>
+
+    <button [class.d-none]="!isEditing" [disabled]="headerState?.gridItems.length === 0"
+            [matMenuTriggerFor]="addItemMenu" mat-icon-button type="button">
+      <mat-icon matTooltipShowDelay="300" matTooltip="{{'ADD'|translate}}">add</mat-icon>
+      <mat-menu #addItemMenu="matMenu">
+        <ng-container *ngFor="let key of headerState?.gridItems">
+          <button (click)="sendHeaderClick( 'addItem',key )" mat-menu-item type="button">
+            {{ key|uppercase|translate}}
+          </button>
+        </ng-container>
+      </mat-menu>
+    </button>
+
+    <button [class.d-none]="!isEditing" (click)="sendHeaderClick('save');editClick()" mat-icon-button type="button">
+      <mat-icon matTooltipShowDelay="300" matTooltip="{{'SAVE'|translate}}">save</mat-icon>
+    </button>
+  </div>
+</div>

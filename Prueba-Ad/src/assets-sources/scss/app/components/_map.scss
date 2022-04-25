@@ -1,0 +1,71 @@
+
+.map-utils {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  cursor: default;
+  max-width: 40%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+  z-index: 2;
+  border-radius: 8px;
+  height: 40px;
+  max-height: 40px;
+  @include align-items(center);
+  @include justify-content(center);
+  @include flexbox;
+  @include flex-direction(row);
+}
+
+@include media-breakpoint-down(sm) {
+  .map-utils {
+    position: initial;
+    width: 100%;
+    border-radius: 0;
+    max-width: 100%;
+    @include justify-content(space-around);
+  }
+}
+
+.cluster {
+  div[tabindex="0"] {
+    color: black;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    font-style: normal;
+    outline: none;
+  }
+
+
+  &.cluster-0 {
+    div[tabindex="0"] {
+      line-height: 53px;
+    }
+  }
+
+  &.cluster-1 {
+    div[tabindex="0"] {
+      line-height: 56px;
+    }
+  }
+
+  &.cluster-2 {
+    div[tabindex="0"] {
+      line-height: 66px;
+    }
+  }
+
+  &.cluster-3 {
+    div[tabindex="0"] {
+      line-height: 78px;
+    }
+  }
+
+  &.cluster-4 {
+    div[tabindex="0"] {
+      line-height: 90px;
+    }
+  }
+}
+

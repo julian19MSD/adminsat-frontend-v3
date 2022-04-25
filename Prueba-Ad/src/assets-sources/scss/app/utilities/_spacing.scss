@@ -1,0 +1,23 @@
+@for $i from 1 through 10 {
+  .z-#{$i} {
+    z-index: $i !important;
+  }
+}
+
+@each $size in (1, normal, initial) {
+  .lh-#{$size} {
+    line-height: $size !important;
+  }
+}
+
+.overflow-x-auto {
+  overflow-x: auto !important;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden !important;
+}
+
+.overflow-hidden {
+  overflow: hidden !important;
+}

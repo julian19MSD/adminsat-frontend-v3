@@ -1,0 +1,12 @@
+.help-menu-wrapper {
+  .mat-menu-content {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+
+    .mat-menu-item {
+      .mat-icon-no-color {
+        color: inherit;
+      }
+    }
+  }
+}

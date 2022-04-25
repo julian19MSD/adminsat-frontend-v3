@@ -1,0 +1,52 @@
+@import "~src/assets-sources/scss/app/mixins/flex";
+
+.header-wrapper {
+  display: grid;
+  grid-template-columns: 40px repeat(11, 200px);
+  column-gap: 16px;
+  align-items: center;
+  height: 56px;
+  padding: 0 16px;
+
+  &.mainAction{
+    grid-template-columns:  40px 40px repeat(11, 200px);
+  }
+
+  &::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  .title-item {
+    text-align: center;
+  }
+
+}
+
+.help-item {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  column-gap: 8px;
+  padding: 0 0.5rem 0 0;
+  @include align-items(center)
+}
+
+.ph-wrapper {
+  height: 48px;
+}
+
+:host::ng-deep {
+  .mat-menu-content {
+    padding: 0;
+  }
+
+  .cdk-virtual-scroll-viewport {
+    height: calc(100% - 56px) !important;
+
+    .cdk-virtual-scroll-content-wrapper {
+      padding: 0;
+    }
+  }
+}
+
+

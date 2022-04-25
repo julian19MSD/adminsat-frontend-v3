@@ -1,0 +1,166 @@
+<div [class.searchMode]="searchMode" class="header-list-wrapper">
+
+  <div class="header-select-all">
+    <mat-checkbox (change)="sendHeaderClick('allChecked', $event.checked)"
+      *ngIf="crudHeaderState?.actionsCapabilities?.default && !searchMode"
+      [indeterminate]="!crudHeaderState?.allChecked && crudHeaderState?.selectedItemsCounter > 0"
+      [ngModel]="crudHeaderState?.allChecked" color="primary">
+    </mat-checkbox>
+  </div>
+
+  <ng-container *ngIf="crudHeaderState?.selectedItemsCounter > 0;else noSelectedItems">
+    <div class="header-list-title">
+      <h1 class="mat-title text-ellipsis">
+        {{"ITEMS_OF" | translate:{
+        'partial': crudHeaderState?.selectedItemsCounter,
+        'total': crudHeaderState?.totalListItemsCounter
+        } }}
+      </h1>
+    </div>
+
+    <div class="header-list-buttons">
+      <button (click)="sendHeaderClick('mainAction')" *ngIf="crudHeaderState?.actionsCapabilities?.default" class="mr-2"
+        color="primary" mat-raised-button matTooltip="{{crudHeaderState?.defaultActionTooltip | translate}}"
+        matTooltipShowDelay="300" type="button">
+        {{crudHeaderState?.defaultActionText |translate}}
+      </button>
+    </div>
+  </ng-container>
+
+
+  <ng-template #noSelectedItems>
+    <ng-container *ngIf="!searchMode; else searchContent">
+
+      <div class="header-list-title">
+        <h1 class="mat-title text-ellipsis">
+          {{crudHeaderState?.title|translate}}
+        </h1>
+        <small class="mat-hint text-ellipsis">
+          {{"ITEMS_OF" | translate:{
+          'partial': crudHeaderState?.partialListItemsCounter || 0,
+          'total': crudHeaderState?.totalListItemsCounter || 0
+          } }}
+        </small>
+      </div>
+
+      <div class="header-list-buttons">
+
+        <ng-container *ngTemplateOutlet="searchField"></ng-container>
+        <ng-container *ngTemplateOutlet="searchButton"></ng-container>
+
+        <button (click)="sendHeaderClick('filter')" class="d-down-sm-none" mat-icon-button
+          matTooltip="{{'FILTER_LIST'|translate}}" matTooltipShowDelay="300" type="button">
+          <mat-icon>filter_list</mat-icon>
+        </button>
+
+        <button (click)="sendHeaderClick('sort')" class="d-down-sm-none" mat-icon-button
+          matTooltip="{{'SORT_LIST'|translate}}" matTooltipShowDelay="300" type="button">
+          <mat-icon>sort_by_alpha</mat-icon>
+        </button>
+
+        <button (click)="sendHeaderClick('refresh')" class="d-down-sm-none" mat-icon-button
+          matTooltip="{{'REFRESH_LIST'|translate}}" matTooltipShowDelay="300" type="button">
+          <mat-icon>refresh</mat-icon>
+        </button>
+
+        <button [matMenuTriggerFor]="moreMenu" mat-icon-button type="button">
+          <mat-icon>more_vert</mat-icon>
+
+          <mat-menu #moreMenu="matMenu">
+            <button (click)="sendHeaderClick('filter')" class="d-md-none" mat-menu-item type="button">
+              <mat-icon>filter_list</mat-icon>
+              <span>{{'FILTER_LIST'|translate}}</span>
+            </button>
+
+            <button (click)="sendHeaderClick('sort')" class="d-md-none" mat-menu-item type="button">
+              <mat-icon>sort_by_alpha</mat-icon>
+              <span>{{'SORT_LIST'|translate}}</span>
+            </button>
+
+            <button (click)="sendHeaderClick('refresh')" class="d-md-none" mat-menu-item type="button">
+              <mat-icon>refresh</mat-icon>
+              <span>{{'REFRESH_LIST'|translate}}</span>
+            </button>
+
+            <button (click)="openTweetDialog()" mat-menu-item type="button">
+              <mat-icon class="adminsat-icon icon-road"></mat-icon>
+              <span>{{'Invias #767'}}</span>
+            </button>
+
+            <button [matMenuTriggerFor]="pagesSize" mat-menu-item type="button">
+              <mat-icon>pages</mat-icon>
+              <span>{{'PAGE_SIZE' | translate}}</span>
+              <mat-menu #pagesSize="matMenu">
+                <button (click)="setPageSize(null)" [class.active]="!pageSize" mat-menu-item>100</button>
+                <ng-container *ngFor="let number of ['200','300','400','500','600','700','800','900','1000']">
+                  <button (click)="setPageSize(number)" [class.active]="number === pageSize" mat-menu-item>
+                    {{number}}
+                  </button>
+                </ng-container>
+              </mat-menu>
+            </button>
+
+            <button (click)="sendHeaderClick('download')" *ngIf="crudHeaderState?.downloadList" mat-menu-item
+              type="button">
+              <img [src]="assetsUrl + '/images/filetypes/x-office-spreadsheet.svg'" alt="" class="mat-icon-file">
+              <span>{{'DOWNLOAD' | translate}}</span>
+            </button>
+
+          </mat-menu>
+        </button>
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #searchContent>
+    <div class="header-list-title fadeInLeft">
+      <ng-container *ngTemplateOutlet="searchField"></ng-container>
+    </div>
+
+    <div class="header-list-buttons">
+      <ng-container *ngTemplateOutlet="searchButton"></ng-container>
+      <button (click)="searchMode=false;" *ngIf="searchMode" mat-button mat-icon-button
+        matTooltip="{{'CLOSE'|translate}}" matTooltipShowDelay="300" type="button">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="crudHeaderState?.actionsCapabilities?.create">
+    <a *ngIf="crudHeaderState?.actionsCapabilities?.create && !crudHeaderState?.customCreateFormState ; else createDialog"
+      [routerLink]="crudHeaderState?.createRoutePath" class="header-list-create" color="primary" mat-mini-fab
+      matTooltip="{{'CREATE'|translate}}" matTooltipShowDelay="300">
+      <mat-icon>add</mat-icon>
+    </a>
+    <ng-template #createDialog>
+      <button *ngIf="crudHeaderState?.actionsCapabilities?.create && crudHeaderState?.customCreateFormState "
+        class="header-list-create"  (click)="sendHeaderClick('customCreate')" color="primary" mat-mini-fab matTooltip="{{'CREATE'|translate}}" matTooltipShowDelay="300">
+        <mat-icon>add</mat-icon> 
+      </button>
+    </ng-template>
+
+
+  </ng-container>
+
+
+
+
+</div>
+
+<ng-template #searchField>
+  <mat-form-field [class.d-down-lg-none]="!searchMode" class="search-container" floatLabel="never">
+    <mat-label>{{'FILTER' | translate}}</mat-label>
+    <input (keyup.enter)="onSearch()" [(ngModel)]="search" matInput matTooltip="{{'WORD_FILTER_HELP'|translate}}"
+      matTooltipShowDelay="300" type="text">
+    <button (click)="search=null;onSearch()" *ngIf="search" mat-icon-button matSuffix type="button">
+      <mat-icon>clear</mat-icon>
+    </button>
+  </mat-form-field>
+</ng-template>
+
+<ng-template #searchButton>
+  <button (click)="changeSearhcMode()" [color]="search?'primary':null" class="d-xl-none" mat-icon-button
+    matTooltip="{{'FILTER'|translate}}" matTooltipShowDelay="300" type="button">
+    <mat-icon>search</mat-icon>
+  </button>
+</ng-template>

@@ -1,0 +1,89 @@
+<div class="item-wrapper bb-divider ">
+
+
+
+  <!-- activo -->
+  <div class="item-content" [matTooltipDisabled]="!alarm.activo_placa" matTooltip="{{alarm.activo_placa || '--'}}"
+    matTooltipShowDelay="300">
+    <button (click)="openAssetDetails(alarm.activo)"
+      *ngIf="alarm?.activo && permissionsService.hasPermission(permissions.activos.ver);else assetPlate"
+      class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+      {{alarm.activo_placa}}
+    </button>
+    <ng-template #assetPlate>
+      <div class="text-ellipsis">
+        {{alarm.activo_placa || '--'}}
+      </div>
+    </ng-template>
+  </div>
+
+
+  <!-- actor vial -->
+  <div class="item-content" [matTooltipDisabled]="!alarm.actor_vial_nombre"
+    matTooltip="{{alarm.actor_vial_nombre || '--'}}" matTooltipShowDelay="300">
+    <button (click)="openRoadActorDetails(alarm.actor_vial)"
+      *ngIf="alarm.actor_vial_nombre && permissionsService.hasPermission(permissions.actorVial.ver);else roadActor"
+      class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+      {{alarm.actor_vial_nombre}}
+    </button>
+    <ng-template #roadActor>
+      <div class="text-ellipsis">
+        {{alarm.actor_vial_nombre || '--'}}
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- celular -->
+  <div class="item-content" [matTooltipDisabled]="!alarm.actor_vial_celular" matTooltipShowDelay="300"
+    matTooltip="{{alarm.actor_vial_celular || '--'}}">
+    <div class="text-ellipsis">
+      {{alarm.actor_vial_celular || '--'}}
+    </div>
+  </div>
+
+
+
+  <!-- fecha -->
+  <div class="item-content" [matTooltipDisabled]="!alarm.report_dt" matTooltipShowDelay="300"
+    matTooltip="{{alarm.report_dt || '--'}}">
+    <div class="text-ellipsis">
+      {{alarm.report_dt || '--'}}
+    </div>
+  </div>
+
+  <!-- tipo de evento -->
+  <div class="item-content" [matTooltipDisabled]="!alarm.value_name" matTooltipShowDelay="300"
+    matTooltip="{{alarm.value_name || '--'}}">
+    <div class="text-ellipsis">
+      {{alarm.value_name || '--'}}
+    </div>
+  </div>
+
+
+  <!-- valor recibido -->
+  <div class="item-content" [matTooltipDisabled]="!alarm.report_value" matTooltipShowDelay="300"
+    matTooltip="{{alarm.report_value || '--'}}">
+    <div class="text-ellipsis">
+      {{alarm.report_value || '--'}} <span *ngIf="alarm.magnitude == 'temperature';else metrics">ºC</span> <ng-template #metrics>{{metricsAlias[alarm.magnitude]}}</ng-template>
+      
+    </div>
+  </div>
+
+
+  <!-- limite -->
+  <div class="item-content" [matTooltipDisabled]="!alarm.alarm_value" matTooltipShowDelay="300"
+    matTooltip="{{alarm.alarm_value || '--'}}">
+    <div class="text-ellipsis">
+      {{alarm.alarm_value || '--'}} <span *ngIf="alarm.magnitude == 'temperature';else metrics">ºC</span> <ng-template #metrics>{{metricsAlias[alarm.magnitude]}}</ng-template>
+    </div>
+  </div>
+
+  <!-- historico -->
+  <div class="item-content" matTooltip="{{ 'HISTORIC' | translate }}" matTooltipShowDelay="300">
+    <button  (click)="openDetailDialog(alarm?.id, null, null, 'max-full-screen')" class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+      {{'HISTORIC' | translate}} 
+    </button>
+
+  </div>
+
+</div>

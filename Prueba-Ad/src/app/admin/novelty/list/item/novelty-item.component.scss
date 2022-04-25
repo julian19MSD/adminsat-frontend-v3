@@ -1,0 +1,19 @@
+.novelty-item-wrapper {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  column-gap: 16px;
+  margin: auto;
+  align-items: center;
+  min-height: 92px;
+  max-width: 600px;
+
+
+  .description {
+    align-self: start;
+
+    .novelty-name {
+      font-size: 1.25rem;
+      margin-bottom: 8px;
+    }
+  }
+}

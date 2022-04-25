@@ -1,0 +1,1052 @@
+<div class="p-1 p-lg-2 h-100 fadeInUp">
+  <div *ngIf="loader" [innerHTML]="loaderContent" class="loader-container" id="internalLoader"></div>
+
+  <mat-card class="main-card-container">
+
+    <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" id="assetForm">
+
+      <section class="mt-4" id="profile">
+        <div class="w-100">
+          <adms-drop-zone (dropZoneFileSelect)="updateFormData('foto', $event)"
+            [defaultImage]="staticUrl + '/images/noimage.jpg'" [fileUrl]="instance?.foto" model="foto">
+          </adms-drop-zone>
+        </div>
+      </section>
+
+      <section class="mt-4" id="basic-data">
+
+        <div class="grid grid-sm-2 title-grid">
+          <h2 class="dark info-subtitle">
+            {{ "BASIC_DATA" | translate }}
+          </h2>
+          <div class="w-100 text-center text-sm-left">
+            <mat-slide-toggle class="mat-primary" formControlName="is_active">
+              {{formGroup.get("is_active").value ? ("ENABLED" | translate) : ("STAND_BY" | translate)}}
+            </mat-slide-toggle>
+
+          </div>
+        </div>
+
+        <div class="grid grid-sm-2 grid-md-3 mt-3">
+          <div *ngIf="clients.length > 1" class="w-100">
+            <adms-select [ctrl]="formGroup.get('cliente')" [options]="clients" placeholder="{{ 'CLIENT' | translate }}"
+              required="true">
+            </adms-select>
+          </div>
+
+          <mat-form-field class="w-100">
+            <mat-select formControlName="tipo_activo" placeholder="{{ 'ASSET_TYPE' | translate }}" required>
+              <mat-option *ngFor="let tipo_activo of choices.tipo_activo_choices" [value]="tipo_activo.id">
+                {{ tipo_activo.value | titlecase }}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{ formStatus?.tipo_activo | translate }}
+            </mat-error>
+          </mat-form-field>
+
+
+          <mat-form-field class="w-100">
+            <input #assetName formControlName="nombre" matInput maxlength="30" placeholder="{{ 'NAME' | translate }}"
+              required type="text" />
+            <mat-hint align="end">
+              {{ assetName.value?.length || 0 }}/30
+            </mat-hint>
+            <mat-error>
+              {{ formStatus?.nombre | translate }}
+            </mat-error>
+          </mat-form-field>
+
+
+          <ng-container *ngIf="formGroup.get('tipo_activo').value === 0">
+            <adms-select [ctrl]="formGroup.get('tipo_vehiculo')" [options]="vehicleTypes" class=""
+              placeholder="{{ 'TYPE_VEHICLE' | translate }}">
+            </adms-select>
+
+            <mat-form-field class="w-100">
+              <input #assetPlate formControlName="placa" matInput maxlength="14" placeholder="{{ 'PLATE' | translate }}"
+                required type="text" />
+              <mat-hint align="end">
+                {{ assetPlate.value?.length || 0 }}/14
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.placa | translate }}
+              </mat-error>
+            </mat-form-field>
+
+
+            <ng-container formGroupName="documentos_json">
+
+              <mat-form-field class="w-100">
+                <input #assetBrand formControlName="marca" matInput maxlength="50"
+                  placeholder="{{ 'BRAND' | translate }}" type="text" />
+                <mat-hint align="end">
+                  {{ assetBrand.value?.length || 0 }}/50
+                </mat-hint>
+                <mat-error>
+                  {{ formStatus?.documentos_json?.marca | translate }}
+                </mat-error>
+              </mat-form-field>
+
+
+              <mat-form-field class="w-100">
+                <input #assetLine formControlName="linea" matInput maxlength="50" placeholder="{{ 'LINE' | translate }}"
+                  type="text" />
+                <mat-hint align="end">
+                  {{ assetLine.value?.length || 0 }}/50
+                </mat-hint>
+                <mat-error>
+                  {{ formStatus?.documentos_json?.linea | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input #assetColor formControlName="color" matInput maxlength="50"
+                  placeholder="{{ 'COLOR' | translate }}" type="text" />
+                <mat-hint align="end">
+                  {{ assetColor.value?.length || 0 }}/50
+                </mat-hint>
+                <mat-error>
+                  {{ formStatus?.documentos_json?.color | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input formControlName="puertas" matInput min="0" placeholder="{{ 'DOOR_NUM' | translate }}"
+                  type="number" />
+                <mat-error>
+                  {{ formStatus?.documentos_json?.puertas | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input formControlName="potencia" matInput min="0" placeholder="{{ 'ASSET_HP' | translate }}"
+                  type="number" />
+                <mat-error>
+                  {{ formStatus?.documentos_json?.potencia | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input formControlName="modelo" matInput min="0" placeholder="{{ 'MODEL' | translate }}"
+                  type="number" />
+                <mat-error>
+                  {{ formStatus?.documentos_json?.modelo | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <mat-select formControlName="servicio" placeholder="{{ 'SERVICE_TYPE' | translate }}">
+                  <mat-option *ngFor="let servicio of choices.servicio_choices" [value]="servicio.id">
+                    {{ servicio.value | titlecase }}
+                  </mat-option>
+                </mat-select>
+                <mat-error>
+                  {{ formStatus?.documentos_json?.servicio | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input formControlName="modalidad_servicio" matInput placeholder="{{ 'SERVICE_MODE' | translate }}"
+                  type="text" />
+                <mat-error>
+                  {{ formStatus?.documentos_json?.modalidad_servicio | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input formControlName="capacidad_pasajeros" matInput min="0"
+                  placeholder="{{ 'PASSENGER_CAPACITY' | translate }}" type="number" />
+                <mat-error>
+                  {{ formStatus?.documentos_json?.capacidad_pasajeros | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input formControlName="radio_accion" matInput placeholder="{{ 'ASSIGNED_AREA' | translate }}"
+                  type="text" />
+                <mat-error>
+                  {{ formStatus?.documentos_json?.radio_accion | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input formControlName="peso" matInput min="0"
+                  placeholder="{{ 'WEIGHT' | translate }} ({{ 'KILOGRAMS_ABBREVIATION' | translate }})" type="number" />
+                <mat-error>
+                  {{ formStatus?.documentos_json?.peso | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input formControlName="cilindraje" matInput min="0" placeholder="{{ 'CYLINDER_CAPACITY' | translate }}"
+                  type="number" />
+                <mat-error>
+                  {{ formStatus?.documentos_json?.cilindraje | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input formControlName="transito" matInput placeholder="{{ 'TRANSIT_AUTHORITY' | translate }}"
+                  type="text" />
+                <mat-error>
+                  {{ formStatus?.documentos_json?.transito | translate }}
+                </mat-error>
+              </mat-form-field>
+
+            </ng-container>
+          </ng-container>
+        </div>
+      </section>
+
+      <section class="mt-4" id="thermo">
+        <h2 class="dark info-subtitle">
+          {{ "THERMO" | translate }}
+        </h2>
+        <div class="grid grid-sm-2 grid-md-3 mt-3">
+          <ng-container formGroupName="documentos_json">
+
+            <mat-form-field class="w-100">
+              <input #numeroThermo formControlName="numero_thermo" matInput maxlength="50"
+                placeholder="{{ 'NUMBER' | translate }}" type="text" />
+              <mat-hint align="end">
+                {{ numeroThermo.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.documentos_json?.numero_thermo | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-100">
+              <input #serieThermo formControlName="serie_thermo" matInput maxlength="50"
+                placeholder="{{ 'SERIE' | translate }}" type="text" />
+              <mat-hint align="end">
+                {{ serieThermo.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.documentos_json?.serie_thermo | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-100">
+              <input #lineThermo formControlName="linea_thermo" matInput maxlength="50"
+                placeholder="{{ 'LINE' | translate }}" type="text" />
+              <mat-hint align="end">
+                {{ lineThermo.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.documentos_json?.linea_thermo | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-100">
+              <input #controladorThermo formControlName="controlador_thermo" matInput maxlength="50"
+                placeholder="{{ 'CONTROLLER' | translate }}" type="text" />
+              <mat-hint align="end">
+                {{ controladorThermo.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.documentos_json?.controlador_thermo | translate }}
+              </mat-error>
+            </mat-form-field>
+
+          </ng-container>
+        </div>
+      </section>
+
+      <div class="grid grid-md-2 px-0">
+
+        <section class="mt-4" id="links">
+          <h2 class="dark info-subtitle">
+            {{ "LINKS" | translate }}
+          </h2>
+
+          <div class="d-flex flex-nowrap align-items-center flex-row px-2 mt-3">
+            <adms-select [ctrl]="formGroup.get('equipos')" [options]="devices" class="w-100" mainKey="identificador"
+              multiple="true" placeholder="{{ 'DEVICES' | translate }}">
+            </adms-select>
+
+            <button (click)="addAllDevices()" mat-icon-button matTooltip="{{ 'SELECT_ALL' | translate }}"
+              matTooltipShowDelay="300" type="button">
+              <mat-icon>select_all</mat-icon>
+            </button>
+
+            <button (click)="formGroup.get('equipos').reset([])" mat-icon-button
+              matTooltip="{{ 'UNSELECT_ALL' | translate }}" matTooltipShowDelay="300" type="button">
+              <mat-icon>clear_all</mat-icon>
+            </button>
+          </div>
+
+          <adms-device-associations-preview (disassociate)="formGroup.get('equipos').reset($event)" [items]="devices"
+            [selected]="formGroup.get('equipos').value">
+          </adms-device-associations-preview>
+        </section>
+
+        <section class="mt-4" id="icon">
+
+          <div class="grid grid-sm-2 title-grid">
+            <h2 class="dark info-subtitle">
+              {{ "ICON" | translate }}
+            </h2>
+            <mat-error class="small w-100 text-center text-sm-left">
+              {{ formStatus?.icono | translate }}
+            </mat-error>
+          </div>
+
+          <mat-radio-group class="mat-primary" formControlName="icono" required>
+            <virtual-scroller #iconScroll [items]="icons" class="icon-wrapper gid-scroller">
+              <mat-radio-button *ngFor=" let icon of iconScroll.viewPortItems"
+                [class.asset-icon-selected]=" formGroup.get('icono').value === icon.id "
+                [class.bg-unselected-chip]="formGroup.get('icono').value === icon.id" [value]="icon.id"
+                class="icon-item bg-hover" color="primary">
+                <div *ngIf="!icon.loaded" class="ph-picture ph-brightness mx-auto"></div>
+                <img (load)="icon.loaded=true" [hidden]="!icon.loaded" [src]="icon.icono" alt="icon" />
+              </mat-radio-button>
+            </virtual-scroller>
+          </mat-radio-group>
+
+        </section>
+      </div>
+
+      <ng-container *ngIf="formGroup.get('tipo_activo').value === 0">
+
+        <section class="mt-4" id="technicalData">
+          <h2 class="dark info-subtitle">
+            {{ "TECHNICAL_DATA" | translate }}
+          </h2>
+
+          <div class="grid grid-sm-2 grid-md-3 mt-3">
+            <ng-container formGroupName="documentos_json">
+
+              <mat-form-field class="w-100">
+                <input #assetVIN formControlName="vin" matInput maxlength="30"
+                  placeholder="{{ 'VIN_NUMBER' | translate }}" type="text" />
+                <mat-hint align="end">
+                  {{ assetVIN.value?.length || 0 }}/30
+                </mat-hint>
+                <mat-error>
+                  {{ formStatus?.documentos_json?.vin | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input #assetMotor formControlName="motor" matInput maxlength="30"
+                  placeholder="{{ 'ENGINE_NUMBER' | translate }}" type="text" />
+                <mat-hint align="end">
+                  {{ assetMotor.value?.length || 0 }}/30
+                </mat-hint>
+                <mat-error>
+                  {{ formStatus?.documentos_json?.motor | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input #assetChasis formControlName="chasis" matInput maxlength="30"
+                  placeholder="{{ 'CHASSIS_NUMBER' | translate }}" type="text" />
+                <mat-hint align="end">
+                  {{ assetChasis.value?.length || 0 }}/30
+                </mat-hint>
+                <mat-error>
+                  {{ formStatus?.documentos_json?.chasis | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input #assetSerie formControlName="serie" matInput maxlength="30"
+                  placeholder="{{ 'SERIAL_NUMBER' | translate }}" type="text" />
+                <mat-hint align="end">
+                  {{ assetSerie.value?.length || 0 }}/30
+                </mat-hint>
+                <mat-error>
+                  {{ formStatus?.documentos_json?.serie | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <mat-select formControlName="tipo_combustible" placeholder="{{ 'FUEL' | translate }}">
+                  <mat-option *ngFor="let combustible of choices.combustible_choices" [value]="combustible.id">
+                    {{ combustible.value | titlecase }}
+                  </mat-option>
+                </mat-select>
+                <mat-error>
+                  {{ formStatus?.documentos_json?.tipo_combustible | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input formControlName="tipo_carroceria" matInput placeholder="{{ 'TYPE_BODYWORK' | translate }}" />
+                <mat-error>
+                  {{ formStatus?.documentos_json?.tipo_carroceria | translate }}
+                </mat-error>
+              </mat-form-field>
+            </ng-container>
+
+            <mat-form-field class="w-100">
+              <input formControlName="horas_uso" matInput placeholder="{{ 'ACTUAL_USAGE_HOURS' | translate }}"
+                step="any" type="number" />
+              <mat-error>
+                {{ formStatus?.horas_uso | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-100">
+              <input formControlName="odometro" matInput
+                placeholder="{{ 'ACTUAL_ODOMETER' | translate }} ({{ metricsAlias?.distance }})" step="any"
+                type="number" />
+              <mat-error>
+                {{ formStatus?.odometro | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <div class="grid-col">
+              <div class="mw-600-px">
+                <div class="text-center mb-2">
+                  {{ "TECHNICAL_SPECIFICATIONS" | translate }}
+                </div>
+                <adms-drop-zone (dropZoneFileSelect)=" updateFormData('especificaciones_tecnicas', $event) "
+                  [fileUrl]="instance?.especificaciones_tecnicas" [resetFiles]="resetFiles" document="true"
+                  model="especificaciones_tecnicas">
+                </adms-drop-zone>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div class="grid grid-md-2">
+          <section class="mt-4" id="accessories">
+            <h2 class="dark info-subtitle">
+              {{ "ACCESSORIES_INSTALLED" | translate }}
+            </h2>
+
+            <div class="grid grid-md-2 py-3" formGroupName="varios_json">
+              <mat-slide-toggle color="primary" formControlName="ecumonitor">
+                {{ "ECU" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle color="primary" formControlName="sensor_combustible">
+                {{ "FUEL_SENSOR" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle color="primary" formControlName="sensor_llantas">
+                {{ "TIRE_SENSOR" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle color="primary" formControlName="boton_panico">
+                {{ "PANIC_BUTTON" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle color="primary" formControlName="apagado_remoto">
+                {{ "REMOTE_SHUTDOWN" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle color="primary" formControlName="ignicion">
+                {{ "IGNITION" | translate }}
+              </mat-slide-toggle>
+
+            </div>
+          </section>
+
+          <section class="mt-4" id="extraInfo">
+            <h2 class="dark info-subtitle">
+              {{ "EXTRA_INFORMATION" | translate }}
+            </h2>
+
+            <div class="grid gird-md-2 py-3 px-2 px-md-3">
+              <mat-slide-toggle color="primary" formControlName="out_of_service">
+                {{ "IN_WORKSHOP" | translate }}
+              </mat-slide-toggle>
+
+              <ng-container formGroupName="varios_json">
+                <mat-slide-toggle color="primary" formControlName="own">
+                  {{ "OWN_ASSET" | translate }}
+                </mat-slide-toggle>
+              </ng-container>
+            </div>
+          </section>
+        </div>
+
+        <section class="mt-4" id="ownerData">
+          <h2 class="dark info-subtitle">
+            {{ "OWNER_DATA" | translate }}
+          </h2>
+
+          <div class="grid grid-sm-2 grid-md-3 mt-3">
+            <ng-container formGroupName="propietario_json">
+              <mat-form-field class="w-100">
+                <input #assetpName formControlName="nombre" matInput maxlength="50"
+                  placeholder="{{ 'NAME' | translate }}" type="text" />
+                <mat-hint align="end">
+                  {{ assetpName.value?.length || 0 }}/50
+                </mat-hint>
+                <mat-error>
+                  {{ formStatus?.propietario_json?.nombre | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input #assetpLastName formControlName="apellidos" matInput maxlength="50"
+                  placeholder="{{ 'LAST_NAME' | translate }}" type="text" />
+                <mat-hint align="end">
+                  {{ assetpLastName.value?.length || 0 }}/50
+                </mat-hint>
+                <mat-error>
+                  {{ formStatus?.propietario_json?.apellidos | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input #assetpID formControlName="identificacion" matInput maxlength="50"
+                  placeholder="{{ 'IDENTIFICATION' | translate }}" type="text" />
+                <mat-hint align="end">
+                  {{ assetpID.value?.length || 0 }}/50
+                </mat-hint>
+                <mat-error>
+                  {{ formStatus?.propietario_json?.identificacion | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input #assetpmail formControlName="correo" matInput maxlength="50"
+                  placeholder="{{ 'EMAIL' | translate }}" type="email" />
+                <mat-hint align="end">
+                  {{ assetpmail.value?.length || 0 }}/50
+                </mat-hint>
+                <mat-error>
+                  {{ formStatus?.propietario_json?.correo | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input #assetpphone formControlName="telefono" matInput maxlength="50"
+                  placeholder="{{ 'PHONE' | translate }}" type="text" />
+                <mat-hint align="end">
+                  {{ assetpphone.value?.length || 0 }}/50
+                </mat-hint>
+                <mat-error>
+                  {{ formStatus?.propietario_json?.telefono | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input #assetpcity formControlName="ciudad" matInput maxlength="50"
+                  placeholder="{{ 'CITY' | translate }}" type="text" />
+                <mat-hint align="end">
+                  {{ assetpcity.value?.length || 0 }}/50
+                </mat-hint>
+                <mat-error *ngIf=" formGroup.get('propietario_json').get('ciudad').invalid ">
+                  {{ formStatus?.propietario_json?.ciudad | translate }}
+                </mat-error>
+              </mat-form-field>
+
+              <mat-form-field class="w-100">
+                <input #assetAddress formControlName="direccion" matInput maxlength="200"
+                  placeholder="{{ 'ADDRESS' | translate }}" type="text" />
+                <mat-hint align="end">
+                  {{ assetAddress.value?.length || 0 }}/200
+                </mat-hint>
+                <mat-error>
+                  {{ formStatus?.propietario_json?.direccion | translate }}
+                </mat-error>
+              </mat-form-field>
+
+            </ng-container>
+            <div class="grid-col">
+              <div class="mw-600-px">
+                <div class="text-center mb-2">
+                  {{ "OWNERSHIP_CARD" | translate }}
+                </div>
+                <adms-drop-zone (dropZoneFileSelect)=" updateFormData('propietario_tarjeta', $event) "
+                  [fileUrl]="instance?.propietario_tarjeta" [resetFiles]="resetFiles" document="true"
+                  model="propietario_tarjeta"></adms-drop-zone>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mt-4" id="contact">
+          <h2 class="dark info-subtitle">
+            {{ "CONTACT" | translate }}
+          </h2>
+
+          <div class="grid grid-sm-2 grid-md-3 mt-3" formGroupName="contacto_json">
+            <mat-form-field class="w-100">
+              <input #assetcname formControlName="nombre" matInput maxlength="50" placeholder="{{ 'NAME' | translate }}"
+                type="text" />
+              <mat-hint align="end">
+                {{ assetcname.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.contacto_json?.nombre | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-100">
+              <input #assetLastname formControlName="apellidos" matInput maxlength="50"
+                placeholder="{{ 'LAST_NAME' | translate }}" type="text" />
+              <mat-hint align="end">
+                {{ assetLastname.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.contacto_json?.apellidos | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-100">
+              <input #assetID formControlName="identificacion" matInput maxlength="50"
+                placeholder="{{ 'IDENTIFICATION' | translate }}" type="text" />
+              <mat-hint align="end">
+                {{ assetID.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.contacto_json?.identificacion | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-100">
+              <input #assetcmail formControlName="correo" matInput maxlength="50"
+                placeholder="{{ 'EMAIL' | translate }}" type="email" />
+              <mat-hint align="end">
+                {{ assetcmail.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.contacto_json?.correo | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-100">
+              <input #assetPhone formControlName="telefono" matInput maxlength="50"
+                placeholder="{{ 'PHONE' | translate }}" type="text" />
+              <mat-hint align="end">
+                {{ assetPhone.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.contacto_json?.telefono | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-100">
+              <input #assetCity formControlName="ciudad" matInput maxlength="50" placeholder="{{ 'CITY' | translate }}"
+                type="text" />
+              <mat-hint align="end">
+                {{ assetCity.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.contacto_json?.ciudad | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-100">
+              <input #assetcAddress formControlName="direccion" matInput maxlength="200"
+                placeholder="{{ 'ADDRESS' | translate }}" type="text" />
+              <mat-hint align="end">
+                {{ assetcAddress.value?.length || 0 }}/200
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.contacto_json?.direccion | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-100">
+              <input #assetProvince formControlName="departamento" matInput maxlength="50"
+                placeholder="{{ 'PROVINCE' | translate }}" type="text" />
+              <mat-hint align="end">
+                {{ assetProvince.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.contacto_json?.departamento | translate }}
+              </mat-error>
+            </mat-form-field>
+
+          </div>
+        </section>
+
+        <section class="mt-4" id="asignacion">
+          <h2 class="dark info-subtitle">
+            {{ "ASSIGNMENT" | translate }}
+          </h2>
+
+          <div class="grid grid-sm-2 grid-md-3 mt-3" formGroupName="contacto_json">
+            <mat-form-field class="w-100">
+              <input #asignadoA formControlName="asignado" matInput maxlength="50"
+                placeholder="{{ 'ASSIGNED_TO' | translate }}" type="text" />
+              <mat-hint align="end">
+                {{ asignadoA.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.contacto_json?.asignado | translate }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="w-100">
+              <input #assetLastname formControlName="cargo_asignado" matInput maxlength="50"
+                placeholder="{{ 'CHARGE' | translate }}" type="text" />
+              <mat-hint align="end">
+                {{ assetLastname.value?.length || 0 }}/50
+              </mat-hint>
+              <mat-error>
+                {{ formStatus?.contacto_json?.cargo_asignado | translate }}
+              </mat-error>
+            </mat-form-field>
+
+          </div>
+        </section>
+
+        <section *ngIf="instance?.id" class="mt-4" id="documentsInfo">
+          <div class="grid grid-sm-2 title-grid">
+            <h2 class="dark info-subtitle">
+              {{ "DOCUMENTS" | translate }}
+            </h2>
+
+            <div class="w-100 text-center text-sm-left">
+              <button (click)="addEditDocument()" mat-raised-button type="button">
+                {{ "ADD" | translate }}
+              </button>
+            </div>
+          </div>
+
+          <div class="mw-400-px px-2 mt-4">
+            <adms-select [ctrl]="documentFormControl" [options]="documentOptions"
+              placeholder="{{ 'SELECT_DOCUMENT_TYPE' | translate }}">
+            </adms-select>
+          </div>
+
+          <div class="px-2">
+            <mat-accordion>
+              <ng-container *ngFor="let document of documents; let i = index">
+                <mat-expansion-panel (closed)="document.open = false" (opened)="document.open = true"
+                  [expanded]="i === 0">
+
+                  <mat-expansion-panel-header class="h-auto">
+                    <div class="grid grid-md-2 w-100 px-2">
+
+                      <div [class.bb-divider]="document.open" class="w-100 py-2">
+                        <h3 class="mat-h3 font-weight-bold mb-0">
+                          {{ "EFFECTIVE_FROM" | translate }}:
+                        </h3>
+                        <div class="mat-body">
+                          {{ document.vigencia_desde }}
+                        </div>
+                      </div>
+
+                      <div [class.bb-divider]="document.open" class="w-100 py-2">
+                        <h3 class="mat-h3 font-weight-bold mb-0">
+                          {{ "EFFECT_UNTIL" | translate }}:
+                        </h3>
+                        <div class="mat-body">
+                          {{ document.vigencia_hasta }}
+                        </div>
+                      </div>
+                    </div>
+                  </mat-expansion-panel-header>
+
+
+                  <div class="grid grid-md-2 mt-4">
+
+                    <div class="w-100 bb-divider pb-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">
+                        {{ "VALUE" | translate }}:
+                      </h3>
+                      <div class="mat-body">
+
+                        <span *ngIf=" document.valor; else sinValor">
+                          {{ document.valor | currency }}
+                        </span>
+                        <ng-template #sinValor>
+                          --
+                        </ng-template>
+
+                      </div>
+                    </div>
+
+                    <div class="w-100 bb-divider pb-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">
+                        {{ "EXPEDITION_DATE" | translate }}:
+                      </h3>
+                      <div class="mat-body">
+                        {{ document.fecha_expedicion }}
+                      </div>
+                    </div>
+
+                    <div class="w-100 bb-divider pb-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">
+                        {{ "DOCUMENT_NUMBER" | translate }}:
+                      </h3>
+                      <div class="mat-body">
+                        {{ document.numero_documento }}
+                      </div>
+                    </div>
+
+                    <div class="w-100 bb-divider pb-2">
+
+                      <h3 class="mat-h3 font-weight-bold mb-0">
+                        {{ "COMPANY" | translate }}:
+                      </h3>
+                      <div class="mat-body">
+                        {{ document.compania || ("NOT_RECORDED" | translate) }}
+                      </div>
+                    </div>
+
+                    <div class="w-100 bb-divider pb-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">
+                        {{ "NOTIFICATION_DAYS" | translate }}:
+                      </h3>
+                      <div class="mat-body">
+                        {{ document.dias_notificacion }}
+                      </div>
+                    </div>
+
+                    <div class="w-100 bb-divider pb-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">
+                        {{ "NOTIFICATION_EMAIL" | translate }}:
+                      </h3>
+                      <div class="mat-body">
+                        <mat-chip-list *ngIf=" document?.correos_notificaciones_m2m?.length > 0; else notRegister ">
+                          <mat-chip *ngFor=" let email of document.correos_notificaciones_m2m " color="primary"
+                            selected="true">
+                            {{ email }}
+                          </mat-chip>
+                        </mat-chip-list>
+                        <ng-template #notRegister>
+                          {{ "NOT_RECORDED" | translate }}
+                        </ng-template>
+                      </div>
+                    </div>
+
+                    <div class="w-100 bb-divider pb-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">
+                        {{ "VOUCHER" | translate }}
+                      </h3>
+                      <div class="text-center">
+                        <a *ngIf="document.comprobante; else notRegister" [href]="document.comprobante" mat-icon-button
+                          matTooltip="{{ 'VIEW_FILE_SAVED' | translate }}" matTooltipShowDelay="300" target="_blank">
+                          <mat-icon>description</mat-icon>
+                        </a>
+                      </div>
+                    </div>
+
+                    <div class="grid-col text-center">
+                      <button (click)="addEditDocument(document.id)" mat-icon-button
+                        matTooltip="{{ 'EDIT' | translate }}" matTooltipShowDelay="300" type="button">
+                        <mat-icon>edit</mat-icon>
+                      </button>
+                      <button (click)="deleteDocument(document.id)" mat-icon-button
+                        matTooltip="{{ 'DELETE' | translate }}" matTooltipShowDelay="300" type="button">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+                </mat-expansion-panel>
+
+              </ng-container>
+            </mat-accordion>
+          </div>
+        </section>
+
+        <section class="mt-4" id="securitySystems">
+          <h2 class="dark info-subtitle">
+            {{ "SECURITY_SYSTEMS" | translate }}
+          </h2>
+
+          <div class="grid grid-sm-2 mt-3" formGroupName="seguridad_json">
+            <div class="mt-3" formGroupName="seguridad_activa">
+              <h2 class="mat-subheading-2">
+                {{ "ACTIVE_SAFETY" | translate }} ({{ "PREVENTING_ACCIDENTS" | translate }})
+              </h2>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="llantas">
+                {{ "TIRES" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="frenos_abs">
+                {{ "ABS" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="frenos_bas">
+                {{ "BAS" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="tcs">
+                {{ "TCS" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="control_estabilidad">
+                {{ "STABILITY_CONTROL" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="direccion_asistida">
+                {{ "POWER_STEERING" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="suspension_activa">
+                {{ "ACTIVE_SUSPENSION" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="iluminacion">
+                {{ "LIGHTING" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="climatizacion">
+                {{ "AIR_CONDITIONER" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="cambio_carril">
+                {{ "LDW" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="circulacion_sentido_contrario">
+                {{ "ONCOMMING_TRAFFIC_DETECTION" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="angulo_muerto">
+                {{ "BLIND_SPOT_DETECTION" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="mobileye">
+                {{ "MOBILEYE" | translate }}
+              </mat-slide-toggle>
+
+            </div>
+
+            <div class="mt-3" formGroupName="seguridad_pasiva">
+              <h2 class="mat-subheading-2">
+                {{ "PASSIVE_SAFETY" | translate }} ({{ "REDUCING_DAMAGE" | translate }})
+              </h2>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="airbag">
+                {{ "AIRBAG" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="cinturon_seguridad">
+                {{ "SEAT_BELT" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="apoyacabezas">
+                {{ "HEADRESTS" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="diseno_carroceria">
+                {{ "BODYWORK_DESIGN" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="chasis">
+                {{ "CHASSIS" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="blindaje">
+                {{ "ARMOR" | translate }}
+              </mat-slide-toggle>
+
+              <mat-slide-toggle class="w-100 py-2" color="primary" formControlName="polarizado">
+                {{ "POLARIZED_GLASS" | translate }}
+              </mat-slide-toggle>
+
+            </div>
+          </div>
+        </section>
+
+        <section class="mt-4" id="procedures">
+          <h2 class="dark info-subtitle">
+            {{ "PROCEDURES" | translate }}
+          </h2>
+
+          <div class="grid grid-sm-2 grid-md-3 mt-3">
+            <ng-container formGroupName="varios_json">
+              <ng-container formGroupName="tramites">
+
+                <mat-form-field class="grid-col grid-col-md-1 grid-offset-md-2">
+                  <input #assetVTramites formControlName="grupo_vehiculo" matInput maxlength="70"
+                    placeholder="{{ 'VEHICLE_GROUP' | translate }}" type="text" />
+                  <mat-hint align="end">
+                    {{ assetVTramites.value?.length || 0 }}/70
+                  </mat-hint>
+                  <mat-error>
+                    {{ formStatus?.varios_json?.tramites?.grupo_vehiculo | translate }}
+                  </mat-error>
+                </mat-form-field>
+
+                <div class="w-100 text-md-right grid-offset-md-1">
+                  <mat-slide-toggle color="primary" formControlName="impuestos">
+                    {{ "PAY_TAX" | translate }}
+                  </mat-slide-toggle>
+                </div>
+
+                <div class="w-100 text-md-center">
+                  <mat-slide-toggle color="primary" formControlName="blindaje">
+                    {{ "BLINDAGE" | translate }}
+                  </mat-slide-toggle>
+                </div>
+              </ng-container>
+            </ng-container>
+            <ng-container formGroupName="propietario_json">
+              <div class="w-100 text-md-left">
+                <mat-slide-toggle color="primary" formControlName="leasing">
+                  {{ "HAS_LEASING" | translate }}
+                </mat-slide-toggle>
+              </div>
+
+              <ng-container *ngIf="formGroup.get('propietario_json').get('leasing').value">
+                <mat-form-field class="grid-col grid-col-md-1">
+                  <input #assetLeasingNumber formControlName="leasing_numero" matInput maxlength="70"
+                    placeholder="{{ 'LEASING_NUMBER' | translate }}" type="text" />
+                  <mat-hint align="end">
+                    {{ assetLeasingNumber.value?.length || 0 }}/70
+                  </mat-hint>
+                  <mat-error>
+                    {{ formStatus?.propietario_json?.leasing_numero | translate }}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                  <input (focus)="pLeasingVigenciaDesde.open()" [matDatepicker]="pLeasingVigenciaDesde"
+                    [max]=" formGroup .get('propietario_json') .get('leasing_vigencia_hasta').value "
+                    formControlName="leasing_vigencia_desde" matInput
+                    placeholder="{{ 'EFFECTIVE_FROM' | translate }}" />
+                  <mat-datepicker-toggle [for]="pLeasingVigenciaDesde" matSuffix></mat-datepicker-toggle>
+                  <mat-datepicker #pLeasingVigenciaDesde></mat-datepicker>
+                  <mat-error>
+                    {{ formStatus?.propietario_json?.leasing_vigencia_desde | translate }}
+                  </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="w-100">
+                  <input (focus)="pLeasingVigenciaHasta.open()" [matDatepicker]="pLeasingVigenciaHasta"
+                    [min]=" formGroup .get('propietario_json') .get('leasing_vigencia_desde').value "
+                    formControlName="leasing_vigencia_hasta" matInput placeholder="{{ 'EFFECT_UNTIL' | translate }}" />
+                  <mat-datepicker-toggle [for]="pLeasingVigenciaHasta" matSuffix></mat-datepicker-toggle>
+                  <mat-datepicker #pLeasingVigenciaHasta></mat-datepicker>
+                  <mat-error>
+                    {{ formStatus?.propietario_json?.leasing_vigencia_hasta | translate }}
+                  </mat-error>
+                </mat-form-field>
+              </ng-container>
+            </ng-container>
+
+            <div class="grid-col mt-3">
+              <div class="mw-600-px">
+                <div class="text-center mb-2">
+                  {{ "CHECK_LIST" | translate }}
+                </div>
+                <adms-drop-zone (dropZoneFileSelect)=" updateFormData('lista_verificacion_documentos', $event) "
+                  [fileUrl]="instance?.lista_verificacion_documentos" [resetFiles]="resetFiles" document="true"
+                  model="lista_verificacion_documentos">
+                </adms-drop-zone>
+              </div>
+            </div>
+          </div>
+        </section>
+      </ng-container>
+
+      <section class="my-4">
+        <h2 class="dark info-subtitle">
+          {{ "OBSERVATIONS" | translate }}
+        </h2>
+
+        <div class="mt-3 px-1 mw-800-px">
+          <quill-editor [styles]="{ height: '200px' }" formControlName="observaciones"
+            placeholder="{{ 'INSERT_TEXT' | translate }}">
+          </quill-editor>
+        </div>
+      </section>
+    </form>
+  </mat-card>
+</div>

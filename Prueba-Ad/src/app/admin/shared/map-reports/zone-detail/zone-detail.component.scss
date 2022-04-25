@@ -1,0 +1,92 @@
+@import "~src/assets-sources/scss/app/mixins/flex";
+
+.report-details {
+  label {
+    margin: 0;
+    font-weight: 700;
+    padding: 5px 10px 5px 0;
+    text-align: left;
+    max-width: 200px;
+  }
+
+  .header-wrapper {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-column-gap: 0.5rem;
+
+    .close-button {
+      grid-row: 1/3;
+      grid-column: 2;
+      justify-self: center;
+    }
+
+    .title {
+      font-size: 2rem !important;
+    }
+  }
+
+  .photo-video {
+    padding: 8px 8px 16px;
+    text-align: center;
+
+
+    img {
+      max-height: 150px;
+      max-width: 90%;
+      cursor: zoom-in;
+    }
+  }
+
+  .mat-spinner {
+    margin: auto;
+  }
+
+  .trama-container {
+    -ms-word-break: break-all;
+    word-break: break-all;
+    -webkit-hyphens: auto;
+    -moz-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+  }
+
+  .item {
+    @include flexbox;
+    @include align-items(center);
+    @include align-content(center);
+    @include flex-wrap(wrap);
+    margin: 0 16px;
+    font-size: 0.88rem;
+  }
+
+  a.no-hover:hover {
+    color: inherit !important;
+  }
+
+  .mat-chip {
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+  }
+
+  .indicators-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 150px);
+    grid-row-gap: 1rem;
+    grid-column-gap: 0.5rem;
+    font-size: 0.69rem;
+    padding: 0.25rem;
+    margin: 0.5rem 0.5rem 1rem;
+    @include justify-content(center);
+
+    .indicator {
+      @include flexbox();
+      @include flex-direction(row);
+      @include align-items(center);
+      @include flex-wrap(nowrap);
+
+      em {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+}

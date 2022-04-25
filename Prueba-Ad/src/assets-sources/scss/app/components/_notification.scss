@@ -1,0 +1,230 @@
+
+
+.notification {
+  max-width: 90vw !important;
+  max-height: 97vh !important;
+  z-index: 1002 !important;
+
+  .mat-dialog-container {
+    width: 32em;
+    max-width: 90vw !important;
+    padding-bottom: 16px !important;
+    -webkit-animation: notification-show .3s;
+    animation: notification-show .3s;
+
+    .notification-title {
+      font-size: 1.875em;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .notification-content {
+      font-size: 1.125em;
+      font-weight: 300;
+      line-height: normal;
+      text-align: center;
+      margin-bottom: 0 !important;
+    }
+
+    .notification-footer {
+      @include flex-just(center);
+      padding: 0 !important;
+      margin-bottom: 0 !important;
+    }
+
+
+    .notification-icon {
+      .icon {
+        @include flexbox();
+        position: relative;
+        box-sizing: content-box;
+        justify-content: center;
+        width: 5em;
+        height: 5em;
+        margin: 1.25em auto 1.875em;
+        zoom: normal;
+        border: .25em solid transparent;
+        border-radius: 50%;
+        font-family: inherit;
+        line-height: 5em;
+        cursor: default;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none
+      }
+
+      .icon::before {
+        display: flex;
+        align-items: center;
+        height: 92%;
+        font-size: 3.75em
+      }
+
+
+      .notification-error {
+        border-color: #f27474;
+
+        .notification-x-mark {
+          position: relative;
+          flex-grow: 1
+        }
+
+        [class^=notification-x-mark-line] {
+          display: block;
+          position: absolute;
+          top: 2.3125em;
+          width: 2.9375em;
+          height: .3125em;
+          border-radius: .125em;
+          background-color: #f27474
+        }
+
+        [class^=notification-x-mark-line][class$=left] {
+          left: 1.0625em;
+          transform: rotate(45deg)
+        }
+
+        [class^=notification-x-mark-line][class$=right] {
+          right: 1em;
+          transform: rotate(-45deg)
+        }
+
+      }
+
+      .notification-animate-error-icon {
+        -webkit-animation: notification-animate-error-icon .5s;
+        animation: notification-animate-error-icon .5s;
+
+        .notification-x-mark {
+          -webkit-animation: notification-animate-error-x-mark .5s;
+          animation: notification-animate-error-x-mark .5s
+        }
+      }
+
+      .notification-warning {
+        border-color: #facea8;
+        color: #f8bb86
+      }
+
+      .notification-warning::before {
+        content: "!"
+      }
+
+      .notification-info {
+        border-color: #9de0f6;
+        color: #3fc3ee
+      }
+
+      .notification-info::before {
+        content: "i"
+      }
+
+      .notification-question {
+        border-color: #c9dae1;
+        color: #87adbd
+      }
+
+      .notification-question::before {
+        content: "?"
+      }
+
+      .notification-success {
+        border-color: #a5dc86;
+
+        [class^=notification-success-circular-line] {
+          position: absolute;
+          width: 3.75em;
+          height: 7.5em;
+          transform: rotate(45deg);
+          border-radius: 50%
+        }
+
+        [class^=notification-success-circular-line][class$=left] {
+          top: -.4375em;
+          left: -2.0635em;
+          transform: rotate(-45deg);
+          transform-origin: 3.75em 3.75em;
+          border-radius: 7.5em 0 0 7.5em
+        }
+
+        [class^=notification-success-circular-line][class$=right] {
+          top: -.6875em;
+          left: 1.875em;
+          transform: rotate(-45deg);
+          transform-origin: 0 3.75em;
+          border-radius: 0 7.5em 7.5em 0
+        }
+
+        .notification-success-ring {
+          position: absolute;
+          z-index: 2;
+          top: -.25em;
+          left: -.25em;
+          box-sizing: content-box;
+          width: 100%;
+          height: 100%;
+          border: .25em solid rgba(165, 220, 134, .3);
+          border-radius: 50%
+        }
+
+        .notification-success-fix {
+          position: absolute;
+          z-index: 1;
+          top: .5em;
+          left: 1.625em;
+          width: .4375em;
+          height: 5.625em;
+          transform: rotate(-45deg)
+        }
+
+        [class^=notification-success-line] {
+          display: block;
+          position: absolute;
+          z-index: 2;
+          height: .3125em;
+          border-radius: .125em;
+          background-color: #a5dc86
+        }
+
+        [class^=notification-success-line][class$=tip] {
+          top: 2.875em;
+          left: .875em;
+          width: 1.5625em;
+          transform: rotate(45deg)
+        }
+
+        [class^=notification-success-line][class$=long] {
+          top: 2.375em;
+          right: .5em;
+          width: 2.9375em;
+          transform: rotate(-45deg)
+        }
+      }
+
+      .notification-animate-success-icon {
+        .notification-success-line-tip {
+          -webkit-animation: notify-animate-success-line-tip .75s;
+          animation: notify-animate-success-line-tip .75s
+        }
+
+        .notification-success-line-long {
+          -webkit-animation: notify-animate-success-line-long .75s;
+          animation: notify-animate-success-line-long .75s
+        }
+
+        .notification-success-circular-line-right {
+          -webkit-animation: notify-rotate-success-circular-line 4.25s ease-in;
+          animation: notify-rotate-success-circular-line 4.25s ease-in
+        }
+      }
+    }
+  }
+}
+
+.notification.command {
+  .mat-dialog-container {
+    width: 100% !important;
+  }
+}
+

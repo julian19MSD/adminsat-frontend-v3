@@ -1,0 +1,120 @@
+<div class="filter-bottom-sheet">
+  <div class="filter-bottom-sheet-title">
+    <h5>{{'FILTER_ALARMS'| translate}}</h5>
+    <mat-divider></mat-divider>
+  </div>
+
+  <form [formGroup]="formGroup" class="grid grid-md-3 align-items-center pt-3" id="filterForm">
+
+    <adms-select *ngIf="data.clients?.length > 1" multiple="true"
+                 [ctrl]="formGroup.get('activo__cliente__in')"
+                 [options]="data.clients" placeholder="{{'CLIENT' | translate}}">
+    </adms-select>
+
+    <mat-form-field>
+      <mat-chip-list #eventList formControlName="evento_nombre__in">
+        <mat-chip (removed)="chipRemove('evento_nombre__in',name)"
+                  *ngFor="let name of formGroup.get('evento_nombre__in').value"
+                  removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('evento_nombre__in',$event)"
+               (paste)="chipPaste('evento_nombre__in',$event)"
+               [matChipInputAddOnBlur]="true"
+               [matChipInputFor]="eventList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               placeholder="{{'EVENT'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_5'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #assetList formControlName="activo_nombre__in">
+        <mat-chip (removed)="chipRemove('activo_nombre__in',name)"
+                  *ngFor="let name of formGroup.get('activo_nombre__in').value"
+                  removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('activo_nombre__in',$event)"
+               (paste)="chipPaste('activo_nombre__in',$event)"
+               [matChipInputAddOnBlur]="true"
+               [matChipInputFor]="assetList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               placeholder="{{'ASSET'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_5'| translate}}</mat-hint>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-chip-list #plateList formControlName="activo_placa__in">
+        <mat-chip (removed)="chipRemove('activo_placa__in',name)"
+                  *ngFor="let name of formGroup.get('activo_placa__in').value"
+                  removable="true" selectable="true">
+          {{name}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input (matChipInputTokenEnd)="chipAdd('activo_placa__in',$event)"
+               (paste)="chipPaste('activo_placa__in',$event)"
+               [matChipInputAddOnBlur]="true"
+               [matChipInputFor]="plateList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               placeholder="{{'PLATE'|translate}}">
+      </mat-chip-list>
+      <mat-hint>{{'MAX_5'| translate}}</mat-hint>
+    </mat-form-field>
+
+
+    <mat-form-field>
+      <mat-label>{{ 'DATE_FROM' | translate }}</mat-label>
+      <input #dtFrom [max]="formGroup.get('reporte_fecha__lte').value" [owlDateTime]="dtRangeFrom"
+             [owlDateTimeTrigger]="dtRangeFrom" formControlName="reporte_fecha__gte" matInput>
+      <button (click)="formGroup.get('reporte_fecha__gte').reset(null);" *ngIf="dtFrom.value" mat-icon-button matSuffix
+              type="button">
+        <mat-icon>clear</mat-icon>
+      </button>
+      <button [owlDateTimeTrigger]="dtRangeFrom" mat-icon-button matSuffix type="button">
+        <mat-icon>calendar_today</mat-icon>
+      </button>
+      <mat-error>
+        {{formStatus?.reporte_fecha__gte|translate}}
+      </mat-error>
+      <owl-date-time #dtRangeFrom></owl-date-time>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>{{ 'DATE_TO' | translate }}</mat-label>
+      <input #dtTo [min]="formGroup.get('reporte_fecha__gte').value" [owlDateTime]="dtRangeTo"
+             [owlDateTimeTrigger]="dtRangeTo"
+             formControlName="reporte_fecha__lte" matInput>
+      <button (click)="formGroup.get('reporte_fecha__lte').reset(null);" *ngIf="dtTo.value" mat-icon-button matSuffix
+              type="button">
+        <mat-icon>clear</mat-icon>
+      </button>
+      <button [owlDateTimeTrigger]="dtRangeTo" mat-icon-button matSuffix type="button">
+        <mat-icon>calendar_today</mat-icon>
+      </button>
+      <mat-error>
+        {{formStatus?.reporte_fecha__lte|translate}}
+      </mat-error>
+      <owl-date-time #dtRangeTo></owl-date-time>
+    </mat-form-field>
+
+  </form>
+</div>
+
+<div class="filter-bottom-sheet-controls">
+  <mat-divider class="mt-2 mb-2"></mat-divider>
+  <div class="container-fluid">
+    <div class="row justify-content-end">
+      <button (click)="close($event,false, false)" class="m-1" mat-button type="button">
+        {{'CANCEL'| translate}}
+      </button>
+      <button class="m-1" form="filterForm" mat-raised-button type="reset">{{'CLEAR'| translate}}</button>
+      <button (click)="close($event,true, true)" class="m-1" color="primary" mat-raised-button type="button">
+        {{'FILTER'| translate}}
+      </button>
+    </div>
+  </div>
+</div>

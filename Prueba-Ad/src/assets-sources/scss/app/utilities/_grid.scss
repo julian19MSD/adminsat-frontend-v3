@@ -1,0 +1,65 @@
+.grid-col {
+  grid-column: 1 / -1;
+}
+
+@for $i from 1 through 12 {
+  @include vendor-grid($i) {
+  }
+
+  .grid-col-#{$i} {
+    grid-column-end: span $i;
+  }
+
+  .grid-offset-#{$i} {
+    grid-column-start: col-start $i;
+  }
+
+  @each $breakpoint, $value in $grid-breakpoints {
+    @include media-breakpoint-up($breakpoint) {
+      @include vendor-grid($i, $breakpoint) {
+      }
+
+      .grid-col-#{$breakpoint}-#{$i} {
+        grid-column-end: span $i;
+      }
+
+      .grid-offset-#{$breakpoint}-#{$i} {
+        grid-column-start: col-start $i;
+      }
+
+      .grid-col-#{$breakpoint} {
+        grid-column: 1 / -1;
+      }
+    }
+  }
+}
+
+@each $name, $value in (0 0, 1 0.25, 2 0.5, 3 1, 4 1.5, 5 3) {
+  .gap-#{$name} {
+    gap: #{$value}rem #{$value}rem !important;
+  }
+
+  .row-gap-#{$name} {
+    row-gap: #{$value}rem !important;
+  }
+
+  .column-gap-#{$name} {
+    row-gap: #{$value}rem !important;
+  }
+
+  @each $breakpoint, $value in $grid-breakpoints {
+    @include media-breakpoint-up($breakpoint) {
+      .gap-#{$breakpoint}-#{$name} {
+        gap: #{$value}rem !important;
+      }
+
+      .row-gap-#{$breakpoint}-#{$name} {
+        row-gap: #{$value}rem !important;
+      }
+
+      .column-gap-#{$breakpoint}-#{$name} {
+        row-gap: #{$value}rem !important;
+      }
+    }
+  }
+}

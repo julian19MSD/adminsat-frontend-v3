@@ -1,0 +1,8 @@
+body:not(.dark) {
+  .mat-menu-content {
+    button.active:not(:hover) {
+      background-color: mat-color($primary);
+      color: mat-color($primary, default-contrast) !important;
+    }
+  }
+}

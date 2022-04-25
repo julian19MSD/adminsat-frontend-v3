@@ -1,0 +1,21 @@
+.preview-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas: "name info" "device info";
+  column-gap:  8px;
+  padding: 8px;
+
+  .name {
+    grid-area: name;
+    line-height: initial;
+    margin: 0;
+  }
+
+  .device {
+    grid-area: device;
+  }
+
+  .info {
+    grid-area: info;
+  }
+}

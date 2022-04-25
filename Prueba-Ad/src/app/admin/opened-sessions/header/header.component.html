@@ -1,0 +1,14 @@
+<div class="header-wrapper">
+  <h1 class="m-0 mat-title">{{'OPENED_SESSIONS'|translate}}</h1>
+  <div>
+    <button *ngIf="openedSessions" (click)="sendHeaderClick('mainAction')"
+            matTooltipShowDelay="300" matTooltip="{{'CLOSE_ALL'|translate}}"
+            mat-icon-button type="button">
+      <mat-icon>delete_sweep</mat-icon>
+    </button>
+    <button matTooltipShowDelay="300" matTooltip="{{'REFRESH'|translate}}" mat-icon-button
+            (click)="sendHeaderClick('refresh')" type="button">
+      <mat-icon>refresh</mat-icon>
+    </button>
+  </div>
+</div>

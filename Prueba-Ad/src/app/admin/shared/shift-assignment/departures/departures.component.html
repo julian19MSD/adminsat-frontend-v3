@@ -1,0 +1,122 @@
+<div class="detail-container" [class.w-100]="fullWidth">
+
+  <mat-toolbar color="primary">
+    <h1 *ngIf="instance?.length >0;else phTittle">{{ data?.params }}</h1>
+    <ng-template #phTittle>
+      <div class="ph-row">
+        <div class="ph-col-auto big ph-brightness">
+        </div>
+      </div>
+    </ng-template>
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+  <ng-template #loaded>
+    <mat-tab-group>
+
+      <mat-tab label="{{'ROUTE_DEPARTURES' | translate}}">
+        <!-- <div class="grid grid-sm-2 grid-md-3 grid-xl-6 pt-3 align-items-center" [formGroup]="formGroup"> -->
+
+        <div class="grid grid-sm-2 grid-md-4 grid-xl-4 pt-3 align-items-center" [formGroup]="formGroup">
+          <h3 class="mat-h3 mb-0 text-center  d-down-lg-none">
+            <strong>{{'ROUTE_DEPARTURE'|translate}}</strong>
+          </h3>
+          <h3 class="mat-h3 mb-0  text-center  d-down-lg-none">
+            <strong>{{'REENTRY_ROUTE'|translate}}</strong>
+          </h3>
+          <h3 class="mat-h3 mb-0  text-center  d-down-lg-none">
+            <strong>{{'USER'|translate}}</strong>
+          </h3>
+          <h3 class="mat-h3 mb-0  text-center  d-down-lg-none">
+            <strong>{{'OBSERVATION'|translate}}</strong>
+          </h3>
+
+          <mat-divider class="grid-col  d-down-lg-none"></mat-divider>
+
+          <ng-container *ngFor="let departure of instance; let idx = index">
+            <div>
+              <h3 class="mat-h3 mb-0 d-xl-none">
+                <strong>{{'ROUTE_DEPARTURE' | translate}}</strong>
+              </h3>
+              <div [matTooltipDisabled]="!departure.leave_dt" matTooltipShowDelay="300"
+                matTooltip="{{departure.leave_dt}}" class="text-xl-center">
+                <div class="text-xl-center">{{departure.leave_dt || '--'}}</div>
+
+
+              </div>
+            </div>
+
+            <div>
+              <h3 class="mat-h3 mb-0 d-xl-none">
+                <strong>{{'REENTRY_ROUTE' | translate}}
+                </strong>
+              </h3>
+              <button type="button" mat-button (click)="openDeparturesMaps(departure.id)">
+               {{departure.reentry_dt || '--'}}
+              </button>
+              <div class="text-xl-center"></div>
+            </div>
+
+            <div>
+              <h3 class="mat-h3 mb-0 d-xl-none">
+                <strong>{{'USER' | translate}}</strong>
+              </h3>
+              <div class="text-xl-center">{{departure.obs_user || '--'}}</div>
+            </div>
+
+            <div>
+
+              <h3 class="mat-h3 mb-0 d-xl-none">
+                <strong>{{'OBSERVATION' | translate}}</strong>
+              </h3>
+
+              <ng-container *ngIf="departureIndex !== idx;else observationEditing">
+                <div [matTooltipDisabled]="!departure.observation" matTooltipShowDelay="300"
+                  matTooltip="{{departure.observation}}" class="text-xl-center">
+                  <button mat-button (click)="editObservationDate(idx, true)">
+                    {{departure.observation || '--'}}
+                  </button>
+
+                </div>
+              </ng-container>
+            </div>
+
+            <mat-divider class="grid-col grid-col-sm-2 grid-col-md-4 grid-col-xl-4"></mat-divider>
+          </ng-container>
+
+
+          <ng-template #observationEditing>
+
+            <mat-form-field class="w-100">
+              <textarea formControlName="observation" matInput placeholder="{{'OBSERVATION'|translate}}" required
+                type="text">
+              </textarea>
+              <button (click)="formGroup.get('observation').reset(null)" mat-icon-button matSuffix type="button"
+                matTooltip="{{'CLEAR'|translate}}">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button *ngIf="formGroup.get('observation').valid" mat-icon-button matSuffix type="button"
+                (click)="updateObservation()" matTooltip="{{'SAVE'|translate}}">
+                <mat-icon>save</mat-icon>
+              </button>
+
+              <button mat-icon-button matSuffix type="button" (click)="cancelEditingObservationIndex()"
+                matTooltip="{{'CANCEL'|translate}}">
+                <mat-icon>cancel</mat-icon>
+              </button>
+
+              <mat-error>
+                {{formStatus?.observation | translate}}
+              </mat-error>
+            </mat-form-field>
+
+          </ng-template>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-template>
+</div>

@@ -1,0 +1,27 @@
+<div class="detail-container">
+
+  <mat-toolbar color="primary">
+    <h1>{{ 'ALARMS_DETAIL'|translate }}</h1>
+    <ng-template #phTittle>
+      <div class="ph-row">
+        <div class="ph-col-auto big ph-brightness">
+        </div>
+      </div>
+    </ng-template>
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+  <ng-template #loaded>
+    <div class="alarm-wrapper align-items-center">
+      <ng-container *ngFor="let alarm of alarms">
+        <div class="py-1 pl-1">{{alarm.nombre}}</div>
+        <div class="py-1 pr-1">{{alarm.count}}</div>
+        <mat-divider class="grid-col"></mat-divider>
+      </ng-container>
+    </div>
+  </ng-template>
+</div>

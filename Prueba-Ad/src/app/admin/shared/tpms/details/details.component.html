@@ -1,0 +1,68 @@
+<div class="detail-container">
+
+    <mat-toolbar color="primary">
+        <h1 *ngIf="instance?.referencia;else phTittle">{{ instance?.referencia }}</h1>
+        <ng-template #phTittle>
+            <div class="ph-row">
+                <div class="ph-col-auto big ph-brightness">
+                </div>
+            </div>
+        </ng-template>
+        <button mat-dialog-close mat-icon-button type="button">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+
+    <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+    <ng-template #loaded>
+        <mat-tab-group (selectedIndexChange)="selectedIndex=$event" [selectedIndex]="selectedIndex">
+
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon>home</mat-icon>
+                </ng-template>
+
+                <div class="instance-detail-container">
+
+                    <div class="instance-detail-item">
+                        <div class="mat-body-2">{{'CLIENT' | translate}}</div>
+                        <div class="mat-body-1">{{instance?.cliente_nombre}}</div>
+                        <mat-divider class="mt-1"></mat-divider>
+                    </div>
+
+                    <div class="instance-detail-item">
+                        <div class="mat-body-2">{{'MANUFACTURER' | translate}}</div>
+                        <div class="mat-body-1 text-capitalize">{{instance?.fabricante | translate}}</div>
+                        <mat-divider class="mt-1"></mat-divider>
+                    </div>
+
+                    <div class="instance-detail-item">
+                        <div class="mat-body-2">{{'POSITION' | translate}}</div>
+                        <div class="mat-body-1 text-capitalize">{{instance?.posicion | translate}}</div>
+                        <mat-divider class="mt-1"></mat-divider>
+                    </div>
+
+                    <div class="instance-detail-item">
+                        <div class="mat-body-2">{{'STATE' | translate}}</div>
+                        <div class="mat-body-1 text-capitalize">{{instance?.estado | translate}}</div>
+                        <mat-divider class="mt-1"></mat-divider>
+                    </div>
+
+                    <div class="instance-detail-item">
+                        <div class="mat-body-2">{{'PRESSURE' | translate}}</div>
+                        <div class="mat-body-1 text-capitalize">{{instance?.presion | translate}}</div>
+                        <mat-divider class="mt-1"></mat-divider>
+                    </div>
+                </div>
+            </mat-tab>
+
+
+            <mat-tab *ngIf="instance?.historico_cambios?.length > 0 || instance?.creacion?.fecha_hora"
+                label="{{'HISTORICAL' | translate}}">
+                <adms-historical-changes [changes]="instance?.historico_cambios" [creation]="instance?.creacion">
+                </adms-historical-changes>
+            </mat-tab>
+        </mat-tab-group>
+    </ng-template>
+</div>

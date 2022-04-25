@@ -1,0 +1,15 @@
+header {
+  .header-logo-container {
+    background-color: mat-color($dark-primary);
+  }
+
+  .header-profile-button {
+    background-color: mat-color($dark-background, card);
+  }
+
+  @include media-breakpoint-down(md) {
+    .header-router-wrapper {
+      background-color: mat-color($dark-background, card) !important;
+    }
+  }
+}

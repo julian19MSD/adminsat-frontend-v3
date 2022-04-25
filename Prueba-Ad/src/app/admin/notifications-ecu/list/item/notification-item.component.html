@@ -1,0 +1,51 @@
+<mat-card [class.list-item-selected]="notification?.isSelected" class="workday-item-wrapper" matRipple>
+  <div *ngIf="actionsCapabilities?.delete" class="selector pr-2 pr-md-0">
+    <mat-checkbox (change)="checkedItem($event.checked)" [(ngModel)]="notification.isSelected" color="primary">
+    </mat-checkbox>
+  </div>
+
+  <div class="description">
+    <h2 class="workday-name">
+      {{ notification?.cliente_nombre }}
+    </h2>
+  </div>
+
+  <div class="times">
+
+    <div *ngIf="notification?.ecu?.presion_aceite" class="small">
+      <span class="font-weight-bold mr-1">{{ "OIL_PRESSURE" | translate }}: </span
+      >{{ notification?.ecu?.presion_aceite || "--" }} {{metricsAlias.pressure}}
+    </div>
+
+    <div *ngIf="notification?.ecu?.presion_combustible" class="small">
+      <span class="font-weight-bold mr-1">{{ "FUEL_PRESSURE" | translate }}: </span
+      >{{ notification?.ecu?.presion_combustible || "--" }} {{metricsAlias.pressure}}
+    </div>
+  </div>
+
+  <div class="info">
+
+    <div *ngIf="notification?.ecu?.temperatura_refrigerante_motor" class="small">
+      <span class="font-weight-bold mr-1">{{ "REFRIGERANT_TEMPERATURE" | translate }}: </span
+      >{{ notification?.ecu?.temperatura_refrigerante_motor || "--" }} °C
+    </div>
+
+    <div *ngIf="notification?.ecu?.temperatura_aire_admision" class="small">
+      <span class="font-weight-bold mr-1">{{ "INTAKE_AIR_TEMPERATURE" | translate }}: </span
+      >{{ notification?.ecu?.temperatura_aire_admision || "--" }} °C
+    </div>
+
+  </div>
+
+  <button [matMenuTriggerFor]="detailsMenu" class="more" mat-icon-button type="button">
+    <mat-icon>more_vert</mat-icon>
+
+    <mat-menu #detailsMenu="matMenu">
+
+      <a *ngIf="actionsCapabilities?.edit" [routerLink]="['form', notification?.id]" class="text-decoration-none"
+        mat-menu-item>
+        <mat-icon>edit</mat-icon>
+        <span>{{ "EDIT" | translate }}</span>
+      </a>
+    </mat-menu>
+  </button>

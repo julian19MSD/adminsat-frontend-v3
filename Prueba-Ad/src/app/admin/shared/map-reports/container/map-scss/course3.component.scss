@@ -1,0 +1,15 @@
+@import "~src/assets-sources/scss/app/mixins/mixins";
+
+
+:host ::ng-deep {
+  .map-report-wrapper {
+    .map-container {
+      @for $i from 151 through 200 {
+        .map-marker.course-#{$i} .course-wrapper {
+          @include vendor-rotate(0deg + $i);
+          @include vendor-prefix(transition, transform 0.3s);
+        }
+      }
+    }
+  }
+}

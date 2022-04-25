@@ -1,0 +1,49 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "~src/assets-sources/scss/app/mixins/flex";
+
+.content-placeholder-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 262px);
+  gap: 0.25rem;
+  justify-content: center;
+}
+
+.ph-card-item {
+  height: 196px;
+  padding: 0 !important;
+}
+
+.alarm-wrapper {
+  width: 100%;
+  height: calc(100% - 8px);
+  text-align: center;
+
+  .mat-card-avatar {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+:host ::ng-deep {
+  .gid-scroller {
+    .scrollable-content {
+      grid-template-columns: repeat(auto-fill, 262px);
+      grid-template-rows: minmax(196px, auto);
+    }
+
+    .mat-card-header-text {
+      overflow: hidden;
+      text-align: left;
+      width: 100%;
+    }
+  }
+
+  @include media-breakpoint-down(xs) {
+    .content-placeholder-wrapper {
+      grid-template-columns: repeat(auto-fill, 262px);
+      gap: 0.25rem;
+    }
+  }
+}

@@ -1,0 +1,91 @@
+<mat-card [class.list-item-selected]="actor?.isSelected" class="actor-item-wrapper" matRipple>
+  <div *ngIf="actionsCapabilities?.delete" class="selector pr-2 pr-md-0">
+    <mat-checkbox (change)="checkedItem($event.checked)" [(ngModel)]="actor.isSelected" color="primary">
+    </mat-checkbox>
+  </div>
+
+  <div class="actor-icon">
+    <div *ngIf="noImage" class="icon-image"></div>
+    <img (error)="noImage = true" (load)="noImage = false" [hidden]="noImage"
+      [src]="actor?.foto || 'https://s3.amazonaws.com/adminsat/assets/images/user-not-available_250.png' " alt="icon" />
+
+    <ng-container>
+      <div *ngIf="!actor?.actor_seguro" class="icon-safe-badge">
+        <mat-icon *ngIf="actor?.actor_seguro; else noSafe" class="text-success"
+          matTooltip="{{ 'SAFE_ACTOR' | translate }}" matTooltipShowDelay="300">
+          check_circle
+        </mat-icon>
+        <ng-template #noSafe>
+          <mat-icon class="text-danger" matTooltip="{{ 'UNSAFE_ACTOR' | translate }}" matTooltipShowDelay="300">
+            error
+          </mat-icon>
+        </ng-template>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="description">
+    <h2 class="actor-name">
+      {{ actor?.apellidos +', '+ actor?.nombre }}
+    </h2>
+
+    <div *ngIf="actor?.numero_documento_identidad" class="small">
+      <span class="font-weight-bold mr-1">{{ "IDENTIFICATION" | translate }}:
+      </span>{{ actor?.numero_documento_identidad }}
+    </div>
+
+  </div>
+
+  <div class="external">
+
+    <div class="small mb-2">
+      <strong class="mr-1">{{ "STATE" | translate }}:</strong>
+      <span *ngIf="actor?.is_active; else inactive" class="text-success">{{
+          "ENABLED" | translate
+          }}</span>
+      <ng-template #inactive>
+        <span class="text-danger">{{ "DISABLED" | translate }}</span>
+      </ng-template>
+    </div>
+
+    <div *ngIf="viewClienInfo" class="small">
+      <span class="font-weight-bold mr-1">{{ "CLIENT" | translate }}:</span>
+      {{ actor?.cliente_nombre }}
+    </div>
+
+    <div *ngIf="actor?.tipo_actor_nombre" class="small">
+      <span class="font-weight-bold mr-1">{{ "TYPE_ACTOR" | translate }}:</span>
+      {{ actor?.tipo_actor_nombre }}
+    </div>
+  </div>
+
+  <div class="devices">
+    <div *ngIf="actor?.correo" class="small">
+      <span class="font-weight-bold mr-1">{{ "EMAIL" | translate }}:</span>
+      <a href="mailto:{{actor?.correo}}">{{actor?.correo}}</a>
+    </div>
+    <div *ngIf="actor?.telefono" class="small">
+      <span class="font-weight-bold mr-1">{{ "PHONE" | translate }}:</span>
+      <a href="tel:{{actor?.telefono}}">{{actor?.telefono}}</a>
+    </div>
+    <div *ngIf="actor?.celular" class="small">
+      <span class="font-weight-bold mr-1">{{ "CELLPHONE" | translate }}:</span>
+      <a href="tel:{{actor?.celular}}">{{actor?.celular}}</a>
+    </div>
+  </div>
+
+  <button [matMenuTriggerFor]="detailsMenu" class="more" mat-icon-button type="button">
+    <mat-icon>more_vert</mat-icon>
+    <mat-menu #detailsMenu="matMenu">
+      <button (click)="openDetailDialog(actor?.id)" mat-menu-item type="button">
+        <mat-icon>info_outline</mat-icon>
+        <span>{{ "DETAILS" | translate }}</span>
+      </button>
+      <a *ngIf="actionsCapabilities?.edit" [routerLink]="['form', actor?.id]" class="text-decoration-none"
+        mat-menu-item>
+        <mat-icon>edit</mat-icon>
+        <span>{{ "EDIT" | translate }}</span>
+      </a>
+    </mat-menu>
+  </button>
+</mat-card>

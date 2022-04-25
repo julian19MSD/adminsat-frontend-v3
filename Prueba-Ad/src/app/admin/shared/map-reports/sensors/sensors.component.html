@@ -1,0 +1,48 @@
+<div class="d-flex flex-column h-100">
+
+  <mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <span>{{'SENSORS' | translate}}</span>
+      <span class="col"></span>
+      <button (click)="closeDialog()" mat-icon-button>
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div class="d-block overflow-auto">
+    <mat-tab-group [dynamicHeight]="true">
+      <mat-tab *ngFor="let item of data | keys" label="{{item.key | uppercase| translate}}">
+        <div class="p-2">
+          <div class="container-fluid">
+            <ng-container *ngFor="let value of item.value | keys">
+              <div class="row align-items-center">
+
+                <div class="col">
+                  <h3 class="mat-h3 mb-0"><strong>{{value.value.nombre}}</strong></h3>
+                  <div class="mat-body-1"><strong>{{ value.value.valueName | translate}}</strong>: {{value.value.valor}}
+                  </div>
+                  <div *ngIf="value.value.showCode" class="mat-caption">
+                    <strong>{{ 'INPUT' | translate}}</strong>: {{value.value.codigo}}
+                  </div>
+                </div>
+                <div>
+                  <mat-icon *ngIf="value.value.state;else iconError"
+                            class="text-success" matTooltip="{{value.value.tooltip | translate}}"
+                            matTooltipShowDelay="300">check_circle
+                  </mat-icon>
+                  <ng-template #iconError>
+                    <mat-icon class="text-danger" matTooltip="{{value.value.tooltip | translate}}"
+                              matTooltipShowDelay="300">error
+                    </mat-icon>
+                  </ng-template>
+                </div>
+                <mat-divider class="py-2 col-12"></mat-divider>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

@@ -1,0 +1,56 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "src/assets-sources/scss/app/mixins/flex";
+
+.home-tab-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas: 'image safe' 'image info';
+  column-gap: 16px;
+  padding: 0.5rem;
+
+  .asset-image {
+    grid-area: image;
+    justify-self: center;
+
+    &.ph-picture {
+      height: 100%;
+      margin: 0;
+      min-height: 100px;
+      max-width: 100%;
+      width: 350px;
+    }
+
+    img {
+      width: 350px;
+      max-width: 100%;
+    }
+  }
+
+  .info {
+    grid-area: info;
+
+    img.icon {
+      max-height: 50px;
+    }
+  }
+
+  .safe {
+    grid-area: safe;
+    padding: 0.5rem;
+    @include flexbox();
+    @include justify-content(center);
+    @include flex-wrap(nowrap);
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .home-tab-container {
+    grid-template-columns: 100%;
+    grid-template-areas: 'safe' 'image' 'info';
+    row-gap: 8px;
+  }
+}
+

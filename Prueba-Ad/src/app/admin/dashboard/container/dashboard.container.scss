@@ -1,0 +1,109 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "./src/assets-sources/scss/app/mixins/flex";
+@import "./src/assets-sources/scss/app/utilities/variables";
+
+.gridster {
+  max-width: $max-content-width;
+  margin: auto;
+
+  .gridster-item {
+    padding: 0;
+
+    .title {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      padding: 4px;
+      z-index: 4;
+      border-radius: 4px;
+    }
+
+    .delete {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 4;
+      padding: 8px;
+      cursor: pointer;
+      border-bottom-left-radius: 16px;
+    }
+  }
+}
+
+
+.ph-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 200px);
+  grid-template-areas: 'child-1 child-1 child-2' 'child-3 child-4 child-2';
+  gap: 8px;
+  max-width: $max-content-width;
+  margin: auto;
+
+  .ph-grid-item {
+    border-radius: 4px;
+    position: relative;
+
+    @for $i from 1 through 4 {
+      &:nth-child(#{$i}) {
+        grid-area: child-#{$i};
+      }
+    }
+
+    .title,
+    .icon {
+      @include flexbox();
+      @include justify-content(center);
+      @include align-items(center);
+    }
+
+    .title {
+      height: 24px;
+      width: 60px;
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      border-radius: 4px
+    }
+
+    .icon {
+      height: 40px;
+      width: 40px;
+      position: absolute;
+      top: 0;
+      right: 0;
+      border-radius: 0 0 0 16px;
+    }
+  }
+}
+
+@include media-breakpoint-down(md) {
+  .ph-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 200px);
+    grid-template-areas: 'child-1 child-1' 'child-2 child-3';
+
+    .ph-grid-item {
+      &:nth-child(4) {
+        display: none;
+      }
+    }
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .ph-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: 200px;
+
+    .ph-grid-item {
+      @for $i from 2 through 4 {
+        &:nth-child(#{$i}) {
+          display: none;
+        }
+      }
+    }
+  }
+}

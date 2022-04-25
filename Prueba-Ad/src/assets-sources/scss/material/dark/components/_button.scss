@@ -1,0 +1,33 @@
+button.active {
+  color: mat-color($dark-background, text);
+}
+
+a {
+  &:hover {
+    color: mat-color($dark-background, text);
+  }
+
+  &.active {
+    color: mat-color($dark-primary) !important;
+  }
+
+  &.mat-button:hover,
+  &.mat-primary:hover {
+    color: mat-color($dark-primary, default-contrast) !important;
+  }
+}
+
+.profile-avatar.picture-avatar {
+  background: mat-color($dark-background, unselected-chip);
+}
+
+
+.mat-raised-button:not(.mat-primary) {
+  background: mat-color($dark-accent);
+  color: mat-color($dark-accent, default-contrast);
+}
+mat-mini-fab {
+  font-family: Montserrat, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+}

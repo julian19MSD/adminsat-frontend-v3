@@ -1,0 +1,217 @@
+<div class="detail-container">
+
+  <mat-toolbar color="primary">
+    <h1 *ngIf="instance?.identificador;else phTittle">{{ instance?.identificador }}</h1>
+    <ng-template #phTittle>
+      <div class="ph-row">
+        <div class="ph-col-auto big ph-brightness">
+        </div>
+      </div>
+    </ng-template>
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+  <ng-template #loaded>
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <mat-icon>home</mat-icon>
+        </ng-template>
+        <div class="instance-detail-container">
+          <div class="instance-detail-item">
+            <div class="mat-body-2">{{'STATE' | translate}}</div>
+            <div *ngIf="instance?.is_active; else state"
+                 class="mat-body-1 text-success">{{'ENABLED' | translate}}</div>
+            <ng-template #state>
+              <div class="mat-body-1 text-danger">{{'DISABLED' | translate}}</div>
+            </ng-template>
+            <mat-divider class="mt-1"></mat-divider>
+          </div>
+
+          <div class="instance-detail-item">
+            <div class="mat-body-2">{{'CLIENT' | translate}}</div>
+            <div class="mat-body-1">{{instance?.cliente_nombre}}</div>
+            <mat-divider class="mt-1"></mat-divider>
+          </div>
+
+          <div class="instance-detail-item">
+            <div class="mat-body-2">{{'COMMUNICATION_CHANNEL' | translate}}</div>
+            <div class="mat-body-1 text-capitalize">{{instance?.tipo_equipo_canal_comunicacion | translate}}</div>
+            <mat-divider class="mt-1"></mat-divider>
+          </div>
+
+          <div class="instance-detail-item">
+            <div class="mat-body-2">{{'TYPE_DEVICE' | translate}}</div>
+            <div class="mat-body-1">{{instance?.tipo_equipo_nombre }}</div>
+            <mat-divider class="mt-1"></mat-divider>
+          </div>
+
+          <div class="instance-detail-item">
+            <div class="mat-body-2">{{'INSTALATION_DATE' | translate}}</div>
+            <div class="mat-body-1">
+              {{instance?.fecha_instalacion || ('NOT_RECORDED'|translate) }}
+            </div>
+            <mat-divider class="mt-1"></mat-divider>
+          </div>
+
+          <div class="instance-detail-item">
+            <div class="mat-body-2">{{'CELLPHONE_NUMBER' | translate}}</div>
+            <div class="mat-body-1">{{instance?.numero_celular || ('NOT_RECORDED'|translate) }}</div>
+            <mat-divider class="mt-1"></mat-divider>
+          </div>
+
+          <div class="instance-detail-item">
+            <div class="mat-body-2">{{'SERIAL_SIM' | translate}}</div>
+            <div class="mat-body-1">{{instance?.numero_sim || ('NOT_RECORDED'|translate) }}</div>
+            <mat-divider class="mt-1"></mat-divider>
+          </div>
+
+          <div class="instance-detail-item">
+            <div class="mat-body-2">{{'DATA_PLAN' | translate}}</div>
+            <div class="mat-body-1">{{instance?.plan_datos || ('NOT_RECORDED'|translate) }}</div>
+            <mat-divider class="mt-1"></mat-divider>
+          </div>
+
+          <div class="instance-detail-item">
+            <div class="mat-body-2">{{'DATA_CONSUMED' | translate}}</div>
+            <div
+              class="mat-body-1">{{instance?.datos_consumidos || ('NOT_RECORDED'|translate) }}</div>
+            <mat-divider class="mt-1"></mat-divider>
+          </div>
+
+          <div class="instance-detail-item">
+            <div class="mat-body-2">{{'APN' | translate}}</div>
+            <div
+              class="mat-body-1 text-capitalize">{{instance?.apn_nombre || ('NOT_RECORDED'|translate) }}</div>
+            <mat-divider class="mt-1"></mat-divider>
+          </div>
+
+          <div *ngIf="instance?.activo" class="instance-detail-item">
+            <div class="mat-body-2">{{'ASSET' | translate}}</div>
+            <adms-asset-preview (details)="dialogRef.close()" [data]="instance?.activo"></adms-asset-preview>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab *ngIf="instance?.redireccion_json?.length > 0"
+               label="{{'REDIRECTION_SERVERS' | translate}}">
+        <div class="p-2 p-md-4">
+
+          <mat-accordion>
+            <mat-expansion-panel *ngFor="let server of instance?.redireccion_json"
+                                 class="pt-2 pb-2 pt-sm-0 pb-sm-0">
+              <mat-expansion-panel-header class="flex-wrap" style="height: 48px">
+                <mat-panel-title class="font-weight-bold text-uppercase">
+                  {{server?.servidor_nombre}}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+
+              <ng-template matExpansionPanelContent>
+                <mat-divider></mat-divider>
+                <div class="container-fluid">
+                  <div class="row">
+
+                    <div *ngIf="server?.identificador_destino" class="col-12 col-md-6 mt-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">{{'DESTINATION_IDENTIFIER' | translate}}</h3>
+                      <div class="mat-body">{{ server?.identificador_destino }}</div>
+                      <mat-divider class="mt-2"></mat-divider>
+                    </div>
+
+                    <div *ngIf="server?.numero_valido" class="col-12 col-md-6 mt-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">{{'VALID_NUMBER' | translate}}</h3>
+                      <div class="mat-body">{{ server?.numero_valido }}</div>
+                      <mat-divider class="mt-2"></mat-divider>
+                    </div>
+
+                    <div *ngIf="server?.ip" class="col-12 col-md-6 mt-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">{{'IP' | translate}}</h3>
+                      <div class="mat-body">{{ server?.ip }}</div>
+                      <mat-divider class="mt-2"></mat-divider>
+                    </div>
+
+                    <div *ngIf="server?.puerto" class="col-12 col-md-6 mt-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">{{'PORT' | translate}}</h3>
+                      <div class="mat-body">{{ server?.puerto }}</div>
+                      <mat-divider class="mt-2"></mat-divider>
+                    </div>
+
+                    <div *ngIf="server?.usuario" class="col-12 col-md-6 mt-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">{{'USERNAME' | translate}}</h3>
+                      <div class="mat-body">{{ server?.usuario }}</div>
+                      <mat-divider class="mt-2"></mat-divider>
+                    </div>
+
+                    <div *ngIf="server?.carpeta_destino" class="col-12 col-md-6 mt-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">{{'DESTINATION_FOLDER' | translate}}</h3>
+                      <div class="mat-body">{{ server?.carpeta_destino }}</div>
+                      <mat-divider class="mt-2"></mat-divider>
+                    </div>
+
+                    <div *ngIf="server?.protocolo" class="col-12 col-md-6 mt-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">{{'PROTOCOL' | translate}}</h3>
+                      <div class="mat-body">{{ server?.protocolo }}</div>
+                      <mat-divider class="mt-2"></mat-divider>
+                    </div>
+
+                    <div *ngIf="server?.formato" class="col-12 col-md-6 mt-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">{{'FORMAT' | translate}}</h3>
+                      <div class="mat-body">{{ server?.formato }}</div>
+                      <mat-divider class="mt-2"></mat-divider>
+                    </div>
+
+                    <div *ngIf="server?.mascara" class="col-12 col-md-6 mt-2">
+                      <h3 class="mat-h3 font-weight-bold mb-0">{{'MASK' | translate}}</h3>
+                      <div class="mat-body">{{ server?.mascara }}</div>
+                      <mat-divider class="mt-2"></mat-divider>
+                    </div>
+
+                    <div *ngIf="server?.codigos_evento" class="col-12">
+                      <h3 class="mat-h3 font-weight-bold">{{'CODES_EVENT' | translate}}</h3>
+                      <div class="mat-elevation-z6">
+                        <mat-table #table [dataSource]="server?.codigos_evento">
+
+                          <ng-container matColumnDef="INPUT_CODE">
+                            <mat-header-cell
+                              *matHeaderCellDef> {{'INPUT_CODE' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.codigo_entrada}}</mat-cell>
+                          </ng-container>
+
+                          <ng-container matColumnDef="OUTPUT_CODE">
+                            <mat-header-cell
+                              *matHeaderCellDef> {{'OUTPUT_CODE' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.codigo_salida}}</mat-cell>
+                          </ng-container>
+
+                          <ng-container matColumnDef="TYPE">
+                            <mat-header-cell
+                              *matHeaderCellDef> {{'TYPE' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let element"> {{element.tipo}}</mat-cell>
+                          </ng-container>
+
+                          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                        </mat-table>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </ng-template>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </mat-tab>
+
+      <mat-tab
+        *ngIf="instance?.historico_cambios?.length > 0 || instance?.creacion?.fecha_hora"
+        label="{{'HISTORICAL' | translate}}">
+        <adms-historical-changes [changes]="instance?.historico_cambios"
+                                 [creation]="instance?.creacion"></adms-historical-changes>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-template>
+</div>

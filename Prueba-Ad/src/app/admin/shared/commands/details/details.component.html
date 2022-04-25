@@ -1,0 +1,65 @@
+<div class="detail-container p-0">
+
+    <mat-toolbar color="primary">
+        <h1>{{ 'DETAILS' | translate }}</h1>
+        <ng-template #phTittle>
+            <div class="ph-row">
+                <div class="ph-col-auto big ph-brightness">
+                </div>
+            </div>
+        </ng-template>
+        <button mat-dialog-close mat-icon-button type="button">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-toolbar>
+
+    <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+    <ng-template #loaded>
+        <div class="mt-3">
+            <h2 class="dark info-subtitle">{{'BASIC_DATA' | translate}}</h2>
+
+            <div class="grid grid-md-2 align-items-start py-2 px-0">
+                <div class="instance-detail-item mx-3">
+                    <div class="mat-body-2">{{'DATE' | translate}}</div>
+                    <div class="mat-body-1">{{instance?.send_dt}}</div>
+                </div>
+
+                <div class="instance-detail-item mx-3">
+                    <div class="mat-body-2">{{'USERNAME' | translate}}</div>
+                    <div class="mat-body-1">{{instance?.username || "--"}}</div>
+                </div>
+                <mat-divider class="mt-1 grid-col"></mat-divider>
+
+                <div class="instance-detail-item mx-3">
+                    <div class="mat-body-2">{{'DEVICE' | translate}}</div>
+                    <div class="mat-body-1">{{instance?.identifier || "--"}}</div>
+                </div>
+            </div>
+
+            <mat-divider class="mt-1 grid-col"></mat-divider>
+
+
+            <h2 class="dark info-subtitle mt-3">{{'SEND_COMMAND' | translate}}</h2>
+
+            <div class="instance-detail-item mx-3">
+                <div class="mat-body-2">{{instance?.command || "--"}}</div>
+                <div class="mat-body-1">{{instance?.technical_command || "--"}}</div>
+            </div>
+
+            <div *ngIf="instance?.response_message; then showResp"></div>
+
+            <ng-template #showResp>
+                <h2 class="dark info-subtitle mt-3">{{'RESPONSE' | translate}}</h2>
+
+                <div class="instance-detail-item mx-3 mb-3">
+                    <div class="mat-body-2">{{instance?.response_message || '--'}}</div>
+                    <div class="mat-body-1 text-response border border-primary">{{instance?.technical_response || '--'
+                        }}</div>
+                </div>
+            </ng-template>
+        </div>
+
+
+    </ng-template>
+</div>

@@ -1,0 +1,47 @@
+<div class="form-container">
+  <!-- <h1 class="mb-0" mat-dialog-title>{{'CREATE_ZONE'|translate}}</h1> -->
+
+  <mat-toolbar color="primary">
+    <h1>{{title|translate}}</h1>
+
+  </mat-toolbar>
+
+
+  <adms-ph *ngIf="loading; else loaded" mode="form"></adms-ph>
+
+  <ng-template #loaded>
+    <form (ngSubmit)="onSubmit($event)" class="m-3" [formGroup]="formGroup" id="zonesForm">
+
+      <div class=" align-items-center">
+        <div *ngIf="clients.length > 1" class="w-100">
+          <adms-select [ctrl]="formGroup.get('cliente')" [options]="clients" placeholder="{{ 'CLIENT' | translate }}"
+            required="true">
+          </adms-select>
+        </div>
+        <mat-form-field class="w-100">
+          <input #zonesReference formControlName="name" matInput maxlength="30"
+            placeholder="{{ 'REFERENCE' | translate }}" required type="text" />
+          <mat-hint align="end">
+            {{ zonesReference.value?.length || 0 }}/30
+          </mat-hint>
+          <mat-error>
+            {{ formStatus?.reference | translate }}
+          </mat-error>
+        </mat-form-field>
+
+      </div>
+    </form>
+  </ng-template>
+
+
+  <div class="container-fluid">
+    <div class="row justify-content-end">
+      <button class="m-1" mat-button type="button" mat-dialog-close>
+        {{'CANCEL'| translate}}
+      </button>
+      <button *ngIf="!loading" class="m-1" color="primary" form="zonesForm" mat-raised-button type="submit">
+        {{actionButton| translate}}
+      </button>
+    </div>
+  </div>
+</div>

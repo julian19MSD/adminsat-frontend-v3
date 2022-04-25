@@ -1,0 +1,5 @@
+body:not(.dark) {
+  .list-item-selected {
+    background: mat-color($background, hover);
+  }
+}

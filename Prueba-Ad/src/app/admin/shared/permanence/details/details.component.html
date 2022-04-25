@@ -1,0 +1,26 @@
+<div class="detail-container">
+  <mat-toolbar color="primary">
+    <h1 *ngIf="data?.placa;else phTittle">{{ data?.placa }}</h1>
+    <ng-template #phTittle>
+      <div class="ph-row">
+        <div class="ph-col-auto big ph-brightness ">
+        </div>
+      </div>
+    </ng-template>
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <!-- <adms-ph *ngIf="loading; else loaded"></adms-ph> -->
+  <div *ngIf="loading" [innerHTML]="loaderContent" class="loader-container" id="internalLoader"></div>
+
+
+
+    <div class="container-g">
+      <div id="timeline" style="position: relative;"></div>
+    </div>
+
+
+ 
+</div>

@@ -1,0 +1,43 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "~src/assets-sources/scss/app/mixins/flex";
+@import "~src/assets-sources/scss/app/utilities/variables";
+
+.header-controls {
+  @include flexbox;
+  @include flex-direction(row);
+  @include align-items(center);
+  @include justify-content(space-evenly);
+  @include media-breakpoint-up(lg) {
+    .mat-icon {
+      font-size: 1.25rem !important;
+    }
+    .mat-icon-button {
+      width: 30px !important;
+      height: 30px !important;
+      line-height: 30px !important;
+    }
+  }
+}
+
+
+:host ::ng-deep {
+  .header-controls {
+    .mat-badge-medium {
+      .mat-badge-content {
+        width: 16px !important;
+        height: 16px !important;
+        line-height: 16px !important;
+      }
+
+      &.mat-badge-overlap.mat-badge-after .mat-badge-content {
+        right: -3px;
+      }
+
+      &.mat-badge-above .mat-badge-content {
+        top: -6px;
+      }
+    }
+  }
+}

@@ -1,0 +1,61 @@
+<div class="tracking-container p-1 p-md-0  fadeInUp">
+
+  <div class="map-utils">
+    <ng-container *ngIf="controlsLoader || fetchingMarkers;else controls">
+      <div class="ph-item m-0 py-0 align-items-center">
+        <div class="ph-icon ph-brightness m-0 mr-2"></div>
+        <div class="ph-icon ph-brightness  m-0 mr-2"></div>
+        <div class="ph-icon ph-brightness m-0"></div>
+      </div>
+    </ng-container>
+    <ng-template #controls>
+      <button (click)="clientSelector.open()" *ngIf="clients?.length >1" mat-icon-button
+              matTooltip="{{'SELECT_CLIENT'|translate}}" matTooltipShowDelay="300" type="button">
+
+        <mat-icon [class.text-info]="selectedClient">supervised_user_circle</mat-icon>
+
+        <mat-select #clientSelector (selectionChange)="changeClient($event.value)" [(ngModel)]="selectedClient">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="clientFilterCtrl"
+                                   noEntriesFoundLabel="{{'NO_RESULT' | translate}}"
+                                   placeholderLabel="{{'SEARCH' | translate}}">
+            </ngx-mat-select-search>
+          </mat-option>
+          <mat-option [value]="null">------</mat-option>
+          <mat-option *ngFor="let item of clientFilteredOptions | async" [value]="item.id">
+            {{item.nombre}}
+          </mat-option>
+        </mat-select>
+      </button>
+
+      <button (click)="onControlZoneInteresPointClick('controlZone')" mat-icon-button
+              matTooltip="{{'TOOGLE_CONTROLZONES'|translate}}" matTooltipShowDelay="300" type="button">
+        <i [class.text-info]="controlZoneActive" class="adminsat-icon icon-polygon-1"></i>
+      </button>
+
+      <button (click)="onControlZoneInteresPointClick('interestPoint')" mat-icon-button
+              matTooltip="{{'TOOGLE_POINTS_OF_INTEREST'|translate}}" matTooltipShowDelay="300" type="button">
+        <i [class.text-info]="interestPointActive" class="adminsat-icon icon-marker-img"></i>
+      </button>
+
+      <button class="d-lg-none" (click)="toogleReportsSideNav()" mat-icon-button type="button">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </ng-template>
+
+  </div>
+
+  <mat-divider class="d-md-none z-2"></mat-divider>
+
+  <adms-map-reports (scrollEnd)="fetchMore()"
+                    (totalItems)="setTotalItems($event)"
+                    [isFetchingMarkers]="fetchingMarkers"
+                    [isFetchingList]="fetching"
+                    [controlZoneActive]="controlZoneActive"
+                    [controlZones]="controlZones"
+                    [interestPointActive]="interestPointActive"
+                    [interestPoints]="interesPoints"
+                    [markers]="markers"
+                    [reports]="listItems$|async"
+                    [toggleReports]="toggleReports"></adms-map-reports>
+</div>

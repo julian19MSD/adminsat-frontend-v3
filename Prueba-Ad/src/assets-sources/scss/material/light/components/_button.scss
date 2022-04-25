@@ -1,0 +1,17 @@
+
+body:not(.dark) {
+  button.active,
+  a.active,
+  a:hover {
+    color: mat-color($primary) !important;
+  }
+
+
+  .mat-menu-content a:hover {
+    color: mat-color($foreground, text) !important;
+  }
+
+  a.mat-primary:hover {
+    color: mat-color($primary, default-contrast) !important;
+  }
+}

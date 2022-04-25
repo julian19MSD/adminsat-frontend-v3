@@ -1,0 +1,139 @@
+<div class="item-wrapper bb-divider" [class.mainAction]="actionsCapabilities.default"
+[class.bg-alert-success]="work?.status_color == 0" [class.bg-alert-warning-deep]="work?.status_color == 1"
+[class.bg-alert-danger-deep]="work?.status_color == 2"
+  [class.list-item-selected]="work.isSelected">
+
+  <div *ngIf="actionsCapabilities?.default" class="text-center">
+    <mat-checkbox (change)="checkedItem($event.checked)" [(ngModel)]="work.isSelected" color="primary">
+    </mat-checkbox>
+  </div>
+
+  <div class="item-content">
+    <button type="button" [matMenuTriggerFor]="moreWorkMenu" mat-icon-button>
+      <mat-icon>more_vert</mat-icon>
+
+      <mat-menu #moreWorkMenu="matMenu">
+
+        <button type="button" mat-menu-item (click)="addObservation(work?.id, work?.cliente?.id)"
+          *ngIf="permissionsService.hasPermission(permissions.rutas.jornadaLaboral.observaciones.crear)">
+          <mat-icon>speaker_notes</mat-icon>
+          <span>{{'ADD_OBSERVATION'|translate}}</span>
+        </button>
+
+        <button type="button" mat-menu-item (click)="openDetailDialog(work.id)">
+          <mat-icon>details</mat-icon>
+          <span>{{"DETAILS" |translate}}</span>
+        </button>
+
+        <button type="button" class="mw-100 text-ellipsis" mat-menu-item
+          (click)="addNovelty(work?.id, work?.cliente?.id, work?.enturnamiento)">
+          <mat-icon>announcement</mat-icon>
+          <span>{{"NOVELTY" |translate}}</span>
+        </button>
+      </mat-menu>
+    </button>
+
+  </div>
+
+  <!-- activo -->
+  <div class="item-content" [matTooltipDisabled]="!work.activo_placa" matTooltip="{{work.activo_placa || '--'}}"
+    matTooltipShowDelay="300">
+    <button (click)="openAssetDetails(work.activo)"
+      *ngIf="work?.activo && permissionsService.hasPermission(permissions.activos.ver);else assetPlate"
+      class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+      {{work.activo_placa}}
+    </button>
+    <ng-template #assetPlate>
+      <div class="text-ellipsis">
+        {{work.activo_placa || '--'}}
+      </div>
+    </ng-template>
+  </div>
+
+
+  <!-- estado -->
+  <div class="item-content" [matTooltipDisabled]="!work.status" matTooltipShowDelay="300"
+    matTooltip="{{work.status || '--'}}">
+    <div class="text-ellipsis">
+      {{work.status || '--'}}
+    </div>
+  </div>
+
+  <!-- inicio -->
+  <div class="item-content" [matTooltipDisabled]="!work.start_dt" matTooltipShowDelay="300"
+    matTooltip="{{work.start_dt || '--'}}">
+    <div class="text-ellipsis">
+      {{work.start_dt || '--'}}
+    </div>
+  </div>
+
+
+  <!-- tiempo transcurrido -->
+  <div class="item-content" [matTooltipDisabled]="!work.start_dt_parse" matTooltipShowDelay="300"
+   matTooltip="{{work.start_dt_parse || '--'}}">
+    <div class="text-ellipsis">
+      {{work.start_dt_parse || '--'}}
+    </div>
+  </div>
+
+  <!-- actor vial -->
+  <div class="item-content" [matTooltipDisabled]="!work.actor_vial?.full_name"
+    matTooltip="{{work.actor_vial?.full_name || '--'}}" matTooltipShowDelay="300">
+    <button (click)="openRoadActorDetails(work.actor_vial?.id)"
+      *ngIf="work.actor_vial?.full_name && permissionsService.hasPermission(permissions.actorVial.ver);else roadActor"
+      class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+      {{work.actor_vial?.full_name}}
+    </button>
+    <ng-template #roadActor>
+      <div class="text-ellipsis">
+        {{work.actor_vial?.full_name || '--'}}
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- origen -->
+  <div class="item-content" [matTooltipDisabled]="!work.origen" matTooltipShowDelay="300"
+    matTooltip="{{work.origen || '--'}}">
+    <div class="text-ellipsis">
+      {{work.origen || '--'}}
+    </div>
+  </div>
+
+  <!-- destino -->
+  <div class="item-content" [matTooltipDisabled]="!work.destino" matTooltipShowDelay="300"
+    matTooltip="{{work.destino || '--'}}">
+    <div class="text-ellipsis">
+      {{work.destino || '--'}}
+    </div>
+  </div>
+
+  <!-- ultima ubicación -->
+  <div class="item-content" [matTooltipDisabled]="!work?.ultimo_reporte_fecha"
+    matTooltip="{{work?.ultimo_reporte_fecha || '--'}}" matTooltipShowDelay="300"><a
+      [queryParams]="{  cliente: work.cliente?.id,reportId: work?.activo }" class="w-100 mw-100 text-ellipsis"
+      mat-stroked-button routerLink="/monitoring/tracking" target="_blank">
+      {{work?.ultimo_reporte_fecha || '--'}} </a>
+  </div>
+
+  <!-- activo enganchado -->
+  <div class="item-content" [matTooltipDisabled]="!work.remolque" matTooltip="{{work.remolque || '--'}}"
+    matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{work.remolque || '--'}}
+    </div>
+  </div>
+
+  <!-- tipo trailer -->
+  <div class="item-content" [matTooltipDisabled]="!work.tt" matTooltipShowDelay="300" matTooltip="{{work.tt || '--'}}">
+    <div class="text-ellipsis">
+      {{work.tt || '--'}}
+    </div>
+  </div>
+
+  <!-- via -->
+  <div class="item-content" [matTooltipDisabled]="!work.via" matTooltipShowDelay="300"
+    matTooltip="{{work.via || '--'}}">
+    <div class="text-ellipsis">
+      {{work.via || '--'}}
+    </div>
+  </div>

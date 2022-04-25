@@ -1,0 +1,12 @@
+<div >
+  <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+    <div class="example-box" *ngFor="let command of selectedItems$   | async ; let i = index" cdkDrag>
+      <adms-send-command-preview class="w-100" [data]="command"></adms-send-command-preview>
+      <div>
+        <button mat-icon-button (click)="removeC(i)" type="button">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

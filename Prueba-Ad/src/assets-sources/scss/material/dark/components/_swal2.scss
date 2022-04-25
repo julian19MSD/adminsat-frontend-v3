@@ -1,0 +1,13 @@
+.swal2-popup {
+  background-color: mat-color($dark-background, background) !important;
+
+  .swal2-title,
+  .swal2-content {
+    color: mat-color($dark-foreground, text) !important;
+  }
+
+  .swal2-styled.swal2-confirm {
+    background-color: mat-color($dark-primary) !important;
+    color: mat-color($dark-foreground, text) !important;
+  }
+}

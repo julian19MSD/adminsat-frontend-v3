@@ -1,0 +1,68 @@
+@import "~src/assets-sources/scss/app/mixins/flex";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+
+.location-item-wrapper {
+  display: grid;
+  grid-template-columns: 0.7fr 0.3fr;
+  grid-template-rows: auto;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.82rem;
+  padding: 0.5rem;
+
+  &:not(.disabled) {
+    cursor: pointer !important;
+
+    label {
+      cursor: pointer !important;
+    }
+  }
+
+  em {
+    font-size: 1.5rem;
+  }
+
+  .info-wrapper {
+    @include align-self(start);
+    grid-row: 2/4;
+
+    .info-item {
+      display: grid;
+      grid-template-columns: 108px auto;
+      gap: 0.25rem;
+      margin-bottom: 4px;
+
+      label {
+        font-weight: 700;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .info-icon-wrapper {
+    @include align-self(start);
+
+    .info-icon {
+      @include flexbox();
+      @include flex-wrap(nowrap);
+      @include align-items(center);
+      grid-column: 1/-1;
+    }
+  }
+
+  .icon-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 24px);
+    gap: 0.75rem;
+    @include align-items(center);
+  }
+}
+
+
+@include media-breakpoint-down(xs) {
+  .location-item-wrapper {
+    grid-template-columns: 1fr;
+  }
+}

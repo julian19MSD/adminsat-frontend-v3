@@ -1,0 +1,651 @@
+<div class="detail-container">
+
+
+  <mat-toolbar color="primary">
+    <h1 *ngIf="instance?.nombre;else phTittle">{{ instance?.apellidos }}, {{ instance?.nombre }}</h1>
+    <ng-template #phTittle>
+      <div class="ph-row">
+        <div class="ph-col-auto big ph-brightness">
+        </div>
+      </div>
+    </ng-template>
+    <button mat-dialog-close mat-icon-button type="button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <adms-ph *ngIf="loading; else loaded"></adms-ph>
+
+  <ng-template #loaded>
+    <mat-tab-group>
+      <mat-tab>
+
+        <ng-template mat-tab-label>
+          <mat-icon>home</mat-icon>
+        </ng-template>
+
+        <div class="home-tab-container">
+
+          <div [class.ph-brightness]="noImage" [class.ph-avatar]="noImage" class="actor-image ">
+            <img (load)="noImage=false" [hidden]="noImage"
+                 [src]="instance?.foto ||  staticUrl +  '/images/user-not-available.png'" alt="actor-photo"
+                 class="rounded-circle">
+          </div>
+
+          <div class="safe">
+            <div *ngIf="[2,6].includes(instance?.tipo_actor)"
+                 class="mat-body-2 d-flex justify-content-center aling-items-center">
+              <ng-container *ngIf="instance?.actor_seguro; else noSecure">
+
+                <mat-icon class="text-success mr-2">check_circle</mat-icon>
+                <span>{{'SAFE_ACTOR' | translate}}</span>
+              </ng-container>
+
+              <ng-template #noSecure>
+                <mat-icon class="text-danger mr-2">error</mat-icon>
+                <span>{{'UNSAFE_ACTOR' | translate}}</span>
+              </ng-template>
+            </div>
+          </div>
+
+          <mat-list class="info">
+
+            <mat-list-item>
+              <div class="mat-body-2 mr-2">{{'STATE' | translate}}:</div>
+              <div *ngIf="instance?.is_active; else state" class="mat-body-1 text-success">
+                {{'ENABLED' | translate}}
+              </div>
+              <ng-template #state>
+                <div class="mat-body-1 text-danger">{{'DISABLED' | translate}}</div>
+              </ng-template>
+            </mat-list-item>
+            <mat-divider class="mt-2"></mat-divider>
+
+            <ng-container *ngIf="permissionsService.hasPermission(permissions.clientes.ver)">
+              <mat-list-item>
+                <div class="mat-body-2 mr-2">{{'CLIENT' | translate}}:</div>
+                <div class="mat-body-1">{{instance?.cliente_nombre}}</div>
+              </mat-list-item>
+              <mat-divider class="mt-2"></mat-divider>
+            </ng-container>
+
+            <mat-list-item>
+              <div class="mat-body-2 mr-2">{{'TYPE_ACTOR' | translate}}:</div>
+              <div class="mat-body-1">
+                {{instance?.tipo_actor_nombre || ('NOT_RECORDED'|translate) }}
+              </div>
+            </mat-list-item>
+            <mat-divider class="mt-2"></mat-divider>
+
+            <mat-list-item>
+              <div class="mat-body-2 mr-2">{{'IDENTIFICATION' | translate}}:</div>
+              <div class="mat-body-1">
+                {{instance?.numero_documento_identidad || ('NOT_RECORDED'|translate) }}
+              </div>
+            </mat-list-item>
+            <mat-divider class="mt-2"></mat-divider>
+
+            <mat-list-item>
+              <div class="mat-body-2 mr-2">{{'PHONE' | translate}}:</div>
+              <div class="mat-body-1">
+                {{instance?.telefono || ('NOT_RECORDED'|translate)}}
+              </div>
+            </mat-list-item>
+            <mat-divider class="mt-2"></mat-divider>
+
+            <mat-list-item>
+              <div class="mat-body-2 mr-2">{{'CELLPHONE' | translate}}:</div>
+              <div class="mat-body-1">
+                {{instance?.celular || ('NOT_RECORDED'|translate)}}
+              </div>
+            </mat-list-item>
+            <mat-divider class="mt-2"></mat-divider>
+
+            <mat-list-item>
+              <div class="mat-body-2 mr-2">{{'EMAIL' | translate}}:</div>
+              <div class="mat-body-1">
+                {{instance?.correo || ('NOT_RECORDED'|translate)}}
+              </div>
+            </mat-list-item>
+            <mat-divider class="mt-2"></mat-divider>
+
+            <mat-list-item>
+              <div class="mat-body-2 mr-2">{{'IBUTTON' | translate}}:</div>
+              <div class="mat-body-1">
+                {{instance?.ibutton || ('NOT_RECORDED'|translate)}}
+              </div>
+            </mat-list-item>
+            <mat-divider class="mt-2"></mat-divider>
+
+            <mat-list-item *ngIf="instance?.activo?.id" class="h-auto py-2">
+              <div class="w-100">
+                <div class="mat-body-2">{{'ASSOCIATED_ASSET' | translate}}</div>
+                <adms-asset-preview [data]="instance?.activo"></adms-asset-preview>
+              </div>
+            </mat-list-item>
+
+          </mat-list>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="{{'DETAILS' | translate}}">
+        <section id="basic-data">
+          <h2 class="info-subtitle  mt-3">{{'BASIC_DATA' | translate}}</h2>
+          <div class="instance-detail-container">
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'STATE_OF_HABEAS_DATA' | translate}}</div>
+              <div *ngIf="instance?.habeasdata; else unauthorized" class="mat-body-1 text-success">
+                {{'AUTHORIZED' | translate}}
+              </div>
+
+              <ng-template #unauthorized>
+                <ng-container *ngIf="instance?.habeasdata === false; else pending">
+                  <div class="mat-body-1 text-danger">{{'UNAUTHORIZED' | translate}}</div>
+                </ng-container>
+              </ng-template>
+
+              <ng-template #pending>
+                <div class="mat-body-1 text-warning">
+                  {{'PENDING_AUTHORIZATION' | translate}}
+                </div>
+              </ng-template>
+
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'CITY' | translate}}</div>
+              <div class="mat-body-1">{{ instance?.ciudad || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'ADDRESS' | translate}}</div>
+              <div
+                class="mat-body-1">{{ instance?.direccion || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+          </div>
+        </section>
+
+        <section id="personal-data">
+          <h2 class="info-subtitle  mt-3">{{'PERSONAL_DATA' | translate}}</h2>
+          <div class="instance-detail-container">
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'BIRTHDATE' | translate}}</div>
+              <div class="mat-body-1">
+                {{ instance?.datos_personales_json?.fecha_nacimiento || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'GNEDER' | translate}}</div>
+              <div class="mat-body-1">
+                {{ instance?.datos_personales_json?.genero || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'NATIONALITY' | translate}}</div>
+              <div class="mat-body-1">
+                {{ instance?.datos_personales_json?.nacionalidad || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'NUMBER_OF_CHILDRENS' | translate}}</div>
+              <div class="mat-body-1">
+                {{ instance?.datos_personales_json?.hijos || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'CIVIL_STATUS' | translate}}</div>
+              <div class="mat-body-1">
+                {{ instance?.datos_personales_json?.estado_civil || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'BIRTHDATE_SPOUSE' | translate}}</div>
+              <div
+                class="mat-body-1">{{ instance?.datos_personales_json?.fecha_nacimiento_conyugue || ('NOT_RECORDED'|translate)}}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'FIRST_NAME_SPOUSE' | translate}}</div>
+              <div class="mat-body-1">
+                {{ instance?.datos_personales_json?.conyugue_nombres || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'LAST_NAME_SPOUSE' | translate}}</div>
+              <div class="mat-body-1">
+                {{ instance?.datos_personales_json?.conyugue_apellidos || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'LEVEL_EDUCATION_SPOUSE' | translate}}</div>
+              <div class="mat-body-1">
+                {{ instance?.datos_personales_json?.conyugue_formacion || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+          </div>
+
+        </section>
+
+        <section id="acdemic-data">
+          <h2 class="info-subtitle mt-3 ">{{'ACADEMIC_INFORMATION' | translate}}</h2>
+          <div class="instance-detail-container">
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'LEVEL_EDUCATION' | translate}}</div>
+              <div class="mat-body-1">
+                {{ instance?.formacion_json?.nivel_estudios || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <ng-container *ngIf="[2,6].includes(instance?.tipo_actor)">
+
+              
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DRIVING_EXPERIENCE_YEARS' | translate}}</div>
+                <div class="mat-body-1">
+                  {{ instance?.formacion_json?.experiencia_conducion || ('NOT_RECORDED'|translate)}}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="grid-col">
+                <h4 class="dark info-subtitle-2">
+                  {{ "LICENSE" | translate }} 1
+                </h4>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DRIVER_LICENSE_NUMBER' | translate}}</div>
+                <div
+                  class="mat-body-1">
+                  {{ instance?.formacion_json?.numero_licencia || ('NOT_RECORDED'|translate)}}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DRIVER_LICENSE_EXPEDITION_DATE' | translate}}</div>
+                <div class="mat-body-1">
+                  {{ instance?.formacion_json?.licencia_fecha_expedicion || ('NOT_RECORDED'|translate) }}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DRIVER_LICENSE_DUE_DATE' | translate}}</div>
+                <div
+                  class="mat-body-1">
+                  {{ instance?.formacion_json?.licencia_fecha_vencimiento || ('NOT_RECORDED'|translate) }}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DRIVER_LICENSE_CATEGORY' | translate}}</div>
+                <div class="mat-body-1">
+                  {{ instance?.formacion_json?.licencia_categoria || ('NOT_RECORDED'|translate) }}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+              
+
+              <div class="grid-col">
+                <h4 class="dark info-subtitle-2">
+                  {{ "LICENSE" | translate }}  2
+                </h4>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DRIVER_LICENSE_NUMBER' | translate}}</div>
+                <div
+                  class="mat-body-1">
+                  {{ instance?.formacion_json?.numero_licencia_1 || ('NOT_RECORDED'|translate)}}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DRIVER_LICENSE_EXPEDITION_DATE' | translate}}</div>
+                <div class="mat-body-1">
+                  {{ instance?.formacion_json?.licencia_fecha_expedicion_1 || ('NOT_RECORDED'|translate) }}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DRIVER_LICENSE_DUE_DATE' | translate}}</div>
+                <div
+                  class="mat-body-1">
+                  {{ instance?.formacion_json?.licencia_fecha_vencimiento_1 || ('NOT_RECORDED'|translate) }}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DRIVER_LICENSE_CATEGORY' | translate}}</div>
+                <div class="mat-body-1">
+                  {{ instance?.formacion_json?.licencia_categoria_1 || ('NOT_RECORDED'|translate) }}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="grid-col">
+                <h4 class="dark info-subtitle-2">
+                  {{ "LICENSE" | translate }} 
+                </h4>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DRIVER_LICENSE_NUMBER' | translate}}</div>
+                <div
+                  class="mat-body-1">
+                  {{ instance?.formacion_json?.numero_licencia_2 || ('NOT_RECORDED'|translate)}}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DRIVER_LICENSE_EXPEDITION_DATE' | translate}}</div>
+                <div class="mat-body-1">
+                  {{ instance?.formacion_json?.licencia_fecha_expedicion_2 || ('NOT_RECORDED'|translate) }}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DRIVER_LICENSE_DUE_DATE' | translate}}</div>
+                <div
+                  class="mat-body-1">
+                  {{ instance?.formacion_json?.licencia_fecha_vencimiento_2 || ('NOT_RECORDED'|translate) }}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+              <div class="instance-detail-item">
+                <div class="mat-body-2">{{'DRIVER_LICENSE_CATEGORY' | translate}}</div>
+                <div class="mat-body-1">
+                  {{ instance?.formacion_json?.licencia_categoria_2 || ('NOT_RECORDED'|translate) }}
+                </div>
+                <mat-divider class="mt-2"></mat-divider>
+              </div>
+
+
+              
+
+            </ng-container>
+
+            <div class="grid-col">
+              <div class="mat-body-2">{{'INSCRIPTION_RUNT' | translate}}</div>
+              <div *ngIf="!instance?.runt; else runt" class="mat-body-1">
+                {{'NOT_RECORDED'|translate}}
+              </div>
+              <ng-template #runt>
+                <a [attr.href]="instance?.runt" color="primary" mat-raised-button target="_blank">
+                  {{'VIEW_FILE_SAVED' | translate}}
+                </a>
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+          </div>
+        </section>
+
+        <section id="employment">
+          <h2 class="info-subtitle  mt-3">{{'EMPLOYMENT_INFORMATION' | translate}}</h2>
+          <div class="instance-detail-container">
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'DATE_ADMISSION' | translate}}</div>
+              <div
+                class="mat-body-1">
+                {{ instance?.informacion_laboral_json?.fecha_ingreso || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'WORKGROUP' | translate}}</div>
+              <div class="mat-body-1">
+                {{ instance?.informacion_laboral_json?.grupo_trabajo || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TYPE_CONTRACT' | translate}}</div>
+              <div class="mat-body-1">
+                {{ instance?.informacion_laboral_json?.tipo_contrato || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TYPE_RELATIONSHIP' | translate}}</div>
+              <div class="mat-body-1">
+                {{ instance?.informacion_laboral_json?.tipo_vinculacion || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'CHARGE' | translate}}</div>
+              <div class="mat-body-1">
+                {{ instance?.informacion_laboral_json?.cargo || ('NOT_RECORDED'|translate)}}
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+          </div>
+        </section>
+
+        <section *ngIf="instance?.prestacionessociales?.length >0" id="benefits">
+          <h2 class="info-subtitle  mt-3">{{'EMPLOYMENT_BENEFITS' | translate}}</h2>
+          <div class="instance-detail-container">
+            <div *ngFor="let prest of instance.prestacionessociales" class="instance-detail-item">
+              <div class="mat-body-2">{{prest.tipo_nombre}}</div>
+              <div class="mat-body-1">{{ prest.nombre }}</div>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+          </div>
+        </section>
+
+        <section id="physicals-aptitude" *ngIf="instance?.tipo_actor === 2">
+          <h2 class="info-subtitle mt-3">{{'TESTS_PHYSICALS_APTITUDE' | translate}}</h2>
+          <div class="instance-detail-container">
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TEST_ATTETION' | translate}}</div>
+              <div *ngIf="!instance?.examen_atencion; else examen_atencion" class="mat-body-1">
+                {{'NOT_RECORDED'|translate}}
+              </div>
+              <ng-template #examen_atencion>
+                <a [attr.href]="instance?.examen_atencion" color="primary" mat-raised-button target="_blank">
+                  {{'VIEW_FILE_SAVED' | translate}}
+                </a>
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TEST_ABILITY' | translate}}</div>
+              <div *ngIf="!instance?.examen_habilidad; else examen_habilidad" class="mat-body-1 ">
+                {{'NOT_RECORDED'|translate}}
+              </div>
+              <ng-template #examen_habilidad>
+                <a [attr.href]="instance?.examen_habilidad" color="primary" mat-raised-button target="_blank">
+                  {{'VIEW_FILE_SAVED' | translate}}
+                </a>
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TEST_ACUITY' | translate}}</div>
+              <div *ngIf="!instance?.examen_agudeza; else examen_agudeza" class="mat-body-1 ">
+                {{'NOT_RECORDED'|translate}}
+              </div>
+              <ng-template #examen_agudeza>
+                <a [attr.href]="instance?.examen_agudeza" color="primary" mat-raised-button target="_blank">
+                  {{'VIEW_FILE_SAVED' | translate}}
+                </a>
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TEST_PSYCHOSENSORIAL' | translate}}</div>
+              <div *ngIf="!instance?.examen_psicosensorica; else examen_psicosensorica"
+                   class="mat-body-1 ">
+                {{'NOT_RECORDED'|translate}}
+              </div>
+              <ng-template #examen_psicosensorica>
+                <a [attr.href]="instance?.examen_psicosensorica" color="primary" mat-raised-button
+                   target="_blank">
+                  {{'VIEW_FILE_SAVED' | translate}}
+                </a>
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TEST_VISIO' | translate}}</div>
+              <div *ngIf="!instance?.examen_visiometria; else examen_visiometria" class="mat-body-1 ">
+                {{'NOT_RECORDED'|translate}}
+              </div>
+              <ng-template #examen_visiometria>
+                <a [attr.href]="instance?.examen_visiometria" color="primary" mat-raised-button target="_blank">
+                  {{'VIEW_FILE_SAVED' | translate}}
+                </a>
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TEST_AUDIOMETRY' | translate}}</div>
+              <div *ngIf="!instance?.examen_audiometria; else examen_audiometria" class="mat-body-1 ">
+                {{'NOT_RECORDED'|translate}}
+              </div>
+              <ng-template #examen_audiometria>
+                <a [attr.href]="instance?.examen_audiometria" color="primary" mat-raised-button target="_blank">
+                  {{'VIEW_FILE_SAVED' | translate}}
+                </a>
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TEST_PSYCHOLOGY' | translate}}</div>
+              <div *ngIf="!instance?.examen_psicologia; else examen_psicologia" class="mat-body-1 ">
+                {{'NOT_RECORDED'|translate}}
+              </div>
+              <ng-template #examen_psicologia>
+                <a [attr.href]="instance?.examen_psicologia" color="primary" mat-raised-button target="_blank">
+                  {{'VIEW_FILE_SAVED' | translate}}
+                </a>
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TEST_MOTOR_COORDINATION' | translate}}</div>
+              <div *ngIf="!instance?.examen_coordinacion_motriz; else examen_coordinacion_motriz"
+                   class="mat-body-1 ">
+                {{'NOT_RECORDED'|translate}}
+              </div>
+              <ng-template #examen_coordinacion_motriz>
+                <a [attr.href]="instance?.examen_coordinacion_motriz" color="primary" mat-raised-button
+                   target="_blank">
+                  {{'VIEW_FILE_SAVED' | translate}}
+                </a>
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TEST_MEDICAL' | translate}}</div>
+              <div *ngIf="!instance?.examen_medico; else examen_medico" class="mat-body-1 ">
+                {{'NOT_RECORDED'|translate}}
+              </div>
+              <ng-template #examen_medico>
+                <a [attr.href]="instance?.examen_medico" color="primary" mat-raised-button target="_blank">
+                  {{'VIEW_FILE_SAVED' | translate}}
+                </a>
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TEST_THEORY' | translate}}</div>
+              <div *ngIf="!instance?.examen_prueba_teorica; else examen_prueba_teorica"
+                   class="mat-body-1 ">
+                {{'NOT_RECORDED'|translate}}
+              </div>
+              <ng-template #examen_prueba_teorica>
+                <a [attr.href]="instance?.examen_prueba_teorica" color="primary" mat-raised-button
+                   target="_blank">
+                  {{'VIEW_FILE_SAVED' | translate}}
+                </a>
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TEST_PRACTICAL' | translate}}</div>
+              <div *ngIf="!instance?.examen_prueba_practica; else examen_prueba_practica"
+                   class="mat-body-1 ">
+                {{'NOT_RECORDED'|translate}}
+              </div>
+              <ng-template #examen_prueba_practica>
+                <a [attr.href]="instance?.examen_prueba_practica" color="primary" mat-raised-button
+                   target="_blank">
+                  {{'VIEW_FILE_SAVED' | translate}}
+                </a>
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+
+            <div class="instance-detail-item">
+              <div class="mat-body-2">{{'TEST_ADMISSION' | translate}}</div>
+              <div *ngIf="!instance?.examen_prueba_ingreso; else examen_prueba_ingreso"
+                   class="mat-body-1 ">
+                {{'NOT_RECORDED'|translate}}
+              </div>
+              <ng-template #examen_prueba_ingreso>
+                <a [attr.href]="instance?.examen_prueba_ingreso" color="primary" mat-raised-button
+                   target="_blank">
+                  {{'VIEW_FILE_SAVED' | translate}}
+                </a>
+              </ng-template>
+              <mat-divider class="mt-2"></mat-divider>
+            </div>
+          </div>
+        </section>
+      </mat-tab>
+
+      <mat-tab *ngIf="instance?.historico_cambios?.length > 0 || instance?.creacion?.fecha_hora"
+               label="{{'HISTORICAL' | translate}}">
+        <adms-historical-changes [changes]="instance?.historico_cambios" [creation]="instance?.creacion">
+        </adms-historical-changes>
+      </mat-tab>
+    </mat-tab-group>
+  </ng-template>
+</div>
+

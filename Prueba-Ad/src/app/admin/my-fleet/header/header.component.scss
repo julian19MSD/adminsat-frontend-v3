@@ -1,0 +1,64 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "./src/assets-sources/scss/app/mixins/flex";
+
+:host ::ng-deep {
+  .header-dashboard-wrapper {
+    .mat-form-field {
+      width: 250px !important;
+      font-size: 0.94rem;
+    }
+  }
+}
+
+.header-dashboard-wrapper {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  grid-template-rows: 1fr;
+  height: 100%;
+  align-items: center;
+  padding-left: 8px;
+
+  .dashboard-controls {
+    @include flexbox();
+    @include flex-wrap(nowrap);
+    @include align-items(center);
+
+    -webkit-transition: width 0.2s; /* Safari */
+    transition: width 0.2s;
+    width: 40px;
+
+
+    &.dashboard-edit {
+      width: 160px;
+      position: relative;
+      background: #afafaf;
+      padding-left: 20px;
+      padding-right: 20px;
+      border-radius: 20px;
+      margin-right: 8px;
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    h1 {
+      font-size: 1rem;
+    }
+  }
+
+}
+
+
+::ng-deep {
+  button {
+    .mat-select {
+      display: inline;
+    }
+
+    .mat-form-field-infix,
+    .mat-select-arrow-wrapper {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,106 @@
+<div class="item-wrapper bb-divider" [class.hasClient]="viewClienInfo">
+
+  <div class="item-content">
+
+  </div>
+
+  <!-- date -->
+  <div class="item-content" [matTooltipDisabled]="!commands.send_dt" matTooltip="{{commands.send_dt || '--'}}"
+    matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{commands.send_dt || '--'}}
+    </div>
+  </div>
+  <!-- user name -->
+  <div class="item-content" [matTooltipDisabled]="!commands.username" matTooltip="{{commands.username || '--'}}"
+    matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{commands.username || '--'}}
+    </div>
+  </div>
+
+  <!-- device -->
+  <div class="item-content" [matTooltipDisabled]="!commands.identifier" matTooltip="{{commands.identifier || '--'}}"
+    matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{commands.identifier || '--'}}
+    </div>
+  </div>
+
+
+  <!-- commands -->
+    <div class="item-content" [matTooltipDisabled]="!commands?.technical_command"
+    matTooltip="{{commands?.technical_command || '--'}}" matTooltipShowDelay="300">
+    <button (click)="viewTechnicalCommand(commands, 'command')" *ngIf="commands?.technical_command  ;else techCom"
+      class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+      {{commands?.technical_command}}
+    </button>
+    <ng-template #techCom>
+      <div class="text-ellipsis">
+        {{commands?.technical_command || '--'}}
+      </div>
+    </ng-template>
+  </div>
+
+
+  <!-- asset -->
+
+  <div class="item-content" [matTooltipDisabled]="!commands?.asset_name" matTooltip="{{commands?.asset_name || '--'}}"
+    matTooltipShowDelay="300">
+    <button (click)="openAssetDetails(commands.activo)"
+      *ngIf="commands?.activo && permissionsService.hasPermission(permissions.activos.ver);else assetPlate"
+      class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+      {{commands?.asset_name}}
+    </button>
+    <ng-template #assetPlate>
+      <div class="text-ellipsis">
+        {{commands?.asset_name || '--'}}
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- response -->
+  <div class="item-content" [matTooltipDisabled]="!commands.response_message"
+    matTooltip="{{commands.response_message || '--'}}" matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{commands.response_message || '--'}}
+    </div>
+  </div>
+
+  <!-- technical_response -->
+  <div class="item-content" [matTooltipDisabled]="!commands?.technical_response"
+    matTooltip="{{commands?.technical_response || '--'}}" matTooltipShowDelay="300">
+    <button (click)="viewTechnicalCommand(commands, 'response')" *ngIf="commands?.technical_response  ;else techResp"
+      class="w-100 mw-100 text-ellipsis" mat-stroked-button type="button">
+      {{commands?.technical_response}}
+    </button>
+    <ng-template #techResp>
+      <div class="text-ellipsis">
+        {{commands?.technical_response || '--'}}
+      </div>
+    </ng-template>
+  </div>
+
+
+
+  <!-- send command -->
+  <div class="item-content" [matTooltipDisabled]="!commands.command" matTooltip="{{commands.command || '--'}}"
+    matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{commands.command || '--'}}
+    </div>
+  </div>
+
+
+  <!-- client -->
+  <div *ngIf="viewClienInfo" [matTooltipDisabled]="!viewClienInfo || !commands?.client_name" class="item-content"
+    matTooltip="{{commands?.client_name || '--'}}" matTooltipShowDelay="300">
+    <div class="text-ellipsis">
+      {{commands?.client_name || '--'}}
+    </div>
+  </div>
+
+
+
+
+</div>

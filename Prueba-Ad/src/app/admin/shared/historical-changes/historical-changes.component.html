@@ -1,0 +1,131 @@
+<div class="instance-detail-container">
+  <div class="instance-detail-item">
+    <h3 class="mat-h3 font-weight-bold m-0">
+      {{ "CREATION_DATE" | translate }}:
+    </h3>
+    <div class="mat-body-1">
+      {{ creation.fecha_hora || ("NOT_RECORDED" | translate) }}
+    </div>
+    <mat-divider class="mt-2"></mat-divider>
+  </div>
+  <div class="instance-detail-item">
+    <h3 class="mat-h3 font-weight-bold m-0">{{ "CREATED_BY" | translate }}:</h3>
+    <div class="mat-body-1">
+      {{ creation.username || ("NOT_RECORDED" | translate) }}
+    </div>
+    <mat-divider class="mt-2"></mat-divider>
+  </div>
+
+  <div *ngIf="changes.length > 0" class="instance-detail-item grid-col mt-2">
+    <h2 class="mat-h2 font-weight-bold">
+      {{ "LASTEST_UPDATES" | translate }}:
+    </h2>
+
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let item of changes" class="py-2 py-sm-0">
+        <mat-expansion-panel-header style="height: 48px;">
+          <mat-panel-title>
+            {{ item.username }}
+          </mat-panel-title>
+          <mat-panel-description>
+            {{ item.fecha_hora }}
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <ng-template matExpansionPanelContent>
+          <mat-divider class="mb-2"></mat-divider>
+
+          <div class="container-fluid">
+            <div class="row d-none d-md-flex">
+              <h3 class="mat-h3 col-4 mb-0">
+                <strong>{{ "FIELD" | translate }}</strong>
+              </h3>
+              <h3 class="mat-h3 col-4 mb-0">
+                <strong>{{ "PREVIOUS" | translate }}</strong>
+              </h3>
+              <h3 class="mat-h3 col-4 mb-0">
+                <strong>{{ "NEW" | translate }}</strong>
+              </h3>
+            </div>
+          </div>
+
+          <div class="container-fluid pt-2">
+            <ng-container *ngFor="let change of item.cambio">
+              <div class="row pt-2">
+                <div class="col-12 col-md-4">
+                  <h3 class="mat-h3 mb-0 d-md-none">
+                    <strong>{{ "FIELD" | translate }}</strong>
+                  </h3>
+                  <div>{{ change.field }}</div>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <h3 class="mat-h3 mb-0 d-md-none">
+                    <strong>{{ "PREVIOUS" | translate }}</strong>
+                  </h3>
+                  <div
+                    *ngIf="!change.isOldArray; else oldDetail"
+                    class="word-break text-ellipsis"
+                  >
+                    {{ change.old }}
+                  </div>
+                  <ng-template #oldDetail>
+                    <div *ngFor="let old_value of change.old">
+                      <div
+                        *ngIf="isString(old_value)"
+                        class="word-break text-ellipsis"
+                      >
+                        {{ old_value }}
+                      </div>
+                      <div *ngIf="isObject(old_value)">
+                        <div
+                          *ngFor="let obj of old_value | keys"
+                          class="word-break text-ellipsis"
+                        >
+                          <strong class="mr-1">{{ obj.key }}:</strong>
+                          {{ obj.value }}
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+
+                <div class="col-12 col-md-4">
+                  <h3 class="mat-h3 mb-0 d-md-none">
+                    <strong>{{ "NEW" | translate }}</strong>
+                  </h3>
+                  <div
+                    *ngIf="!change.isNewArray; else newDetail"
+                    class="word-break text-ellipsis"
+                  >
+                    {{ change.new }}
+                  </div>
+                  <ng-template #newDetail>
+                    <div *ngFor="let new_value of change.new">
+                      <div
+                        *ngIf="isString(new_value)"
+                        class="word-break text-ellipsis"
+                      >
+                        {{ new_value }}
+                      </div>
+                      <div *ngIf="isObject(new_value)">
+                        <div
+                          *ngFor="let obj of new_value | keys"
+                          class="word-break text-ellipsis"
+                        >
+                          <strong class="mr-1">{{ obj.key }}:</strong>
+                          {{ obj.value }}
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+              <mat-divider class="mt-2"></mat-divider>
+            </ng-container>
+          </div>
+        </ng-template>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
+</div>

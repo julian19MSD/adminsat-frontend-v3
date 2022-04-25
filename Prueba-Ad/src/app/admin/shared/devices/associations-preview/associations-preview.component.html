@@ -1,0 +1,12 @@
+<cdk-virtual-scroll-viewport itemSize="58" *ngIf="selected.length > 0" class="device-box">
+  <div *cdkVirtualFor="let device of selectedItems$ | async" class="pb-1">
+    <div class="d-flex flex-nowrap align-items-center">
+      <adms-device-preview class="w-100" [data]="device"></adms-device-preview>
+      <div>
+        <button mat-icon-button (click)="remove(device.id)" type="button">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</cdk-virtual-scroll-viewport>

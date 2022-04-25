@@ -1,0 +1,21 @@
+<div [formGroup]="parts" class="duration-input-container">
+  <div class="mat-form-field-prefix duration-input-spacer">
+    <button (click)="add=add*-1;_handleInput()" type="button" mat-icon-button matPrefix>
+      <mat-icon *ngIf="add >0;else negative">add</mat-icon>
+      <ng-template #negative>
+        <mat-icon>remove</mat-icon>
+      </ng-template>
+    </button>
+  </div>
+  <input class="col duration-input-element" formControlName="days" type="number" min="0" max="364"
+         (focus)="_focused('days')" (blur)="_blured('days')" (input)="_handleInput()">
+  <span class="duration-input-spacer">/</span>
+  <input class="col duration-input-element" formControlName="hours" type="number" min="0" max="23"
+         (focus)="_focused('hours')" (blur)="_blured('hours')" (input)="_handleInput()">
+  <span class="duration-input-spacer">:</span>
+  <input class="col duration-input-element" formControlName="minutes" type="number" min="0" max="59"
+         (focus)="_focused('minutes')" (blur)="_blured('minutes')" (input)="_handleInput()">
+  <span class="duration-input-spacer">:</span>
+  <input class="col duration-input-element" formControlName="seconds" type="number" min="0" max="59"
+         (focus)="_focused('seconds')" (blur)="_blured('seconds')" (input)="_handleInput()">
+</div>

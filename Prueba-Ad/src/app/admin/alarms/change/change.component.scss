@@ -1,0 +1,17 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+
+.map-tab {
+  width: 100% !important;
+}
+
+:host ::ng-deep {
+
+  @include media-breakpoint-up(lg) {
+    .document-editor:not(.disabled):not(.fh) {
+      max-height: 629px !important;
+    }
+  }
+}
+

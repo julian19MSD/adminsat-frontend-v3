@@ -1,0 +1,30 @@
+<div class="zone-item-wrapper" [class.bg-hover]="!disabled" [class.disabled]="disabled">
+
+  
+  <div (click)="setDetail(zone.id)" class="info-wrapper">
+    <h2 class="mat-h2 mb-0 grid-col text-ellipsis">
+      {{zone?.nombre}} 
+  
+    </h2>
+
+    <div class=" info-item ">
+      <strong class="mr-1">{{ "STATE" | translate }}:</strong>
+      <span *ngIf="zone?.is_active; else inactive" class="text-success">{{
+        "ENABLED" | translate
+        }}</span>
+      <ng-template #inactive>
+        <span class="text-danger">{{ "DISABLED" | translate }}</span>
+      </ng-template>
+    </div>
+
+
+  </div>
+
+  <div class="icon-wrapper ">
+
+      <button mat-icon-button (click)="delete(zone.id, zone.nombre)" *ngIf="permissionsService.hasPermission(permissions.zonasControl.eliminar)" matTooltip="{{'DELETE_CONTROLZONE'|translate}}" matTooltipShowDelay="300" type="button">
+        <mat-icon class="text-danger ">delete</mat-icon>
+      </button>
+
+  </div>
+</div>

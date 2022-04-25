@@ -1,0 +1,29 @@
+<mat-form-field [class]="panelClass" [floatLabel]="floatLabel">
+  <mat-select [formControl]="ctrl" [multiple]="multiple" [placeholder]="placeholder" [required]="required">
+    <mat-option>
+      <ngx-mat-select-search [formControl]="selectFilterCtrl" noEntriesFoundLabel="{{'NO_RESULT' | translate}}"
+        placeholderLabel="{{'SEARCH' | translate}}"></ngx-mat-select-search>
+    </mat-option>
+    <mat-select-trigger *ngIf="multiple && ctrl.value?.length > 0">
+      <span class="multiple-selection">
+        {{ctrl.value.length }}
+        {{(ctrl.value?.length === 1 ? 'SELECTED_ITEM' : 'SELECTED_ITEMS')|translate}}
+      </span>
+    </mat-select-trigger>
+
+    <mat-option *ngIf="!required && !multiple && !selectFilterCtrl.value" [value]="null">----</mat-option>
+    <mat-option *ngFor="let item of filteredOptions | async" [value]="item.id">
+
+      <span *ngIf="translate; else untranslated ">
+        {{item[mainKey] | translate}}
+      </span>
+      <ng-template #untranslated>
+        {{item[mainKey]}}
+      </ng-template>
+    </mat-option>
+
+  </mat-select>
+  <mat-error>
+    {{getErrorMessage(ctrl, {})| translate}}
+  </mat-error>
+</mat-form-field>

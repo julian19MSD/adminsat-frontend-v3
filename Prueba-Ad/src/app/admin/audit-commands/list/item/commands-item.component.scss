@@ -1,0 +1,26 @@
+.item-wrapper {
+  display: grid;
+  grid-template-columns: 40px repeat(8, 200px);
+  column-gap: 16px;
+  align-items: center;
+  height: 48px;
+  padding: 0 16px;
+
+
+  &.hasClient {
+    grid-template-columns: 40px repeat(9, 200px);
+  }
+
+
+  .item-content {
+    text-align: center;
+    font-size: 0.8rem;
+
+  }
+}
+
+:host ::ng-deep {
+  .mat-checkbox-layout {
+    margin: 0;
+  }
+}

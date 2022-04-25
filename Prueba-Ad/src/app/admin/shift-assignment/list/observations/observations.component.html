@@ -1,0 +1,97 @@
+<h1 class="mb-0" mat-dialog-title>{{'NEW_OBSERVATION'|translate}}</h1>
+
+<mat-divider class="mt-3 mb-2"></mat-divider>
+
+<div class="w-600-px  py-2" mat-dialog-content>
+
+  <adms-ph *ngIf="loading; else loaded" mode="form"></adms-ph>
+
+  <ng-template #loaded>
+    <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup"
+          id="shiftObservationForm">
+      <div class="grid grid-md-2 align-items-center">
+
+        <div>
+          <adms-select [ctrl]="formGroup.get('tipo')" [options]="tipoOptions"
+                       placeholder="{{'TYPE'|translate}}" required="true">
+          </adms-select>
+        </div>
+
+        <div>
+          <adms-select [ctrl]="formGroup.get('sub_tipo')" [options]="subTipoOptions"
+                       placeholder="{{'SUB_TYPE'|translate}}">
+          </adms-select>
+        </div>
+
+        <div class="grid-col">
+          <mat-slide-toggle (change)="addTimeChange($event.checked)">
+            {{'ADD_TIME'|translate}}
+          </mat-slide-toggle>
+        </div>
+
+        <ng-container *ngIf="addTime">
+          <adms-select [ctrl]="formGroup.get('zona_control')" [options]="zonasControlOptions" required="true"
+                       placeholder="{{'CONTROL_ZONE'|translate}}">
+          </adms-select>
+
+          
+          <mat-form-field >
+            <app-duration-field formControlName="tiempo_agregado" required
+                                placeholder="{{'ADDED_TIME'|translate}} (d/h:m:s)">
+            </app-duration-field>
+            <button mat-icon-button  matSuffix>
+              <mat-icon>access_time</mat-icon>
+            </button>
+            <mat-error>
+              {{formStatus?.tiempo_agregado|translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <!-- <mat-form-field>
+            <mat-label>{{ 'ENTRY_DATE' | translate }}</mat-label>
+            <input #dtEntryInput [owlDateTime]="dtEntry" [min]="now" required [owlDateTimeTrigger]="dtEntry"
+                   formControlName="fecha_ingreso" matInput>
+
+            <button (click)="formGroup.get('fecha_ingreso').reset(null);" *ngIf="dtEntryInput.value" mat-icon-button
+                    matSuffix type="button">
+              <mat-icon>clear</mat-icon>
+            </button>
+
+            <button [owlDateTimeTrigger]="dtEntry" mat-icon-button matSuffix type="button">
+              <mat-icon>calendar_today</mat-icon>
+            </button>
+
+            <mat-error>
+              {{formStatus?.fecha_ingreso|translate}}
+            </mat-error>
+
+            <owl-date-time #dtEntry></owl-date-time>
+
+          </mat-form-field> -->
+
+        </ng-container>
+
+        <mat-form-field class="grid-col">
+            <textarea formControlName="observacion" matInput placeholder="{{'OBSERVATION'|translate}}"
+                      required type="text">
+            </textarea>
+          <mat-error>
+            {{formStatus?.observacion| translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </ng-template>
+</div>
+
+<mat-divider class="mt-3 mb-2"></mat-divider>
+
+<div mat-dialog-actions class="justify-content-end">
+  <button class="m-1" mat-button type="button" mat-dialog-close>
+    {{'CANCEL'| translate}}
+  </button>
+  <button *ngIf="!loading" class="m-1" color="primary" form="shiftObservationForm" mat-raised-button type="submit">
+    {{'SAVE'| translate}}
+  </button>
+</div>
+

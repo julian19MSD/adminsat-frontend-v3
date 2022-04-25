@@ -1,0 +1,27 @@
+@import "~bootstrap/scss/vendor/rfs";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "~bootstrap/scss/mixins/lists";
+@import "~bootstrap/scss/mixins/hover";
+@import "~bootstrap/scss/mixins/text-truncate";
+@import "~bootstrap/scss/mixins/deprecate";
+@import "~bootstrap/scss/mixins/text-emphasis";
+@import "~bootstrap/scss/mixins/text-hide";
+@import "~bootstrap/scss/mixins/background-variant";
+@import "~bootstrap/scss/mixins/border-radius";
+@import "~bootstrap/scss/mixins/gradients";
+@import "~bootstrap/scss/mixins/alert";
+
+@import "~bootstrap/scss/reboot";
+
+@import "~bootstrap/scss/utilities/text";
+@import "~bootstrap/scss/utilities/sizing";
+@import "~bootstrap/scss/utilities/background";
+@import "~bootstrap/scss/utilities/overflow";
+@import "~bootstrap/scss/utilities/position";
+@import "~bootstrap/scss/utilities/borders";
+
+@import "~bootstrap/scss/alert";
+@import "~bootstrap/scss/type";

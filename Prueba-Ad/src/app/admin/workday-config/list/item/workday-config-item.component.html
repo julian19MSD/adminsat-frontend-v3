@@ -1,0 +1,53 @@
+<mat-card [class.list-item-selected]="work?.isSelected" class="workday-item-wrapper" matRipple>
+  <div *ngIf="actionsCapabilities?.delete" class="selector pr-2 pr-md-0">
+    <mat-checkbox (change)="checkedItem($event.checked)" [(ngModel)]="work.isSelected" color="primary">
+    </mat-checkbox>
+  </div>
+
+  <div class="description">
+    <h2 class="workday-name">
+      {{ work?.cliente_nombre }}
+    </h2>
+  </div>
+
+  <div class="times-workday">
+    <div class="small">
+      <span class="font-weight-bold mr-1">{{ "WORKDAY_DURATION" | translate }}  :</span>
+      {{ work?.workday_duration }} {{ "HOURS" | translate }}
+    </div>
+    <div class="small">
+      <span class="font-weight-bold mr-1">{{ "WORKDAY_ALERT" | translate }}:</span>
+      {{ work?.workday_alert }} {{ "HOURS" | translate }}
+    </div>
+  </div>
+
+  <div class="times-rest">
+    <div class="small">
+      <span class="font-weight-bold mr-1">{{ "REST_DURATION" | translate }}:</span>
+      {{ work?.rest_duration }} {{ "HOURS" | translate }}
+    </div>
+    <div class="small">
+      <span class="font-weight-bold mr-1">{{ "REST_ALERT" | translate }}:</span>
+      {{ work?.rest_alert }} {{ "HOURS" | translate }}
+    </div>
+    <div class="small">
+      <span class="font-weight-bold mr-1">{{ "REST_LIMIT_SPEED" | translate }}:</span>
+      {{ work?.rest_limit_speed }} {{metricsAlias.velocity}}
+    </div>
+  </div>
+
+
+
+  <button [matMenuTriggerFor]="detailsMenu" class="more" mat-icon-button type="button">
+    <mat-icon>more_vert</mat-icon>
+
+    <mat-menu #detailsMenu="matMenu">
+
+      <a *ngIf="actionsCapabilities?.edit" [routerLink]="['form', work?.id]" class="text-decoration-none" mat-menu-item>
+        <mat-icon>edit</mat-icon>
+        <span>{{ "EDIT" | translate }}</span>
+      </a>
+    </mat-menu>
+  </button>
+
+</mat-card>

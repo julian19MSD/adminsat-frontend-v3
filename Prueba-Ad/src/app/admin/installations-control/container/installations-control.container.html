@@ -1,0 +1,76 @@
+<div class="tracking-container p-1 p-md-0  fadeInUp">
+
+  <div class="map-utils">
+    <ng-container *ngIf="controlsLoader ;else controls">
+      <div class="ph-item m-0 py-0 align-items-center">
+        <div class="ph-icon ph-brightness m-0 mr-2"></div>
+      </div>
+    </ng-container>
+    <ng-template #controls>
+      <button (click)="clientSelector.open()" *ngIf="clients?.length >1" mat-icon-button
+        matTooltip="{{'SELECT_CLIENT'|translate}}" matTooltipShowDelay="300" type="button">
+
+        <mat-icon [class.text-info]="selectedClient">supervised_user_circle</mat-icon>
+
+        <mat-select #clientSelector (selectionChange)="changeClient($event.value)" [(ngModel)]="selectedClient">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="clientFilterCtrl" noEntriesFoundLabel="{{'NO_RESULT' | translate}}"
+              placeholderLabel="{{'SEARCH' | translate}}">
+            </ngx-mat-select-search>
+          </mat-option>
+          <mat-option [value]="null">------</mat-option>
+          <mat-option *ngFor="let item of clientFilteredOptions | async" [value]="item.id">
+            {{item.nombre}}
+          </mat-option>
+        </mat-select>
+      </button>
+<ng-container *ngIf="isCreatingControlInstallation" >
+  
+  <button mat-icon-button matTooltip="{{'TOOGLE_MOVE_MAP'|translate}}"  (click)="setModeDraw(true)" matTooltipShowDelay="300" type="button">
+    <mat-icon [class.text-info]="modeDraw === null">swipe</mat-icon>
+  </button>
+
+  <button mat-icon-button (click)="setModeDraw('POLYGON')" matTooltip="{{'TOOGLE_DRAW_POLYGON'|translate}}"
+    matTooltipShowDelay="300" type="button">
+    <i [class.text-info]="modeDraw === 'POLYGON'" class="adminsat-icon icon-polygon"></i>
+  </button>
+
+  <button mat-icon-button (click)="setModeDraw('CIRCLE')" matTooltip="{{'TOOGLE_DRAW_CIRCLE'|translate}}"
+    matTooltipShowDelay="300" type="button">
+    <i [class.text-info]="modeDraw === 'CIRCLE'" class="adminsat-icon icon-circle"></i>
+  </button>
+
+
+  <button mat-icon-button (click)="setModeDraw('RECTANGLE')" matTooltip="{{'TOOGLE_DRAW_RECTANGLE'|translate}}"
+    matTooltipShowDelay="300" type="button">
+    <i [class.text-info]="modeDraw === 'RECTANGLE'" class="adminsat-icon icon-rectangle"></i>
+  </button>
+
+  <button mat-icon-button (click)="clearDrawZoneSelected()" matTooltip="{{'CLEAR_DRAW'|translate}}"
+    matTooltipShowDelay="300" type="button">
+    <mat-icon class="text-danger">delete</mat-icon>
+  </button>
+
+  <button (click)="controlZoneActive = !controlZoneActive;" mat-icon-button
+    matTooltip="{{'TOOGLE_CONTROLZONES'|translate}}" matTooltipShowDelay="300" type="button">
+    <i [class.text-info]="controlZoneActive" class="adminsat-icon icon-polygon-1"></i>
+  </button>
+
+</ng-container>
+
+
+      <button class="d-lg-none" (click)="toogleReportsSideNav()" mat-icon-button type="button">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </ng-template>
+
+  </div>
+
+  <mat-divider class="d-md-none z-2"></mat-divider>
+
+  <adms-map-reports (scrollEnd)="fetchMore()" (shapeCompleted)="setModeDraw($event)" [clearDrawZone]="clearDrawZone"
+     (deleteZoneSelected)="openConfirmDialogDeleteZone($event)"  (updateZones)="rechargeUpdateData()"
+    (startEditZone)="initCreationControlinstallations($event)" (totalItems)="setTotalItems($event)" [isFetchingZones]="fetchingZones"
+    [isFetchingList]="fetching" [controlZoneActive]="controlZoneActive" [mode]="'listZones'" [modeDraw]="modeDraw"
+    [controlZones]="controlZones" [zones]="listItems$|async" [toggleReports]="toggleReports"></adms-map-reports>
+</div>

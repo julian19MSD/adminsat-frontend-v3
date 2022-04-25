@@ -1,0 +1,27 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins/breakpoints";
+@import "src/assets-sources/scss/app/mixins/flex";
+
+.detail-container {
+  min-width: 100%;
+  background-color: #e8e9ea;
+
+}
+
+.container-g {
+
+  display:flex;
+  justify-content: center;
+  height: 70vh !important;
+  margin: 10px;
+
+
+  .grafica {
+    
+    width: 100% !important;
+    height: 100%!important;
+    border-radius: 5px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+}

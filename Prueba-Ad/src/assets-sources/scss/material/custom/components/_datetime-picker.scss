@@ -1,0 +1,12 @@
+
+body.custom:not(.dark) {
+  .owl-dt-calendar-table .owl-dt-calendar-cell-selected {
+    color: mat-color($primary, default-contrast) !important;
+    background-color: mat-color($primary) !important;
+  }
+
+  .owl-dt-container-buttons {
+    color: mat-color($foreground, text) !important;
+  }
+
+}

@@ -1,0 +1,164 @@
+<div class="w-800-px mw-100">
+  <h1 class="bb-divider mb-1 pb-2" mat-dialog-title>
+    {{title|translate}}
+  </h1>
+
+  <div class="py-2" mat-dialog-content>
+    <adms-ph *ngIf="loader; else loaded" mode="form"></adms-ph>
+
+    <ng-template #loaded>
+      <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" id="actorTicketForm">
+
+        <div class="grid grid-sm-2 p-0">
+
+          <mat-form-field class="w-100">
+            <input formControlName="numero" matInput placeholder="{{'TICKET_NUMBER'|translate}}"  type="text"
+              required>
+            <mat-error *ngIf="formGroup.get('numero').invalid">
+              {{formStatus?.numero | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input formControlName="codigo_infraccion" matInput placeholder="{{'TICKET_CODE'|translate}}" 
+              type="text">
+            <mat-error *ngIf="formGroup.get('codigo_infraccion').invalid">
+              {{formStatus?.codigo_infraccion | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input (focus)="fechaTicket.open()" [matDatepicker]="fechaTicket" formControlName="fecha" matInput 
+              placeholder="{{ 'DATE' | translate }}">
+            <mat-datepicker-toggle [for]="fechaTicket" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #fechaTicket></mat-datepicker>
+            <mat-error>
+              {{formStatus?.fecha | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input formControlName="descripcion" matInput placeholder="{{'DESCRIPTION'|translate}}" 
+              type="text">
+            <mat-error *ngIf="formGroup.get('descripcion').invalid">
+              {{formStatus?.descripcion | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input formControlName="valor" matInput placeholder="{{'VALUE'|translate}}" type="number">
+            <mat-error *ngIf="formGroup.get('valor').invalid">
+              {{formStatus?.valor | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input formControlName="interes" matInput placeholder="{{'INTEREST'|translate}}" type="number">
+            <mat-error *ngIf="formGroup.get('interes').invalid">
+              {{formStatus?.interes | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <div class="w-100 ">
+            <h3 class="mat-h5 mb-0">
+              {{ "TOTAL_VALUE" | translate }}:
+            </h3>
+            <div class="mat-body">
+              {{formGroup.get('interes').value + formGroup.get('valor').value}}
+            </div>
+          </div>
+
+          <mat-form-field class="w-100">
+            <input formControlName="resolucion" matInput placeholder="{{'RESOLUTION'|translate}}" type="number">
+            <mat-error *ngIf="formGroup.get('resolucion').invalid">
+              {{formStatus?.resolucion | translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <input (focus)="fechaResolucion.open()" [matDatepicker]="fechaResolucion" formControlName="fecha_resolucion"
+              matInput  placeholder="{{ 'RESOLUTION_DATE' | translate }}">
+            <mat-datepicker-toggle [for]="fechaResolucion" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #fechaResolucion></mat-datepicker>
+            <mat-error>
+              {{formStatus?.fecha_resolucion | translate}}
+            </mat-error>
+          </mat-form-field>
+
+
+          <div class="w-100">
+            <div class="d-flex flex-nowrap  align-items-center flex-row">
+              <adms-select [ctrl]="formGroup.get('activo')" [options]="assetsOptions" class="w-100" multiple="false"
+                placeholder="{{'ASSETS' | translate}}">
+              </adms-select>
+
+              <button (click)="formGroup.get('activo').reset(null)" matTooltipShowDelay="300"
+                matTooltip="{{'UNSELECT_ALL'|translate}}" mat-icon-button type="button">
+                <mat-icon>clear</mat-icon>
+              </button>
+            </div>
+            <adms-asset-associations-preview (disassociate)="formGroup.get('activo').reset(null)"
+              [confirmDisassociation]="false" [items]="assetsOptions" multiple="false"
+              [selected]="[formGroup.get('activo').value]">
+            </adms-asset-associations-preview>
+          </div>
+
+          <mat-form-field class="grid-col">
+            <textarea formControlName="observacion" matInput placeholder="{{'OBSERVATION'|translate}}" 
+              type="text">
+          </textarea>
+            <mat-error>
+              {{formStatus?.observation| translate}}
+            </mat-error>
+          </mat-form-field>
+
+
+          <div class="grid-col">
+            <div class="mw-600-px">
+              <div class="text-center mb-2">
+                {{ "VOUCHER" | translate }}
+              </div>
+              <adms-drop-zone (fileResult)="onFileChange('comparendo', $event) " [fileUrl]="filesUrl.comparendo"
+                [resetFiles]="resetFiles" document="true" model="comparendo">
+              </adms-drop-zone>
+              <mat-error class="text-center" *ngIf="formGroup.get('comparendo')?.invalid">
+                {{formStatus?.comparendo | translate}}
+              </mat-error>
+            </div>
+          </div>
+
+          <mat-divider class="grid-col "></mat-divider>
+
+          <div class="text-center align-self-center">
+            <mat-slide-toggle class="w-100  " color="primary" formControlName="pago">
+              {{ "TICKET_PAID" | translate }}
+            </mat-slide-toggle>
+          </div>
+          <div class="w-100">
+            <div class="text-center mb-2">
+              {{ "VOUCHER_TICKET_PAY" | translate }}
+            </div>
+            <adms-drop-zone (fileResult)="onFileChange('comprobante_pago', $event) "
+              [fileUrl]="filesUrl.comprobante_pago" [resetFiles]="resetFiles" document="true" model="comprobante_pago">
+            </adms-drop-zone>
+            <mat-error *ngIf="formGroup.get('pago')?.value === true &&  formGroup.get('comprobante_pago')?.invalid">
+              {{formStatus?.comprobante_pago | translate}}
+            </mat-error>
+          </div>
+
+        </div>
+      </form>
+    </ng-template>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div class="justify-content-end" mat-dialog-actions>
+    <button class="m-1" mat-button mat-dialog-close type="button">
+      {{'CANCEL'| translate}}
+    </button>
+    <button class="m-1" color="primary" form="actorTicketForm" mat-raised-button type="submit">
+      {{'SAVE'| translate}}
+    </button>
+  </div>
+
+</div>

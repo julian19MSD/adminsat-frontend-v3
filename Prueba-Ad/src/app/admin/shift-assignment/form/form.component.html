@@ -1,0 +1,133 @@
+<div class="p-1 p-lg-2 h-100 fadeInUp">
+
+  <div *ngIf="loader" [innerHTML]="loaderContent" class="loader-container" id="internalLoader"></div>
+
+  <mat-card class="main-card-container">
+
+    <form (ngSubmit)="onSubmit($event)" [formGroup]="formGroup" id="shiftAssignmentForm">
+
+      <section id="basic_data">
+        <h1 class="dark info-subtitle mt-4">{{'BASIC_DATA' | translate}}</h1>
+        <div class="grid grid-md-3  pt-3">
+          <div *ngIf="clients.length > 1">
+            <adms-select [ctrl]="formGroup.get('cliente')" [options]="clients" placeholder="{{'CLIENT' | translate}}"
+                         required="true">
+            </adms-select>
+          </div>
+
+          <mat-form-field>
+            <mat-select formControlName="inicializacion" placeholder="{{'INCIALIZATION_MODO'|translate}}" required>
+              <mat-option *ngFor="let modo of choices.inicializacion_choices" [value]="modo.id">
+                {{modo.value | titlecase}}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{formStatus?.inicializacion| translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-select formControlName="finalizacion" placeholder="{{'FINALIZATION_MODE'|translate}}" required>
+              <mat-option *ngFor="let modo of choices.finalizacion_choices" [value]="modo.id">
+                {{modo.value | titlecase}}
+              </mat-option>
+            </mat-select>
+            <mat-error>
+              {{formStatus?.finalizacion| translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <mat-label>{{ 'START_DATE' | translate }}</mat-label>
+            <input #dtFrom [owlDateTime]="dtStart" (focus)="dtStart.open()" required
+                   [owlDateTimeTrigger]="dtStart" formControlName="fecha_hora_inicio" matInput>
+            <button (click)="formGroup.get('fecha_hora_inicio').reset(null);" *ngIf="dtFrom.value" mat-icon-button
+                    matSuffix
+                    type="button">
+              <mat-icon>clear</mat-icon>
+            </button>
+            <button [owlDateTimeTrigger]="dtStart" mat-icon-button matSuffix type="button">
+              <mat-icon>calendar_today</mat-icon>
+            </button>
+            <mat-error>
+              {{formStatus?.fecha_hora_inicio|translate}}
+            </mat-error>
+            <owl-date-time #dtStart></owl-date-time>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input formControlName="orden_cargue" matInput placeholder="{{'LOAD_ORDER'|translate}}" required
+                   type="text">
+            <mat-error>
+              {{formStatus?.orden_cargue| translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input formControlName="planilla" matInput placeholder="{{'PLANILLA'|translate}}" type="text">
+            <mat-error>
+              {{formStatus?.planilla| translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input formControlName="id_carga" matInput placeholder="{{'LOAD_ID'|translate}}" type="text">
+            <mat-error>
+              {{formStatus?.id_carga| translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input formControlName="producto" matInput placeholder="{{'CONTENT'|translate}}" required type="text">
+            <mat-error>
+              {{formStatus?.producto| translate}}
+            </mat-error>
+          </mat-form-field>
+
+          <ng-container formGroupName="varios_json">
+            <mat-form-field>
+              <input #ttInput formControlName="tt" matInput maxlength="50" placeholder="{{'TRAILER_TYPE'|translate}}"
+                     type="text">
+              <mat-hint align="end">{{ttInput.value?.length || 0}}/50</mat-hint>
+              <mat-error>
+                {{formStatus?.varios_json.tt| translate}}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+              <input #odInput formControlName="od" matInput maxlength="50"
+                     placeholder="{{'DEPARTURE_OFFICE'|translate}}" type="text">
+              <mat-hint align="end">{{odInput.value?.length || 0}}/50</mat-hint>
+              <mat-error>
+                {{formStatus?.varios_json.od| translate}}
+              </mat-error>
+            </mat-form-field>
+          </ng-container>
+        </div>
+      </section>
+
+      <section id="realtions">
+        <h1 class="dark info-subtitle mt-4">{{'RELATIONS' | translate}}</h1>
+        <div class="grid grid-md-3 pt-3">
+
+          <adms-select [ctrl]="formGroup.get('cliente_enturne')" [options]="finalClients"
+                       placeholder="{{'FINAL_CLIENT' | translate}}" required="true">
+          </adms-select>
+
+          <adms-select [ctrl]="formGroup.get('activo')" [options]="assets" placeholder="{{'ASSET' | translate}}"
+                       required="true">
+          </adms-select>
+
+          <adms-select [ctrl]="formGroup.get('ruta')" [options]="routes" placeholder="{{'ROUTE' | translate}}"
+                       required="true">
+          </adms-select>
+
+          <adms-select [ctrl]="formGroup.get('actores_viales')" [options]="roadActors"
+                       placeholder="{{'ROAD_ACTORS' | translate}}" multiple="true" required="true">
+          </adms-select>
+        </div>
+      </section>
+
+    </form>
+  </mat-card>
+</div>
